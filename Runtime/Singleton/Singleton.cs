@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Arbinty.Utils
+namespace GameUtils
 {
     public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
@@ -8,7 +8,7 @@ namespace Arbinty.Utils
 
         public static bool InstanceExists => Instance != null;
 
-        void Awake()
+        protected void Awake()
         {
             if (InstanceExists)
             {
@@ -17,12 +17,11 @@ namespace Arbinty.Utils
             else
             {
                 Instance = (T)this;
+                OnPostAwake();
             }
-
-            OnPostAwake();
         }
 
-        void OnDestroy()
+        protected void OnDestroy()
         {
             if (Instance == this)
             {

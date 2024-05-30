@@ -1,9 +1,12 @@
-﻿namespace Arbinty.Utils
+﻿namespace GameUtils
 {
     public class PersistentSingleton<T> : Singleton<T> where T : Singleton<T>
     {
-        protected override void OnPostAwake()
+        new void Awake()
         {
+            base.Awake();
+
+            // 
             DontDestroyOnLoad(gameObject);
         }
     }
