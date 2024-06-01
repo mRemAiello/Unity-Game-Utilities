@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "displayName": "Some Game Utils",
   "description": "Some Game Utils to improve Unity workflows",
-  "unity": "2022.1",
+  "unity": "2022.3.16f1",
   "author": {
     "name": "Mirko Raimondo Aiello",
     "url": "https://github.com/mRemAiello/GameUtils"
