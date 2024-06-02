@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arbinty.Utils
+namespace GameUtils
 {
     public class Point : IEquatable<Point>
     {

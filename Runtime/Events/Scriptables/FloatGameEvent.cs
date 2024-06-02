@@ -3,7 +3,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [CreateAssetMenu(menuName = "Game Utils/Events/Float")]
-    public class FloatGameEvent : ParametrizedGameEvent<float>
+    public class FloatGameEvent : GameEventAsset<float>
     {
     }
 }

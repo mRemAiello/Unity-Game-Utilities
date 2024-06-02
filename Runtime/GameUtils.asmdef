@@ -1,6 +1,6 @@
 {
     "name": "GameUtils",
-    "rootNamespace": "",
+    "rootNamespace": "GameUtils",
     "references": [
         "GUID:a8ffdbcf527bc48df962e130f02cdd7e"
     ],

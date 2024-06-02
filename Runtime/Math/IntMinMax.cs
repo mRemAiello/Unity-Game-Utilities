@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Arbinty.Utils
+namespace GameUtils
 {
     [Serializable]
     public class IntMinMax

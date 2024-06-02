@@ -1,7 +1,7 @@
 using UnityEngine;
 using VInspector;
 
-namespace Arbinty.Utils
+namespace GameUtils
 {
     public class LightFlicker : MonoBehaviour
     {

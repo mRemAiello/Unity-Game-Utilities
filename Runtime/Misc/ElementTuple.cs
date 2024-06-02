@@ -4,19 +4,19 @@ using UnityEngine;
 namespace GameUtils
 {
     [Serializable]
-    public class ElementTuple<T, K>
+    public class ElementTuple<T1, T2>
     {
-        [SerializeField] private T _firstElement;
-        [SerializeField] private K _secondElement;
+        [SerializeField] private T1 _item1;
+        [SerializeField] private T2 _item2;
 
         // private fields
-        public T FirstElement => _firstElement;
-        public K SecondElement => _secondElement;
+        public T1 Item1 => _item1;
+        public T2 Item2 => _item2;
 
-        public ElementTuple(T firstData, K secondData)
+        public ElementTuple(T1 firstData, T2 secondData)
         {
-            _firstElement = firstData;
-            _secondElement = secondData;
+            _item1 = firstData;
+            _item2 = secondData;
         }
     }
 }

@@ -3,8 +3,8 @@ using UnityEditor;
 
 namespace UnityEditor.GameUtils
 {
-    [CustomEditor(typeof(GameEvent))]
-    public class GameEventEditor : Editor
+    [CustomEditor(typeof(GameEventBaseAsset))]
+    public class GameEventBaseAssetEditor : Editor
     {
         public override void OnInspectorGUI()
         {
@@ -14,15 +14,17 @@ namespace UnityEditor.GameUtils
             base.OnInspectorGUI();
 
             // 
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("--- Listeners ---");
 
             // 
-            var gameEvent = (target as GameEvent);
-            if (gameEvent != null)
+            var listeners = (target as GameEventBaseAsset);
+            if (listeners != null)
             {
-                foreach (GameEventListener singleEvent in gameEvent.Events)
+                foreach (var listener in listeners.Listeners)
                 {
-                    EditorGUILayout.LabelField(singleEvent.gameObject.name);
+                    string str = string.Format("{0}: {1}", listener.Item1, listener.Item2);
+                    EditorGUILayout.LabelField(str);
                 }
             }
 
