@@ -2,7 +2,8 @@
     "name": "GameUtils",
     "rootNamespace": "GameUtils",
     "references": [
-        "GUID:a8ffdbcf527bc48df962e130f02cdd7e"
+        "GUID:a8ffdbcf527bc48df962e130f02cdd7e",
+        "GUID:fb24642277b1db2449da7ac148ce939d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
