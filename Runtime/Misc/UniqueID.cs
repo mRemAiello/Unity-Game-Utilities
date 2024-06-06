@@ -50,6 +50,10 @@ namespace GameUtils
             return base.GetHashCode();
         }
 
+        public void Load()
+        {
+        }
+
         // Getters
         public string ID => _id;
     }
