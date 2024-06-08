@@ -26,9 +26,8 @@ namespace GameUtils
             if (Instance == this)
             {
                 Instance = null;
+                OnPostDestroy();
             }
-
-            OnPostDestroy();
         }
 
         protected virtual void OnPostAwake() { }

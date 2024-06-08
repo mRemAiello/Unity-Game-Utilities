@@ -1,3 +1,4 @@
+using Codice.Client.Common;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.AddressableAssets;
@@ -57,6 +58,10 @@ namespace UnityEditor.GameUtils
                     var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
                     if (assetType != null)
                     {
+                        // Rimuovo tutte le label
+                        entry.labels.Clear();
+
+                        // Aggiungo
                         string label = assetType.Name;
                         if (!entry.labels.Contains(label))
                         {
