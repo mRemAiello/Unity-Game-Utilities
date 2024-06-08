@@ -1,4 +1,3 @@
-using Codice.Client.Common;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.AddressableAssets;
@@ -8,7 +7,7 @@ using VInspector;
 
 namespace UnityEditor.GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Auto Bundles")]
+    [CreateAssetMenu(menuName = "Game Utils/Auto Bundles/Auto Bundles")]
     public class AutoBundles : ScriptableObject
     {
         [SerializeField] private List<AutoBundleData> _bundleDatas;
