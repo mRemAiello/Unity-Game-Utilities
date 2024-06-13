@@ -18,6 +18,41 @@ namespace GameUtils
             DebugCurrentFileSave();
         }
 
+        public bool Exists<T>(string key, string suffix = "")
+        {
+            CheckFileSave();
+
+            //
+            var id = GetID<T>(key, suffix);
+
+            //
+            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            if (saveReader.Exists(id))
+            {
+                return true;
+            }
+
+            //
+            return false;
+        }
+
+        public bool TryLoad<T>(string key, out T result, string suffix = "")
+        {
+            CheckFileSave();
+
+            //
+            var id = GetID<T>(key, suffix);
+
+            //
+            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            if (saveReader.TryRead<T>(id, out result))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public void Save<T>(string key, T amount, string suffix = "")
         {
             CheckFileSave();
@@ -51,7 +86,6 @@ namespace GameUtils
             return default;
         }
 
-        [Button]
         public void RemoveKey<T>(string key, string suffix = "")
         {
             CheckFileSave();
@@ -71,7 +105,6 @@ namespace GameUtils
             }
         }
 
-        [Button]
         public void Clear()
         {
             CheckFileSave();
@@ -89,7 +122,6 @@ namespace GameUtils
             _keys.Clear();
         }
 
-        [Button]
         private void DebugCurrentFileSave()
         {
             CheckFileSave();
