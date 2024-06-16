@@ -4,6 +4,7 @@
     "references": [
         "Unity.ResourceManager",
         "Unity.Addressables",
+        "Unity.TextMeshPro",
         "QFSW.QC",
         "VInspector",
         "QuickSave"

@@ -122,6 +122,7 @@ namespace GameUtils
             _keys.Clear();
         }
 
+        [Button]
         private void DebugCurrentFileSave()
         {
             CheckFileSave();
