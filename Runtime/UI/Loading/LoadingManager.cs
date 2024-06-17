@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VInspector;
 
 namespace GameUtils
@@ -11,59 +13,99 @@ namespace GameUtils
         [SerializeField] private LoadingData _popupLoading;
 
         [Tab("Events")]
-        [SerializeField] private VoidGameEventAsset _onDisableLoading;
-        [SerializeField] private VoidGameEventAsset _onEnableLoading;
+        [SerializeField] private VoidGameEventAsset _onLoadingStarted;
+        [SerializeField] private FloatGameEvent _onLoadingProgress;
+        [SerializeField] private VoidGameEventAsset _onLoadingCompleted;
 
         [Tab("Debug")]
         [SerializeField, ReadOnlyField] private LoadingType _currentLoadingType = LoadingType.Fullscreen;
+        [SerializeField, ReadOnlyField] private bool _isLoading;
 
-        public void EnableLoading(string text = "", LoadingType type = LoadingType.Fullscreen, bool enableLoadingAnimation = true)
+        public void StartLoading(Action<Action<float>> loadAction, LoadingScreenData data)
         {
-            DisableLoading();
-            
-            //
-            switch (type)
-            {
-                case LoadingType.Fullscreen:
-                    _fullscreenLoading.Text.text = text;
-                    _fullscreenLoading.Container.SetActive(true);
-                    _fullscreenLoading.Animation.SetActive(enableLoadingAnimation);
-                    _currentLoadingType = type;
-                    break;
-
-                case LoadingType.Popup:
-                    _popupLoading.Text.text = text;
-                    _popupLoading.Container.SetActive(true);
-                    _popupLoading.Animation.SetActive(enableLoadingAnimation);
-                    _currentLoadingType = type;
-                    break;
-                
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            if (_isLoading)
+                return;
 
             //
-            _onEnableLoading.Invoke();
+            StartCoroutine(LoadingCoroutine(loadAction, data));
         }
 
-        public void DisableLoading()
+        private IEnumerator LoadingCoroutine(Action<Action<float>> loadAction, LoadingScreenData data)
         {
-            switch (_currentLoadingType)
+            //
+            ShowLoadingScreen(data);
+
+            //
+            _onLoadingStarted?.Invoke();
+
+            //
+            _isLoading = true;
+
+            // Start the loading action with a callback to update progress
+            loadAction(progress =>
             {
-                case LoadingType.Fullscreen:
-                    _fullscreenLoading.Container.SetActive(false);
-                    break;
-                
-                case LoadingType.Popup:
-                    _popupLoading.Container.SetActive(false);
-                    break;
-                
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(_currentLoadingType), _currentLoadingType, null);
+                if (data.Type == LoadingType.Fullscreen)
+                {
+                    _fullscreenLoading.ProgressBar.value = progress;
+                    _fullscreenLoading.ProgressText.text = (progress * 100f).ToString("F2") + "%";
+                }
+                else
+                {
+                    _fullscreenLoading.ProgressBar.value = progress;
+                    _fullscreenLoading.ProgressText.text = (progress * 100f).ToString("F2") + "%";
+                }
+
+                //
+                _onLoadingProgress?.Invoke(progress);
+
+                //
+                if (progress >= 1f)
+                {
+                    progress = 1f;
+                    _isLoading = false;
+                }
+            });
+
+            while (_isLoading)
+            {
+                yield return null;
             }
 
             //
-            _onDisableLoading.Invoke();
+            _onLoadingCompleted?.Invoke();
+
+            //
+            HideLoadingScreen();
+        }
+
+        private void ShowLoadingScreen(LoadingScreenData data)
+        {
+            if (data.Type == LoadingType.Fullscreen)
+            {
+                _fullscreenLoading.Text.text = data.Text;
+                _fullscreenLoading.Container.SetActive(true);
+                _fullscreenLoading.Animation.SetActive(data.EnableLoadingAnimation);
+                _currentLoadingType = data.Type;
+            }
+            else
+            {
+                _popupLoading.Text.text = data.Text;
+                _popupLoading.Container.SetActive(true);
+                _popupLoading.Animation.SetActive(data.EnableLoadingAnimation);
+                _currentLoadingType = data.Type;
+            }
+        }
+
+        private void HideLoadingScreen()
+        {
+            if (_currentLoadingType == LoadingType.Fullscreen)
+            {
+                _fullscreenLoading.Container.SetActive(false);
+            }
+            else
+            {
+                _popupLoading.Container.SetActive(false);
+            }
         }
     }
 }
