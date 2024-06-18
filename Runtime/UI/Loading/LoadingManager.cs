@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 using VInspector;
 
 namespace GameUtils
@@ -84,14 +83,16 @@ namespace GameUtils
             {
                 _fullscreenLoading.Text.text = data.Text;
                 _fullscreenLoading.Container.SetActive(true);
-                _fullscreenLoading.Animation.SetActive(data.EnableLoadingAnimation);
+                if (_fullscreenLoading.Animation != null)
+                    _fullscreenLoading.Animation.SetActive(data.EnableLoadingAnimation);
                 _currentLoadingType = data.Type;
             }
             else
             {
                 _popupLoading.Text.text = data.Text;
                 _popupLoading.Container.SetActive(true);
-                _popupLoading.Animation.SetActive(data.EnableLoadingAnimation);
+                if (_popupLoading.Animation != null)
+                    _popupLoading.Animation.SetActive(data.EnableLoadingAnimation);
                 _currentLoadingType = data.Type;
             }
         }
