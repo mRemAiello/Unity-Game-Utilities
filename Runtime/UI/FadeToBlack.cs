@@ -1,5 +1,5 @@
+using DG.Tweening;
 using QFSW.QC;
-using System.Collections;
 using UnityEngine;
 using VInspector;
 
@@ -9,7 +9,17 @@ namespace GameUtils
     {
         [Tab("Settings")]
         [SerializeField] private CanvasGroup _canvasGroup;
+        [Space]
         [SerializeField] private float _duration = 1.0f;
+        [Space]
+        [SerializeField] private bool _useFadeInCurve = false;
+        [SerializeField, Range(0.1f, 100f)] private float _fadeInSpeed = 1.0f;
+        [SerializeField, ShowIf("_useFadeInCurve")] private AnimationCurve _fadeInCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        [Space]
+        [SerializeField] private bool _useFadeOutCurve = false;
+        [SerializeField, Range(0.1f, 100f)] private float _fadeOutSpeed = 1.0f;
+        [SerializeField, ShowIf("_useFadeOutCurve")] private AnimationCurve _fadeOutCurve = AnimationCurve.Linear(0, 1, 1, 0);
+
 
         [Tab("Events")]
         [SerializeField] private VoidGameEventAsset _onPreAnimationEvent;
@@ -19,65 +29,67 @@ namespace GameUtils
         [Tab("Debug")]
         [SerializeField, ReadOnlyField] private bool _isAnimating = false;
 
-        [Command]
+        [Button, Command]
         public void StartFade()
         {
-            // Eseguo solo se non c'è nessuna animazione in corso
+            //
             if (_isAnimating)
             {
                 return;
             }
 
-            // Lock del fade
+            // 
             _isAnimating = true;
 
-            // Evento di avvio animazione
+            // 
             _onPreAnimationEvent.Invoke();
 
-            // Avvio il fade
-            StartCoroutine(StartLoad());
+            //
+            FadeIn();
         }
 
-        private IEnumerator StartLoad()
+        private void FadeIn()
         {
-            // Fade In
-            yield return StartCoroutine(FadeScreen(0, 1, _duration));
-
-            // Invoco il metodo di metà animazione
-            _onMiddleAnimationEvent.Invoke();
-
-            // Fade out
-            yield return StartCoroutine(FadeScreen(1, 0, _duration));
-
-            // Evento di fine animazione
-            _onEndAnimationEvent.Invoke();
-
-            // Lock del fade
-            _isAnimating = false;
-        }
-
-        private IEnumerator FadeScreen(float startValue, float targetValue, float duration)
-        {
-            // Imposto l'opacità iniziale del Canvas
-            _canvasGroup.alpha = startValue;
-
-            float time = 0;
-            while (time < duration)
+            if (_canvasGroup == null)
             {
-                // Funzione di smoothing
-                float t = time / duration;
-                t = MathUtility.SmoothTime(t);
-
-                // Imposto il fade del pannello
-                _canvasGroup.alpha = Mathf.Lerp(startValue, targetValue, t);
-
-                // Aumento il tempo e ritorno
-                time += Time.deltaTime;
-                yield return null;
+                return;
             }
 
-            // Imposto il fade al massimo
-            _canvasGroup.alpha = targetValue;
+            // Start fade in
+            _canvasGroup.alpha = 0;
+            if (_useFadeInCurve)
+            {
+                _canvasGroup.DOFade(1, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => FadeOut());
+            }
+            else
+            {
+                _canvasGroup.DOFade(1, _fadeInSpeed).OnComplete(() => FadeOut());
+            }
+        }
+
+        private void FadeOut()
+        {
+            //
+            _onMiddleAnimationEvent.Invoke();
+
+            // Start fade out
+            if (_useFadeOutCurve)
+            {
+                _canvasGroup.DOFade(1, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation());
+            }
+            else
+            {
+                _canvasGroup.DOFade(1, _fadeOutSpeed).OnComplete(() => EndAnimation());
+            }
+        }
+
+        private void EndAnimation()
+        {
+            //
+            _onEndAnimationEvent.Invoke();
+
+            //
+            _isAnimating = false;
         }
     }
 }

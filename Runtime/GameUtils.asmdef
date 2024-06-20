@@ -5,8 +5,9 @@
         "Unity.ResourceManager",
         "Unity.Addressables",
         "Unity.TextMeshPro",
-        "QFSW.QC",
         "VInspector",
+        "DOTween.Modules",
+        "QFSW.QC",
         "QuickSave"
     ],
     "includePlatforms": [],
