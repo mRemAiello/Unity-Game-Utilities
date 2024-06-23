@@ -24,7 +24,7 @@ namespace GameUtils
 
         void Update()
         {
-            _random = (1 - Random.Range(-_speedRandomness, _speedRandomness));
+            _random = 1 - Random.Range(-_speedRandomness, _speedRandomness);
             _time += Time.deltaTime * _random * Mathf.PI;
             _light.intensity = _startingIntensity + Mathf.Sin(_time * _flickersPerSecond) * _flickerIntensity;
         }

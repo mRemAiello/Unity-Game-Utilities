@@ -2,7 +2,7 @@
 
 ## Requirements
 
-DOTween (http://dotween.demigiant.com/)
+* DOTween (http://dotween.demigiant.com/)
 
 ## Generate a Seed
 

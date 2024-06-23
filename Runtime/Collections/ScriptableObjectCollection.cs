@@ -12,7 +12,6 @@ namespace GameUtils
         [Space]
         [SerializeField, ReadOnlyField] private List<T> _assets;
 
-
         [Button]
         public void LoadAssets()
         {

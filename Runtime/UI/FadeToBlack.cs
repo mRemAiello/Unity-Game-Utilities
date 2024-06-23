@@ -10,8 +10,6 @@ namespace GameUtils
         [Tab("Settings")]
         [SerializeField] private CanvasGroup _canvasGroup;
         [Space]
-        [SerializeField] private float _duration = 1.0f;
-        [Space]
         [SerializeField] private bool _useFadeInCurve = false;
         [SerializeField, Range(0.1f, 100f)] private float _fadeInSpeed = 1.0f;
         [SerializeField, ShowIf("_useFadeInCurve")] private AnimationCurve _fadeInCurve = AnimationCurve.Linear(0, 0, 1, 1);
