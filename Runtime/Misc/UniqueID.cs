@@ -7,7 +7,7 @@ namespace GameUtils
     public abstract class UniqueID : ScriptableObject
     {
         [Tab("Settings")]
-        [SerializeField, ReadOnlyField] private string _id = "";
+        [SerializeField, ReadOnly] private string _id = "";
 
         private void OnValidate()
         {

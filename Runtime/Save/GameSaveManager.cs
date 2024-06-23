@@ -1,4 +1,3 @@
-using System;
 using CI.QuickSave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,7 +11,7 @@ namespace GameUtils
     {
         [SerializeField] private int _currentSaveSlot;
         [Space]
-        [SerializeField, ReadOnlyField] private SerializedDictionary<string, string> _keys;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, string> _keys;
 
         protected override void OnPostAwake()
         {

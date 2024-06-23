@@ -17,8 +17,8 @@ namespace GameUtils
         [SerializeField] private VoidGameEventAsset _onLoadingCompleted;
 
         [Tab("Debug")]
-        [SerializeField, ReadOnlyField] private LoadingType _currentLoadingType = LoadingType.Fullscreen;
-        [SerializeField, ReadOnlyField] private bool _isLoading;
+        [SerializeField, ReadOnly] private LoadingType _currentLoadingType = LoadingType.Fullscreen;
+        [SerializeField, ReadOnly] private bool _isLoading;
 
         public void StartLoading(Action<Action<float>> loadAction, LoadingScreenData data)
         {

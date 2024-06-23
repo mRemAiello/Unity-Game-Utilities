@@ -25,7 +25,7 @@ namespace GameUtils
         [SerializeField] private VoidGameEventAsset _onEndAnimationEvent;
 
         [Tab("Debug")]
-        [SerializeField, ReadOnlyField] private bool _isAnimating = false;
+        [SerializeField, ReadOnly] private bool _isAnimating = false;
 
         [Button, Command]
         public void StartFade()

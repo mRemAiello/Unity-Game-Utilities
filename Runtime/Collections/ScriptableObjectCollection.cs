@@ -10,7 +10,7 @@ namespace GameUtils
         [SerializeField] private List<string> _keys;
         
         [Space]
-        [SerializeField, ReadOnlyField] private List<T> _assets;
+        [SerializeField, ReadOnly] private List<T> _assets;
 
         [Button]
         public void LoadAssets()

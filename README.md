@@ -3,7 +3,7 @@
 ## Requirements
 
 * Quantum Console (https://assetstore.unity.com/packages/tools/utilities/quantum-console-211046)
-* VInspector (https://assetstore.unity.com/packages/tools/utilities/vinspector-245000)
+* VInspector 2 (https://assetstore.unity.com/packages/tools/utilities/vinspector-2-252297)
 * Quick Save (https://www.claytoninds.com/quick-save)
 * DOTween (http://dotween.demigiant.com/)
 
