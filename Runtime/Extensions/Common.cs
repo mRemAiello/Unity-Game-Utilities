@@ -10,12 +10,12 @@ namespace GameUtils
             return value == (int)value;
         }
 
-        public static int GetNumberInAString(this string str)
+        public static int GetNumberInString(this string str)
         {
             try
             {
                 var getNumb = Regex.Match(str, @"\d+").Value;
-                return Int32.Parse(getNumb);
+                return int.Parse(getNumb);
             }
             catch (Exception)
             {
