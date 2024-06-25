@@ -42,13 +42,48 @@ namespace GameUtils
                 (values[k], values[n]) = (values[n], values[k]);
             }
 
-            return MakeDictionary(keys, values);
+            IDictionary<T1, T2> result = new Dictionary<T1, T2>();
+            for (var i = 0; i < keys.Length; i++)
+            {
+                result.Add(keys[i], values[i]);
+            }
+
+            return result;
         }
 
-        public static T Random<T>(this IList<T> list)
+        public static T PickRandom<T>(this T[] collection)
         {
-            Random rng = new();
-            return list[rng.Next(list.Count)];
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            return collection.Length == 0 ? default : collection[UnityEngine.Random.Range(0, collection.Length)];
+        }
+
+        public static T PickRandom<T>(this List<T> collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            return collection.Count == 0 ? default : collection[UnityEngine.Random.Range(0, collection.Count)];
+        }
+
+        public static (T, int) PickRandomAndIndex<T>(this T[] collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            int index = UnityEngine.Random.Range(0, collection.Length);
+            return collection.Length == 0 ? (default, -1) : (collection[index], index);
+        }
+
+        public static (T, int) PickRandomWithIndex<T>(this List<T> collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            var index = UnityEngine.Random.Range(0, collection.Count);
+            return collection.Count == 0 ? (default, -1) : (collection[index], index);
+        }
+
+        public static List<T> GetRandomElements<T>(this List<T> list, int elementsCount)
+        {
+            return list.OrderBy(arg => Guid.NewGuid()).Take(list.Count < elementsCount ? list.Count : elementsCount).ToList();
         }
 
         public static T First<T>(this IList<T> list)
@@ -59,11 +94,6 @@ namespace GameUtils
         public static T Last<T>(this IList<T> list)
         {
             return list[list.Count - 1];
-        }
-
-        public static List<T> GetRandomElements<T>(this List<T> list, int elementsCount)
-        {
-            return list.OrderBy(arg => Guid.NewGuid()).Take(list.Count < elementsCount ? list.Count : elementsCount).ToList();
         }
     }
 }

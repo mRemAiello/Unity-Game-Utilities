@@ -9,7 +9,7 @@ namespace GameUtils
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (values == null) throw new ArgumentNullException(nameof(values));
-            if (keys.Length != values.Length) throw new ArgumentException("Size keys and size values diffirent!");
+            if (keys.Length != values.Length) throw new ArgumentException("Size keys and size values are different!");
 
             IDictionary<TKey, TValue> result = new Dictionary<TKey, TValue>();
             for (var i = 0; i < keys.Length; i++)
@@ -24,7 +24,7 @@ namespace GameUtils
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (values == null) throw new ArgumentNullException(nameof(values));
-            if (keys.Count != values.Count) throw new ArgumentException("Size keys and size values diffirent!");
+            if (keys.Count != values.Count) throw new ArgumentException("Size keys and size values are different!");
 
             IDictionary<TKey, TValue> result = new Dictionary<TKey, TValue>();
             for (var i = 0; i < keys.Count; i++)
