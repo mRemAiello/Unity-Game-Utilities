@@ -20,3 +20,17 @@ FadeToBlack.Instance.StartFade();
 ```
 
 ## Loading Manager
+
+
+## Element Tuple
+
+```cs
+public class TestTuple : ElementTuple<string, string>
+{
+    public TestTuple(string firstData, string secondData) : base(firstData, secondData)
+    {
+    }
+}
+```
+
+## Misc
