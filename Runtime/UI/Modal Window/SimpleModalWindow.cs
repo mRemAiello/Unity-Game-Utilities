@@ -1,8 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using VInspector;
 
-public class SimpleModalWindow : ModalWindow<SimpleModalWindow>
+namespace GameUtils
 {
+    public class SimpleModalWindow : ModalWindow
+    {
+        [Tab("References")]
+        private CanvasFader _canvasFader;
+
+        [Tab("Debug")]
+        [SerializeField, ReadOnly] private bool _visible;
+
+        public override bool Visible 
+        { 
+            get => _visible;
+            set 
+            {
+                _visible = value;
+                _canvasFader.ShowOrHide(value);
+            }
+        }
+    }
 }

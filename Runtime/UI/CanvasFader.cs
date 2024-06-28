@@ -45,8 +45,20 @@ namespace GameUtils
             }
         }
 
+        public void ShowOrHide(bool value)
+        {
+            if (value)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
+        }
+
         [Button, Command]
-        void Show()
+        public void Show()
         {
             //
             if (_isAnimating)
@@ -68,7 +80,7 @@ namespace GameUtils
         }
 
         [Button, Command]
-        void Hide()
+        public void Hide()
         {
             //
             if (_isAnimating)

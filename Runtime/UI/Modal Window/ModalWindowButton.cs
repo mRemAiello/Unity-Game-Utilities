@@ -2,34 +2,30 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ModalWindowButton : MonoBehaviour
+namespace GameUtils
 {
-    [SerializeField] private Text text;
-    [SerializeField] private Button button;
-
-    public delegate void ButtonPressed(ModalWindowButton modalWindowButton);
-    public event ButtonPressed OnButtonPressed;
-    Action action;
-
-    public void Init(ButtonPressed onButtonPressed, string _text, Action _action, ModalButtonType _type)
+    public class ModalWindowButton : MonoBehaviour
     {
-        OnButtonPressed = onButtonPressed;
-        text.text = _text;
-        action = _action;
+        [SerializeField] private Text text;
+        [SerializeField] private Button button;
 
-        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Click));
+        public delegate void ButtonPressed(ModalWindowButton modalWindowButton);
+        public event ButtonPressed OnButtonPressed;
+        Action action;
+
+        public void Init(ButtonPressed onButtonPressed, string _text, Action _action, ModalButtonType _type)
+        {
+            OnButtonPressed = onButtonPressed;
+            text.text = _text;
+            action = _action;
+
+            button.onClick.AddListener(new UnityEngine.Events.UnityAction(Click));
+        }
+
+        public void Click()
+        {
+            action?.Invoke();
+            OnButtonPressed?.Invoke(this);
+        }
     }
-
-    public void Click()
-    {
-        action?.Invoke();
-        OnButtonPressed?.Invoke(this);
-    }
-}
-
-public enum ModalButtonType
-{
-    Normal = 0,
-    Danger = 1,
-    Success = 2
 }

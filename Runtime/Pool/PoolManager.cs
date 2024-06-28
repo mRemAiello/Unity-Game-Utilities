@@ -6,15 +6,15 @@ namespace GameUtils
 {
     public class PoolManager : Singleton<PoolManager>
     {
-        [SerializeField, ReadOnly] private Dictionary<string, Queue<GameObject>> _poolDict;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, Queue<GameObject>> _poolDict;
         [SerializeField] private List<Pool> _pools;
 
         protected override void OnPostAwake()
         {
-            // Inizializzazione del dizionario dei pool
-            _poolDict = new Dictionary<string, Queue<GameObject>>();
+            // 
+            _poolDict = new SerializedDictionary<string, Queue<GameObject>>();
 
-            // Creazione e popolamento dei pool
+            // 
             foreach (Pool pool in _pools)
             {
                 Queue<GameObject> objectPool = new Queue<GameObject>();
@@ -28,6 +28,23 @@ namespace GameUtils
 
                 _poolDict.Add(pool.Tag, objectPool);
             }
+        }
+
+        public bool TryGetObjectFromPool(string tag, out GameObject obj)
+        {
+            obj = null;
+            if (!_poolDict.ContainsKey(tag))
+            {
+                Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+                return false;
+            }
+
+            //
+            obj = _poolDict[tag].Dequeue();
+            obj.SetActive(true);
+
+            //
+            return true;
         }
 
         public GameObject GetObjectFromPool(string tag)
