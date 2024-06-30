@@ -35,7 +35,6 @@ namespace GameUtils
             }
         }
 
-        [Button, Command]
         public void Show(bool showAnimation = true)
         {
             //
@@ -53,7 +52,6 @@ namespace GameUtils
         {
         }
 
-        [Button, Command]
         public void Hide(bool showAnimation = true)
         {
             //
