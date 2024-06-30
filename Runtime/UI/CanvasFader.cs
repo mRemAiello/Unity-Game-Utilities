@@ -45,20 +45,20 @@ namespace GameUtils
             }
         }
 
-        public void ShowOrHide(bool value)
+        public void ShowOrHide(bool value, bool showAnimation = true)
         {
             if (value)
             {
-                Show();
+                Show(showAnimation);
             }
             else
             {
-                Hide();
+                Hide(showAnimation);
             }
         }
 
         [Button, Command]
-        public void Show()
+        public void Show(bool showAnimation = true)
         {
             //
             if (_isAnimating)
@@ -67,20 +67,30 @@ namespace GameUtils
             // 
             _isAnimating = true;
 
-            // Start fade in
+            // 
             _canvasGroup.alpha = 0;
-            if (_useFadeInCurve)
+            if (showAnimation)
             {
-                _canvasGroup.DOFade(1, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation());
+                if (_useFadeInCurve)
+                {
+                    _canvasGroup.DOFade(1, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation());
+                }
+                else
+                {
+                    _canvasGroup.DOFade(1, _fadeInSpeed).OnComplete(() => EndAnimation());
+                }
             }
             else
             {
-                _canvasGroup.DOFade(1, _fadeInSpeed).OnComplete(() => EndAnimation());
+                _canvasGroup.alpha = 1;
+
+                //
+                EndAnimation();
             }
         }
 
         [Button, Command]
-        public void Hide()
+        public void Hide(bool showAnimation = true)
         {
             //
             if (_isAnimating)
@@ -91,13 +101,23 @@ namespace GameUtils
 
             //
             _canvasGroup.alpha = 1;
-            if (_useFadeOutCurve)
+            if (showAnimation)
             {
-                _canvasGroup.DOFade(0, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation());
+                if (_useFadeOutCurve)
+                {
+                    _canvasGroup.DOFade(0, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation());
+                }
+                else
+                {
+                    _canvasGroup.DOFade(0, _fadeOutSpeed).OnComplete(() => EndAnimation());
+                }
             }
             else
             {
-                _canvasGroup.DOFade(0, _fadeOutSpeed).OnComplete(() => EndAnimation());
+                _canvasGroup.alpha = 0;
+
+                //
+                EndAnimation();
             }
         }
 
@@ -106,11 +126,11 @@ namespace GameUtils
             //
             if (_canvasGroup.alpha == 0)
             {
-                _onHideEvent.Invoke();
+                _onHideEvent?.Invoke();
             }         
             else
             {
-                _onShowEvent.Invoke();
+                _onShowEvent?.Invoke();
             }   
 
             //

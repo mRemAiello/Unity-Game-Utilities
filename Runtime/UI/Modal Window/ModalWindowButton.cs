@@ -1,31 +1,38 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using VInspector;
 
 namespace GameUtils
 {
     public class ModalWindowButton : MonoBehaviour
     {
-        [SerializeField] private Text text;
-        [SerializeField] private Button button;
+        [Tab("References")]
+        [SerializeField] private TextMeshProUGUI _text;
+        [SerializeField] private Button _button;
 
-        public delegate void ButtonPressed(ModalWindowButton modalWindowButton);
-        public event ButtonPressed OnButtonPressed;
-        Action action;
+        [Tab("Debug")]
+        [SerializeField, ReadOnly] private ModalButtonType _type;
+        [SerializeField, ReadOnly] private ModalWindowButtonEvent _buttonEvent;
 
-        public void Init(ButtonPressed onButtonPressed, string _text, Action _action, ModalButtonType _type)
+        //
+        public ModalButtonType Type => _type;
+
+        public void Init(string text, ModalWindowButtonEvent buttonEvent, ModalButtonType type = ModalButtonType.Normal)
         {
-            OnButtonPressed = onButtonPressed;
-            text.text = _text;
-            action = _action;
+            _text.text = text;
+            _type = type;
+            _buttonEvent = buttonEvent;
 
-            button.onClick.AddListener(new UnityEngine.Events.UnityAction(Click));
+            //
+            _button.onClick.AddListener(new UnityAction(Click));
         }
 
-        public void Click()
+        private void Click()
         {
-            action?.Invoke();
-            OnButtonPressed?.Invoke(this);
+            _buttonEvent?.Invoke(this);
         }
     }
 }

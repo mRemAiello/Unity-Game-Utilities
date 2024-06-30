@@ -6,7 +6,7 @@ namespace GameUtils
     public class SimpleModalWindow : ModalWindow
     {
         [Tab("References")]
-        private CanvasFader _canvasFader;
+        [SerializeField] private CanvasFader _canvasFader;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private bool _visible;
@@ -19,6 +19,14 @@ namespace GameUtils
                 _visible = value;
                 _canvasFader.ShowOrHide(value);
             }
+        }
+
+        protected override void OnPostAwake()
+        {
+            base.OnPostAwake();
+
+            //
+            _canvasFader.Hide(false);
         }
     }
 }
