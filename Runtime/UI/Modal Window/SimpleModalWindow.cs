@@ -1,14 +1,14 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using VInspector;
 
 namespace GameUtils
 {
     public class SimpleModalWindow : ModalWindow
     {
-        [Tab("References")]
-        [SerializeField] private CanvasFader _canvasFader;
-
         [Tab("Debug")]
+        [SerializeField, ReadOnly] private List<UIAnimation> _uiAnimations;
         [SerializeField, ReadOnly] private bool _visible;
 
         public override bool Visible 
@@ -17,7 +17,12 @@ namespace GameUtils
             set 
             {
                 _visible = value;
-                _canvasFader.ShowOrHide(value);
+
+                //
+                foreach (var animation in _uiAnimations)
+                {
+                    animation.ShowOrHide(value, true);
+                }
             }
         }
 
@@ -26,7 +31,31 @@ namespace GameUtils
             base.OnPostAwake();
 
             //
-            _canvasFader.Hide(false);
+            _uiAnimations = GetComponentsInChildren<UIAnimation>().ToList();
+
+            //
+            foreach (var animation in _uiAnimations)
+            {
+                animation.Hide(false);
+            }
+        }
+
+        protected override void OnBeforeShow()
+        {
+            //
+            foreach (var animation in _uiAnimations)
+            {
+                animation.Show(true);
+            }
+        }
+
+        protected override void OnPostClose()
+        {
+            //
+            foreach (var animation in _uiAnimations)
+            {
+                animation.Hide(true);
+            }
         }
     }
 }

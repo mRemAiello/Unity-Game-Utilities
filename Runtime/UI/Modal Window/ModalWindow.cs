@@ -77,7 +77,11 @@ namespace GameUtils
             Visible = false;
             
             //
-            gameObject.SetActive(false);
+            OnPostClose();
+        }
+
+        protected virtual void OnPostClose()
+        {
         }
     }
 }
