@@ -12,8 +12,7 @@ namespace GameUtils
         [Space]
         [SerializeField, ReadOnly] private List<T> _assets;
 
-        [Button]
-        public void LoadAssets()
+        public virtual void LoadAssets()
         {
             _assets = new List<T>();
 
