@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
 using VInspector;
@@ -11,70 +13,111 @@ namespace UnityEditor.GameUtils
     public class AutoBundles : ScriptableObject
     {
         [SerializeField] private List<AutoBundleData> _bundleDatas;
+        [SerializeField] private bool _showLog = false;
 
         [Button]
         public void MarkAllFilesAsAddressables()
         {
-            // Ottieni il settings object degli Addressables
+            // 
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings == null)
             {
-                Debug.LogError("No Addressables settings found.");
+                if (_showLog)
+                {
+                    Debug.LogError("No Addressables settings found.");
+                }
+                
                 return;
             }
 
             //
             foreach (var bundleData in _bundleDatas)
             {
-                // Creo il gruppo eventualmente
-                var group = settings.FindGroup(bundleData.GroupName);
-                if (group == null)
-                {
-                    group = settings.CreateGroup(bundleData.GroupName, false, false, true, null, 
-                        typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-                }
+                var group = SetupGroup(settings, bundleData);
 
-                // Scansiona tutti i file nella cartella specificata
+                //
                 string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
-                    // Escludi cartelle
+                    //
                     if (AssetDatabase.IsValidFolder(file))
                         continue;
 
-                    // Escludi i file .meta
+                    //
                     if (file.EndsWith(".meta"))
                         continue;
 
                     //
                     string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
 
-                    // Aggiungi l'asset come Addressable
+                    //
                     var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
-                    Debug.Log($"Added {relativePath} as Addressable.");
 
-                    // Determina il tipo di asset e aggiungi la label
+                    // 
                     var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
                     if (assetType != null)
                     {
-                        // Rimuovo tutte le label
-                        entry.labels.Clear();
+                        SetupLabel(assetType, entry, bundleData);
+                        SetupAddress(assetType, entry, bundleData);
 
-                        // Aggiungo
-                        string label = assetType.Name;
-                        if (!entry.labels.Contains(label))
+                        // 
+                        if (_showLog)
                         {
-                            entry.SetLabel(label, true, true);
-                            Debug.Log($"Added label '{label}' to {relativePath}.");
+                            Debug.Log($"Added {relativePath} as Addressable.");
                         }
                     }
                 }
             }
 
-            // Salva le modifiche
+            // 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("All files marked as Addressables.");
+
+            if (_showLog)
+            {
+                Debug.Log("All files marked as Addressables.");
+            }                
+        }
+
+        private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
+        {
+            // 
+            var group = settings.FindGroup(bundleData.GroupName);
+            if (group == null)
+            {
+                var contentGroup = typeof(ContentUpdateGroupSchema);
+                var bundledAssetGroup = typeof(BundledAssetGroupSchema);
+
+                //
+                group = settings.CreateGroup(bundleData.GroupName, false, false, true, null, contentGroup, bundledAssetGroup);
+            }
+
+            return group;
+        }
+
+        private void SetupLabel(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
+        {
+            // 
+            entry.labels.Clear();
+
+            //
+            var labels = bundleData.Labels;
+            labels.Add(assetType.Name);
+
+            // 
+            foreach (var label in labels)
+            {
+                if (!entry.labels.Contains(label))
+                {
+                    entry.SetLabel(label, true, true);
+                }            
+            }
+        }
+
+        private void SetupAddress(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(entry.address).Replace("_", " ");
+            entry.SetAddress(fileName);
         }
     }
 }
