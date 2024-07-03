@@ -12,12 +12,18 @@ namespace GameUtils
         [Tab("Fade In")]
         [SerializeField] private bool _useFadeInCurve = false;
         [SerializeField, Range(0.1f, 100f)] private float _fadeInSpeed = 1.0f;
+        
+        [ShowIf("_useFadeInCurve")]
         [SerializeField] private AnimationCurve _fadeInCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        [EndIf]
         
         [Tab("Fade Out")]
         [SerializeField] private bool _useFadeOutCurve = false;
         [SerializeField, Range(0.1f, 100f)] private float _fadeOutSpeed = 1.0f;
+        
+        [ShowIf("_useFadeOutCurve")]
         [SerializeField] private AnimationCurve _fadeOutCurve = AnimationCurve.Linear(0, 1, 1, 0);
+        [EndIf]
 
         protected override void OnShow(bool showAnimation = true)
         {

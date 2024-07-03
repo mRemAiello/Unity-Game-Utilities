@@ -41,10 +41,18 @@ public class CardDataCollection : ScriptableObjectCollection<CardData>
 
 Then make a new Scriptable Object and click "Load Assets".
 
-## Fade in / out
+## UI Animations
+
+Simply add one (or more) of this script to a GameObject:
+
+* TransformScaler
+* CanvasFader
+
+Then you can show / hide
 
 ```cs
-FadeToBlack.Instance.StartFade();
+component.Show();
+component.Hide();
 ```
 
 ## Loading Manager

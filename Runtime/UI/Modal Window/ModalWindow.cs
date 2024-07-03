@@ -57,10 +57,6 @@ namespace GameUtils
             }
         }
 
-        protected virtual void OnBeforeShow()
-        {
-        }
-
         [Button]
         public virtual void Show()
         {
@@ -80,8 +76,8 @@ namespace GameUtils
             OnPostClose();
         }
 
-        protected virtual void OnPostClose()
-        {
-        }
+        //
+        protected virtual void OnBeforeShow() {}
+        protected virtual void OnPostClose() {}
     }
 }

@@ -58,7 +58,7 @@ namespace UnityEditor.GameUtils
                     if (assetType != null)
                     {
                         SetupLabel(assetType, entry, bundleData);
-                        SetupAddress(assetType, entry, bundleData);
+                        SetupAddress(entry);
 
                         // 
                         if (_showLog)
@@ -114,7 +114,7 @@ namespace UnityEditor.GameUtils
             }
         }
 
-        private void SetupAddress(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
+        private void SetupAddress(AddressableAssetEntry entry)
         {
             string fileName = Path.GetFileNameWithoutExtension(entry.address).Replace("_", " ");
             entry.SetAddress(fileName);
