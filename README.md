@@ -71,4 +71,21 @@ public class TestTuple : ElementTuple<string, string>
 
 ## Layers
 
-## Misc
+```cs
+// GameObject
+gameObject.SetLayerMask(layerMask);
+var layerMask = gameObject.GetLayerMask();
+bool contains = gameObject.ContainsLayerMask(layerMask);
+
+// Layer Mask
+bool contains = layerMask.Contains(gameObject);
+```
+
+
+## Transform
+
+```cs
+transform.SetX(0);
+transform.SetY(0);
+transform.SetZ(0);
+```
