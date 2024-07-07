@@ -5,7 +5,6 @@ namespace GameUtils
     public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         public static T Instance { get; protected set; }
-
         public static bool InstanceExists => Instance != null;
 
         protected void Awake()

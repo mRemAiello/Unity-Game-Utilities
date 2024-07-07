@@ -2,7 +2,7 @@
 {
     public class PersistentSingleton<T> : Singleton<T> where T : Singleton<T>
     {
-        new void Awake()
+        protected new void Awake()
         {
             base.Awake();
 

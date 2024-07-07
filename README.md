@@ -47,6 +47,7 @@ Simply add one (or more) of this script to a GameObject:
 
 * TransformScaler
 * CanvasFader
+* Spinner
 
 Then you can show / hide
 
