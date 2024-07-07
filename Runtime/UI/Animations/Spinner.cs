@@ -7,7 +7,10 @@ namespace GameUtils
     {
         [Tab("Animation")]
         [SerializeField] private bool _rotateLeft = true;
-        [SerializeField] private float _rotationSpeed = 10f;
+        [Space]
+        [SerializeField] private float _rotationSpeedX = 0f;
+        [SerializeField] private float _rotationSpeedY = 10f;
+        [SerializeField] private float _rotationSpeedZ = 0f;
         
         //
         [Tab("Debug")]
@@ -15,17 +18,19 @@ namespace GameUtils
 
         //
         public bool RotateLeft => _rotateLeft;
-        public float RotationSpeed => _rotationSpeed;
+        public float RotationSpeed => _rotationSpeedY;
        
         private void Update()
         {
             if (_spinEnabled)
             {
                 //
-                float rotationAmount = (_rotateLeft ? -1f : 1f) * _rotationSpeed * Time.deltaTime;
+                float rotationAmountX = (_rotateLeft ? -1f : 1f) * _rotationSpeedX * Time.deltaTime;
+                float rotationAmountY = (_rotateLeft ? -1f : 1f) * _rotationSpeedY * Time.deltaTime;
+                float rotationAmountZ = (_rotateLeft ? -1f : 1f) * _rotationSpeedZ * Time.deltaTime;
 
                 //
-                transform.Rotate(0, rotationAmount, 0);
+                transform.Rotate(rotationAmountX, rotationAmountY, rotationAmountZ);
             }
         }
 
@@ -40,7 +45,7 @@ namespace GameUtils
         }
 
         //
-        public void SetRotationSpeed(float newSpeed) => _rotationSpeed = newSpeed;
+        public void SetRotationSpeed(float newSpeed) => _rotationSpeedY = newSpeed;
         public void SetRotationDirection(bool nowLeft) => _rotateLeft = nowLeft;
     }
 }

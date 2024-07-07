@@ -12,10 +12,6 @@ namespace GameUtils
         [Tab("Debug")]
         [SerializeField, ReadOnly] private UIAnimationStatus _animationStatus = UIAnimationStatus.None;
 
-        // 
-        public VoidGameEventAsset OnShowEvent => _onShowEvent;
-        public VoidGameEventAsset OnHideEvent => _onHideEvent;
-
         void Awake()
         {
             _animationStatus = UIAnimationStatus.None;

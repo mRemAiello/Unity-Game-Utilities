@@ -58,6 +58,37 @@ component.Hide();
 
 ## Loading Manager
 
+```cs
+void Start()
+{
+    LoadingScreenData data = new LoadingScreenData
+    {
+        EnableLoadingAnimation = true,
+        Text = "Test Progress",
+        Type = LoadingType.Fullscreen
+    };
+
+    LoadingManager.Instance.StartLoading(CustomLoadAction, data);
+}
+
+private void CustomLoadAction(Action<float> updateProgress)
+{
+    // Custom loading logic goes here
+    StartCoroutine(SimulateLoading(updateProgress));
+}
+
+private IEnumerator SimulateLoading(Action<float> updateProgress)
+{
+    // Simulated loading process
+    float progress = 0f;
+    while (progress < 1f)
+    {
+        progress += Time.deltaTime / 5f; // Simulate a loading operation taking 5 seconds
+        updateProgress(Mathf.Clamp01(progress));
+        yield return null;
+    }
+}
+```
 
 ## Element Tuple
 
