@@ -5,7 +5,7 @@ namespace GameUtils
 {
     public class Spinner : UIAnimation
     {
-        [Tab("Settings")]
+        [Tab("Animation")]
         [SerializeField] private bool _rotateLeft = true;
         [SerializeField] private float _rotationSpeed = 10f;
         
@@ -16,7 +16,7 @@ namespace GameUtils
         //
         public bool RotateLeft => _rotateLeft;
         public float RotationSpeed => _rotationSpeed;
-            
+       
         private void Update()
         {
             if (_spinEnabled)

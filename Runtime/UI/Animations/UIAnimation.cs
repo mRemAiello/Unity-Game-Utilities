@@ -1,5 +1,3 @@
-using Mono.CSharp;
-using QFSW.QC;
 using UnityEngine;
 using VInspector;
 
@@ -48,10 +46,6 @@ namespace GameUtils
             OnShow(showAnimation);
         }
 
-        protected virtual void OnShow(bool showAnimation = true)
-        {
-        }
-
         public void Hide(bool showAnimation = true)
         {
             //
@@ -63,10 +57,6 @@ namespace GameUtils
 
             //
             OnHide(showAnimation);
-        }
-
-        protected virtual void OnHide(bool showAnimation = true)
-        {          
         }
 
         protected void EndAnimation(UIAnimationStatus status)
@@ -84,5 +74,9 @@ namespace GameUtils
             //
             _animationStatus = status;
         }
+
+        //
+        protected virtual void OnShow(bool showAnimation = true) { }
+        protected virtual void OnHide(bool showAnimation = true) { }
     }
 }

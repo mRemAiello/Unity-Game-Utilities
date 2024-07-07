@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -43,7 +41,7 @@ namespace GameUtils
             _onInvoked.RemoveListener(call);
         }
 
-        public void RemoveAllLister()
+        public void RemoveAllListeners()
         {
             Listeners.Clear();
             _onInvoked.RemoveAllListeners();

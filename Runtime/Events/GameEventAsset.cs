@@ -44,7 +44,7 @@ namespace GameUtils
             _onInvoked.RemoveListener(call);
         }
 
-        public void RemoveAllLister()
+        public void RemoveAllListeners()
         {
             Listeners.Clear();
             _onInvoked.RemoveAllListeners();
