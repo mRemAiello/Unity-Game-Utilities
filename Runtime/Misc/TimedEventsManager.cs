@@ -8,7 +8,6 @@ namespace GameUtils
         [SerializeField] private float _intervalInSeconds = 5f;
         [SerializeField] private VoidGameEventAsset _onPeriodicTask;
 
-        //
         [Tab("Debug")]
         [SerializeField, ReadOnly] private float _timeElapsed;
 
