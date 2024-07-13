@@ -5,16 +5,16 @@ namespace GameUtils
 {
     public class LightFlicker : MonoBehaviour
     {
-        [Tab("Settings")]
+        [Tab("Variables")]
         [SerializeField] private float _flickerIntensity = 0.2f;
         [SerializeField] private float _flickersPerSecond = 3.0f;
         [SerializeField] private float _speedRandomness = 1.0f;
 
-        // private fields
-        private float _time;
-        private float _random;
-        private float _startingIntensity;
-        private Light _light;
+        [Tab("Debug")]
+        [SerializeField, ReadOnly] private float _time;
+        [SerializeField, ReadOnly] private float _random;
+        [SerializeField, ReadOnly] private float _startingIntensity;
+        [SerializeField, ReadOnly] private Light _light;
 
         void Start()
         {
