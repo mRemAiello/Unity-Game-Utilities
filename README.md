@@ -19,6 +19,15 @@
 int seed = SeedGenerator.GenerateSeed();
 ```
 
+## Improved Debug
+
+```cs
+var gameplayLogger = DebugManager.GetCategory("Gameplay");
+gameplayLogger.Log("Gameplay log.");
+gameplayLogger.LogWarning("Gameplay warning log.");
+gameplayLogger.LogError("Gameplay error log.");
+```
+
 ## Auto Bundles
 
 
