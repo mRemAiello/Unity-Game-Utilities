@@ -13,7 +13,7 @@ namespace GameUtils
 
         [Tab("Events")]
         [SerializeField] private VoidGameEventAsset _onLoadingStarted;
-        [SerializeField] private FloatGameEvent _onLoadingProgress;
+        [SerializeField] private FloatGameEventAsset _onLoadingProgress;
         [SerializeField] private VoidGameEventAsset _onLoadingCompleted;
 
         [Tab("Debug")]

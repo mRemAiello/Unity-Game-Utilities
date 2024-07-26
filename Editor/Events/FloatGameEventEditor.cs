@@ -2,8 +2,8 @@ using GameUtils;
 
 namespace UnityEditor.GameUtils
 {
-    [CustomEditor(typeof(FloatGameEvent))]
-    public class FloatGameEventEditor : GameEventBaseAssetEditor
+    [CustomEditor(typeof(FloatGameEventAsset))]
+    public class FloatGameEventAssetEditor : GameEventBaseAssetEditor
     {
     }
 }

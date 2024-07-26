@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,12 +14,12 @@ namespace GameUtils
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private ModalButtonType _type;
-        [SerializeField, ReadOnly] private ModalWindowButtonEvent _buttonEvent;
+        [SerializeField, ReadOnly] private ModalWindowButtonEventAsset _buttonEvent;
 
         //
         public ModalButtonType Type => _type;
 
-        public void Init(string text, ModalWindowButtonEvent buttonEvent, ModalButtonType type = ModalButtonType.Normal)
+        public void Init(string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type = ModalButtonType.Normal)
         {
             _text.text = text;
             _type = type;

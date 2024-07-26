@@ -41,7 +41,7 @@ namespace GameUtils
         }
 
         [Button]
-        public virtual void AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEvent buttonEvent, ModalButtonType type)
+        public virtual void AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type)
         {
             if (!_buttonsRoot)
             {
