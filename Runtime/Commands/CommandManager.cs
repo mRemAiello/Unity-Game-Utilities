@@ -4,16 +4,16 @@ using VInspector;
 
 namespace GameUtils
 {
-    public class CommandManager : MonoBehaviour
+    public class CommandManager : Singleton<CommandManager>
     {
         [Tab("Debug")]
-        [SerializeField, ReadOnly] private List<Command> _commandQueue = new();
+        [SerializeField, ReadOnly] private List<CommandTuple> _commandQueue = new();
         [SerializeField, ReadOnly] private bool _playingQueue = false;
 
         //
         public bool IsCommandPlaying => _playingQueue;
 
-        public void AddToQueue(Command command)
+        public void AddToQueue(CommandTuple command)
         {
             _commandQueue.Add(command);
             if (!_playingQueue)
@@ -37,7 +37,10 @@ namespace GameUtils
         private void PlayFirstCommandFromQueue()
         {
             _playingQueue = true;
-            _commandQueue.Pop(0).Execute();
+
+            //
+            var command = _commandQueue.Pop(0);
+            command.Item1.Execute(command.Item2);
         }
     }
 }
