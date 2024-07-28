@@ -4,7 +4,7 @@ namespace GameUtils
 {
     public class ApplicationQuitManager : Singleton<ApplicationQuitManager>
     {
-        [SerializeField] private VoidGameEventAsset _onApplicationQuit;
+        [SerializeField] private VoidEventAsset _onApplicationQuit;
 
         void OnApplicationQuit()
         {

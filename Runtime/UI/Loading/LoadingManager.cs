@@ -12,9 +12,9 @@ namespace GameUtils
         [SerializeField] private LoadingData _popupLoading;
 
         [Tab("Events")]
-        [SerializeField] private VoidGameEventAsset _onLoadingStarted;
-        [SerializeField] private FloatGameEventAsset _onLoadingProgress;
-        [SerializeField] private VoidGameEventAsset _onLoadingCompleted;
+        [SerializeField] private VoidEventAsset _onLoadingStarted;
+        [SerializeField] private FloatEventAsset _onLoadingProgress;
+        [SerializeField] private VoidEventAsset _onLoadingCompleted;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private LoadingType _currentLoadingType = LoadingType.Fullscreen;

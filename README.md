@@ -1,5 +1,7 @@
 # Game Utils
 
+A curated list of scripts for Unity.  
+
 ## Requirements
 
 ### Unity Packages:
@@ -31,13 +33,25 @@ gameplayLogger.LogError("Gameplay error log.");
 ## Auto Bundles
 
 
+## Commands
+
+Create a subclass of Command, then implements Execute method.
+
+```cs
+public class DrawCardAction : Command
+{
+    public override void Execute(CommandInput input)
+    {
+        // Add codes here
+    }
+}
+```
 
 ## Scriptable Object Collections
 
-Simply create a subclass:
+Create a subclass of ScriptableObjectCollection:
 
 ```cs
-[CreateAssetMenu(menuName = "Assets/Card Collection")]
 public class CardDataCollection : ScriptableObjectCollection<CardData>
 {
     [Button]

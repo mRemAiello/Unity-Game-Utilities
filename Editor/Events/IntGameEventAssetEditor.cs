@@ -2,7 +2,7 @@ using GameUtils;
 
 namespace UnityEditor.GameUtils
 {
-    [CustomEditor(typeof(IntGameEventAsset))]
+    [CustomEditor(typeof(IntEventAsset))]
     public class IntGameEventAssetEditor : GameEventBaseAssetEditor
     {
     }

@@ -6,8 +6,8 @@ namespace GameUtils
     public abstract class UIAnimation : MonoBehaviour
     {
         [Tab("Events")]
-        [SerializeField] private VoidGameEventAsset _onShowEvent;
-        [SerializeField] private VoidGameEventAsset _onHideEvent;
+        [SerializeField] private VoidEventAsset _onShowEvent;
+        [SerializeField] private VoidEventAsset _onHideEvent;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private UIAnimationStatus _animationStatus = UIAnimationStatus.None;

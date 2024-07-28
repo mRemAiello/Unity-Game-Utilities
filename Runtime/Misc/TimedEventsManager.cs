@@ -6,7 +6,7 @@ namespace GameUtils
     public class TimedEventsManager : Singleton<TimedEventsManager>
     {
         [SerializeField] private float _intervalInSeconds = 5f;
-        [SerializeField] private VoidGameEventAsset _onPeriodicTask;
+        [SerializeField] private VoidEventAsset _onPeriodicTask;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private float _timeElapsed;
