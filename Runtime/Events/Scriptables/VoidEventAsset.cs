@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Events/Void")]
+    [CreateAssetMenu(menuName = "Events/Void")]
     public class VoidEventAsset : GameEventBaseAsset
     {
         [SerializeField] private bool _log = false;

@@ -1,5 +1,4 @@
 using GameUtils;
-using UnityEditor;
 
 namespace UnityEditor.GameUtils
 {
@@ -8,27 +7,35 @@ namespace UnityEditor.GameUtils
     {
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
-            // 
             base.OnInspectorGUI();
+            
+            //
+            serializedObject.Update();
+            ShowListeners();
+            serializedObject.ApplyModifiedProperties();            
+        }
 
+        private void ShowListeners()
+        {
+            // 
+            var gameEventTarget = target as GameEventBaseAsset;
+            
+            //
+            if (gameEventTarget == null)
+                return;
+            
+            //
+            if (gameEventTarget.Listeners == null)
+                return;
+            
             // 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("--- Listeners ---");
-
-            // 
-            var listeners = (target as GameEventBaseAsset);
-            if (listeners != null)
+            foreach (var listener in gameEventTarget.Listeners)
             {
-                foreach (var listener in listeners.Listeners)
-                {
-                    string str = string.Format("{0}: {1}", listener.Item1, listener.Item2);
-                    EditorGUILayout.LabelField(str);
-                }
+                string str = string.Format("{0}: {1}", listener.Item1, listener.Item2);
+                EditorGUILayout.LabelField(str);
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

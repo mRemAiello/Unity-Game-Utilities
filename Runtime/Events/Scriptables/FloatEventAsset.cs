@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Events/Float")]
+    [CreateAssetMenu(menuName = "Events/Float")]
     public class FloatEventAsset : GameEventAsset<float>
     {
     }

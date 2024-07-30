@@ -11,8 +11,14 @@ namespace GameUtils
 
         private void OnValidate()
         {
+            RegenerateID();
+        }
+
+        [Button]
+        private void RegenerateID()
+        {
 #if UNITY_EDITOR
-            // Imposto l'ID
+            // 
             if (string.IsNullOrEmpty(_id))
             {
                 _id = GUID.Generate().ToString();
@@ -23,7 +29,7 @@ namespace GameUtils
 
         public override bool Equals(object other)
         {
-            // Se e' null o di tipo diverso, false
+            // 
             if ((other == null) || !GetType().Equals(other.GetType()))
             {
                 return false;
