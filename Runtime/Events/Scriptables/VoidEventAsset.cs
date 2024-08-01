@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using VInspector;
 
 namespace GameUtils
 {
@@ -9,7 +10,7 @@ namespace GameUtils
         [SerializeField] private bool _log = false;
 
         // private readonly
-        private UnityEvent _onInvoked;
+        private readonly UnityEvent _onInvoked;
 
         public void AddListener(UnityAction call)
         {
@@ -47,6 +48,7 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
+        [Button]
         public void Invoke()
         {
             if (_log)

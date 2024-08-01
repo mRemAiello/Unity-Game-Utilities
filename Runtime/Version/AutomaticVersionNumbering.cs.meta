@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39213e8a4dcadbf42819b7b70c93d900
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 283775
+  packageName: Automatic Version Numbering
+  packageVersion: 1.0.0
+  assetPath: Assets/LombaxGuy/AutomaticVersionNumbering/Editor/AutomaticVersionNumbering.cs
+  uploadId: 660770

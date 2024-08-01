@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Events/Modal Button Type")]
+    [CreateAssetMenu(menuName = "Events/UI/Modal Button Type")]
     public class ModalWindowButtonEventAsset : GameEventAsset<ModalWindowButton>
     {
     }
