@@ -9,8 +9,8 @@ namespace GameUtils
     {
         [SerializeField] private bool _log = false;
 
-        // private readonly
-        private readonly UnityEvent _onInvoked;
+        // private
+        private UnityEvent _onInvoked;
 
         public void AddListener(UnityAction call)
         {
