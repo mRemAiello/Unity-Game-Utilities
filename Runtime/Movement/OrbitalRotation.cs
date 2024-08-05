@@ -7,7 +7,7 @@ namespace GameUtils
     {
         [Tab("References")]
         [SerializeField] private Transform _centerPoint;
-        [SerializeField] private  GameObject[] _spheres;
+        [SerializeField] private GameObject[] _spheres;
         
         [Tab("Animation")]
         [SerializeField] private float _rotationSpeed = 50f;
