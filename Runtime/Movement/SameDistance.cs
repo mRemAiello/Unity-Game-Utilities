@@ -11,6 +11,7 @@ namespace GameUtils
         [SerializeField] private float _yDistance = 0;
         [SerializeField] private float _zDistance = 0;
         [Space]
+        [SerializeField] private bool _useLocalPosition = true;
         [SerializeField] private bool _updateEveryFrame = false;
 
         [Tab("Debug")]
@@ -49,11 +50,23 @@ namespace GameUtils
                     y = _yDistance * i,
                     z = _zDistance * i
                 };
-                obj.transform.position = pos;
+                UpdatePosition(obj, pos);
 
                 //
                 i++;
             }
+        }
+
+        private void UpdatePosition(GameObject obj, Vector3 pos)
+        {
+            if (_useLocalPosition)
+            {
+                obj.transform.localPosition = pos;
+            }
+            else
+            {
+                obj.transform.position = pos;
+            }     
         }
     }
 }
