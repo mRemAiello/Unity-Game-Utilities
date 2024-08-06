@@ -36,11 +36,23 @@ namespace GameUtils
         [Button]
         public void UpdateObjectPositions()
         {
-            for (int i = 0; i < _gameObjects.Count; i++)
+            int i = 0;
+            foreach (var obj in _gameObjects)
             {
-                _gameObjects[i].transform.SetX(_xDistance * i);
-                _gameObjects[i].transform.SetY(_yDistance * i);
-                _gameObjects[i].transform.SetZ(_zDistance * i);
+                if (!obj.activeInHierarchy)
+                    continue;
+
+                //
+                Vector3 pos = new()
+                {
+                    x = _xDistance * i,
+                    y = _yDistance * i,
+                    z = _zDistance * i
+                };
+                obj.transform.position = pos;
+
+                //
+                i++;
             }
         }
     }
