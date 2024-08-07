@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 
-namespace GameUtils
+namespace UnityEditor.GameUtils
 {
     [InitializeOnLoad]
     public static class AutomaticVersionNumbering
