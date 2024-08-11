@@ -117,6 +117,25 @@ private IEnumerator SimulateLoading(Action<float> updateProgress)
 }
 ```
 
+## Asset Loader
+
+```cs
+public class AddressableTest : MonoBehaviour
+{
+    public AssetReferenceT<Sprite> assetReference;
+
+    void Start()
+    {
+        AssetLoader.LoadAssetAsync<Sprite>(assetReference, OnLoadComplete);
+    }
+
+    private void OnLoadComplete(AsyncOperationHandle<Sprite> handle)
+    {
+        Debug.Log(handle.Result);
+    }
+}
+```
+
 ## Element Tuple
 
 ```cs
