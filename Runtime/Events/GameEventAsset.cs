@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEngine.Events;
+using VInspector;
+using ReadOnlyAttribute = VInspector.ReadOnlyAttribute;
 
 namespace GameUtils
 {
     public abstract class GameEventAsset<T> : GameEventBaseAsset
     {
-        [SerializeField] private T _currentValue;
+        [Tab("Settings")]
         [SerializeField] private bool _log = false;
+
+        [Tab("Debug")]
+        [SerializeField, ReadOnly] private T _currentValue;
 
         // private readonly
         private UnityEvent<T> _onInvoked;
