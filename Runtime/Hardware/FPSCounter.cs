@@ -9,6 +9,9 @@ namespace GameUtils
         [SerializeField] private float _resetTime;
 
         [Tab("Debug")]
+        [SerializeField, ReadOnly] private bool _trackFPS = false;
+
+        [Space]
         [SerializeField, ReadOnly] private int _frameCount = 0;
         [SerializeField, ReadOnly] private float _totalDeltaTime = 0.0f;
 
@@ -24,11 +27,13 @@ namespace GameUtils
 
         void Update()
         {
+            //
+            if (!_trackFPS)
+                return;
+
             // 
             _totalDeltaTime += Time.deltaTime;
             _frameCount++;
-
-            // 
             float currentFPS = 1.0f / Time.deltaTime;
 
             // 
@@ -48,5 +53,8 @@ namespace GameUtils
                 _frameCount = 0;
             }
         }
+
+        public void EnableTracking() => _trackFPS = true;
+        public void DisableTracking() => _trackFPS = false;
     }
 }
