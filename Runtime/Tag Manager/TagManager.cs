@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using VInspector;
+using ReadOnlyAttribute = VInspector.ReadOnlyAttribute;
 
 namespace GameUtils
 {
+    [Serializable]
     public class TagManager
     {
-        private readonly Dictionary<string, int> _values;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, int> _values;
 
         public TagManager()
         {
-            _values = new Dictionary<string, int>();
+            _values = new SerializedDictionary<string, int>();
         }
 
         public void SetTagValue(GameTag tag, bool value)
