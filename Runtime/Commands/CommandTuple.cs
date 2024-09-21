@@ -3,9 +3,9 @@ using System;
 namespace GameUtils
 {
     [Serializable]
-    public class CommandTuple : ElementTuple<Command, CommandInput>
+    public class CommandTuple : ElementTuple<Command, ICommandInput>
     {
-        public CommandTuple(Command firstData, CommandInput secondData) : base(firstData, secondData)
+        public CommandTuple(Command firstData, ICommandInput secondData) : base(firstData, secondData)
         {
         }
     }
