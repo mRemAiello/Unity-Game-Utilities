@@ -6,16 +6,37 @@ namespace GameUtils
 {
     public class CommandManager : Singleton<CommandManager>
     {
+        [Tab("Variables")]
+        [SerializeField] private bool _enableLog = false;
+
         [Tab("Debug")]
         [SerializeField, ReadOnly] private List<CommandTuple> _commandQueue = new();
+        [SerializeField, ReadOnly] private List<string> _commandList = new();
         [SerializeField, ReadOnly] private bool _playingQueue = false;
+
+        //
+        DebugCategory _commandLogger;
 
         //
         public bool IsCommandPlaying => _playingQueue;
 
+        protected override void OnPostAwake()
+        {
+            _commandLogger = DebugManager.Instance.GetCategory("Command");
+        }
+
         public void AddToQueue(CommandTuple command)
         {
+            //
             _commandQueue.Add(command);
+            
+            //
+            if (_enableLog)
+            {
+                _commandLogger.Log("Command " + command.Item1.name +  " added to Queue");
+            }
+
+            //
             if (!_playingQueue)
             {
                 PlayFirstCommandFromQueue();
@@ -40,6 +61,15 @@ namespace GameUtils
 
             //
             var command = _commandQueue.Pop(0);
+
+            //
+            if (_enableLog)
+            {
+                _commandLogger.Log("Executing Command " + command.Item1.name);
+            }
+
+            //
+            _commandList.Add(command.Item1.name);
             command.Item1.Execute(command.Item2);
         }
     }
