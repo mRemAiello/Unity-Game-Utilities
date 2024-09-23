@@ -10,12 +10,13 @@ namespace GameUtils
         [SerializeField] private bool _enableLog = false;
 
         [Tab("Debug")]
+        [SerializeField, ReadOnly] private Command _currentCommand;
         [SerializeField, ReadOnly] private List<CommandTuple> _commandQueue = new();
         [SerializeField, ReadOnly] private List<string> _commandList = new();
         [SerializeField, ReadOnly] private bool _playingQueue = false;
 
         //
-        DebugCategory _commandLogger;
+        private DebugCategory _commandLogger;
 
         //
         public bool IsCommandPlaying => _playingQueue;
@@ -52,6 +53,7 @@ namespace GameUtils
             else
             {
                 _playingQueue = false;
+                _currentCommand = null;
             }
         }
 
@@ -61,6 +63,7 @@ namespace GameUtils
 
             //
             var command = _commandQueue.Pop(0);
+            _currentCommand = command.Item1;
 
             //
             if (_enableLog)
