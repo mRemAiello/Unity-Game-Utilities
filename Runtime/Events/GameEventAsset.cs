@@ -7,10 +7,7 @@ namespace GameUtils
 {
     public abstract class GameEventAsset<T> : GameEventBaseAsset
     {
-        [Tab("Settings")]
         [SerializeField] private bool _log = false;
-
-        [Tab("Debug")]
         [SerializeField, ReadOnly] private T _currentValue;
 
         // private readonly
@@ -27,8 +24,7 @@ namespace GameUtils
             }
 
             // 
-            var tuple = new EventTuple(call.Target.ToString(), call.Method.Name);
-            Listeners.Add(tuple);
+            Listeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
 
             //
             _onInvoked.AddListener(call);
@@ -55,6 +51,7 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
+        [Button]
         public void Invoke(T param)
         {
             if (_log)

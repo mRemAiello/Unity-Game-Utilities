@@ -8,6 +8,7 @@ namespace GameUtils
     {
         [Tab("Variables")]
         [SerializeField] private bool _enableLog = false;
+        [SerializeField] private int _maxCommandsInLogList = 20;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly] private Command _currentCommand;
@@ -73,6 +74,12 @@ namespace GameUtils
 
             //
             _commandList.Add(command.Item1.name);
+            if (_commandList.Count > _maxCommandsInLogList)
+            {
+                _commandList.RemoveAt(0);
+            }
+
+            //
             command.Item1.Execute(command.Item2);
         }
     }

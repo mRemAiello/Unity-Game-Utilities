@@ -20,8 +20,7 @@ namespace GameUtils
             }
 
             // 
-            var tuple = new EventTuple(call.Target.ToString(), call.Method.Name);
-            Listeners.Add(tuple);
+            Listeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
 
             //
             _onInvoked.AddListener(call);
