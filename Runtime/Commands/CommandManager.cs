@@ -17,15 +17,7 @@ namespace GameUtils
         [SerializeField, ReadOnly] private bool _playingQueue = false;
 
         //
-        private DebugCategory _commandLogger;
-
-        //
         public bool IsCommandPlaying => _playingQueue;
-
-        protected override void OnPostAwake()
-        {
-            _commandLogger = DebugManager.Instance.GetCategory("Command");
-        }
 
         public void AddToQueue(CommandTuple command)
         {
@@ -35,7 +27,8 @@ namespace GameUtils
             //
             if (_enableLog)
             {
-                _commandLogger.Log("Command " + command.Item1.name +  " added to Queue");
+                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.Command);
+                debugger.Log("Command " + command.Item1.name +  " added to Queue");
             }
 
             //
@@ -69,7 +62,8 @@ namespace GameUtils
             //
             if (_enableLog)
             {
-                _commandLogger.Log("Executing Command " + command.Item1.name);
+                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.Command);
+                debugger.Log("Executing Command " + command.Item1.name);
             }
 
             //
