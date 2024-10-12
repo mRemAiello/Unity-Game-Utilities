@@ -46,6 +46,26 @@ namespace GameUtils
             return false;
         }
 
+        public void AddRange(List<T> items)
+        {
+            foreach (T item in items)
+            {
+                if (item != null)
+                {
+                    _list.Add(item);
+                }
+            }
+        }
+
+        public List<T> ToList()
+        {
+            List<T> list = new();
+            _list.ForEach(item => list.Add(item));
+            
+            //
+            return list;
+        }
+
         public override string ToString()
         {
             string str = "List Name: " + _listName + "\n";
@@ -58,7 +78,8 @@ namespace GameUtils
 
         //
         public int Count => _list.Count;
-        public void Append(T item) => _list.Add(item);
+        public void Add(T item) => _list.Add(item);
+        public void AddRange(BetterList<T> list) => AddRange(list.ToList());
         public void Clear() => _list.Clear();
     }
 }
