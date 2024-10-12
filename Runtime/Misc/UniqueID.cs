@@ -6,7 +6,7 @@ namespace GameUtils
 {
     public abstract class UniqueID : ScriptableObject
     {
-        [Tab("Settings")]
+        [Tab("Internal")]
         [SerializeField, ReadOnly] private string _id = "";
 
         private void OnValidate()
@@ -18,7 +18,6 @@ namespace GameUtils
         private void RegenerateID()
         {
 #if UNITY_EDITOR
-            // 
             if (string.IsNullOrEmpty(_id))
             {
                 _id = GUID.Generate().ToString();
@@ -54,10 +53,6 @@ namespace GameUtils
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public void Load()
-        {
         }
 
         // Getters

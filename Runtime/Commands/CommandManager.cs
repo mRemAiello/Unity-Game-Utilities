@@ -19,16 +19,22 @@ namespace GameUtils
         //
         public bool IsCommandPlaying => _playingQueue;
 
-        public void AddToQueue(CommandTuple command)
+        public void AddToQueue(GameObject igniter, Command command, params object[] additionalSettings)
         {
-            //
-            _commandQueue.Add(command);
+            // Tuple
+            CommandInput commandInput = new()
+            {
+                Igniter = igniter,
+                AdditionalSettings = additionalSettings
+            };
+            CommandTuple commandTuple = new(command, commandInput);
+            _commandQueue.Add(commandTuple);
             
             //
             if (_enableLog)
             {
-                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.Command);
-                debugger.Log("Command " + command.Item1.name +  " added to Queue");
+                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.CommandLog);
+                debugger.Log("Command " + commandTuple.Item1.name +  " added to Queue");
             }
 
             //
@@ -62,7 +68,7 @@ namespace GameUtils
             //
             if (_enableLog)
             {
-                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.Command);
+                var debugger = DebugManager.Instance.GetCategory(GameUtilsConstant.CommandLog);
                 debugger.Log("Executing Command " + command.Item1.name);
             }
 

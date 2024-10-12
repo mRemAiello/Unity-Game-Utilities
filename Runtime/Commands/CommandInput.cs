@@ -1,6 +1,10 @@
+using UnityEngine;
+
 namespace GameUtils
 {
-    public class CommandInput
+    public struct CommandInput
     {
+        public GameObject Igniter;
+        public object[] AdditionalSettings;
     }
 }
