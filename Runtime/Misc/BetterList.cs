@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Mono.CSharp;
 
 namespace GameUtils
 {
@@ -19,6 +18,20 @@ namespace GameUtils
         {
             _listName = name;
             _list = list;
+        }
+
+        public bool TryGet(int index, out T item)
+        {
+            //
+            if (_list.Count > 0 && index >= 0 && index < _list.Count)
+            {
+                item = _list[index];
+                return true;
+            }
+
+            //
+            item = default;
+            return false;
         }
 
         public void InsertAt(T item, int index)
@@ -44,25 +57,32 @@ namespace GameUtils
             }
         }
 
-        public bool TryGet(int index, out T item)
+        public void RemoveAt(int index)
         {
-            //
             if (_list.Count > 0 && index >= 0 && index < _list.Count)
             {
-                item = _list[index];
-                return true;
+                _list.RemoveAt(index);
+            }
+        }
+
+        public int IndexOf(T itemToFind)
+        {
+            for (int i = 0; i < _list.Count; i++)
+            {
+                if (_list[i].Equals(itemToFind))
+                {
+                    return i;
+                }
             }
 
-            //
-            item = default;
-            return false;
+            return -1;
         }
 
         public List<T> ToList()
         {
             List<T> list = new();
             _list.ForEach(item => list.Add(item));
-            
+
             //
             return list;
         }
@@ -70,7 +90,7 @@ namespace GameUtils
         public override string ToString()
         {
             string str = "List Name: " + _listName + "\n";
-            for(int i = 0; i < _list.Count; i++)
+            for (int i = 0; i < _list.Count; i++)
             {
                 str += i + ": " + _list[i].ToString() + "\n";
             }
