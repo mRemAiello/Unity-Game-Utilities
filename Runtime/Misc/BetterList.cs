@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mono.CSharp;
 
 namespace GameUtils
 {
@@ -32,20 +33,6 @@ namespace GameUtils
             _list.Insert(index, item);
         }
 
-        public bool TryGetFirstOrDefault(out T item)
-        {
-            //
-            if (_list.Count > 0)
-            {
-                item = _list[0];
-                return true;
-            }
-
-            //
-            item = default;
-            return false;
-        }
-
         public void AddRange(List<T> items)
         {
             foreach (T item in items)
@@ -55,6 +42,20 @@ namespace GameUtils
                     _list.Add(item);
                 }
             }
+        }
+
+        public bool TryGet(int index, out T item)
+        {
+            //
+            if (_list.Count > 0 && index >= 0 && index < _list.Count)
+            {
+                item = _list[index];
+                return true;
+            }
+
+            //
+            item = default;
+            return false;
         }
 
         public List<T> ToList()
@@ -78,8 +79,10 @@ namespace GameUtils
 
         //
         public int Count => _list.Count;
+        public bool TryGetFirstOrDefault(out T item) => TryGet(0, out item);
         public void Add(T item) => _list.Add(item);
         public void AddRange(BetterList<T> list) => AddRange(list.ToList());
+        public void Shuffle() => _list.Shuffle();
         public void Clear() => _list.Clear();
     }
 }
