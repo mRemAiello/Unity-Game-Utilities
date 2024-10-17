@@ -8,6 +8,8 @@ A curated list of scripts for Unity.
 
 * Addressables (https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
 
+* New Input System ()
+
 ### Third parts:
 
 * Quantum Console (https://assetstore.unity.com/packages/tools/utilities/quantum-console-211046)
