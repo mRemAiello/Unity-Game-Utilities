@@ -22,6 +22,7 @@ namespace GameUtils
         [SerializeField, ReadOnly] private Vector2 _currentPosition;
 
         //
+        private ISelectable _previousSelectable = null;
         private ISelectable _currentSelectable = null;
 
         //
@@ -30,6 +31,11 @@ namespace GameUtils
 
         protected override void OnPostAwake()
         {
+            //
+            _previousSelectable = null;
+            _currentSelectable = null;
+
+            //
             _pointAction.action.performed += OnCursorChangePosition;
             _clickAction.action.performed += OnClick;
         }
@@ -37,41 +43,39 @@ namespace GameUtils
         private void OnCursorChangePosition(CallbackContext context)
         {
             _currentPosition = context.ReadValue<Vector2>();
-            var mousePosition = new Vector3(_currentPosition.x, _currentPosition.y, Camera.main.nearClipPlane);
-
+            
             //
             var raycastHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(_currentPosition));
 
             //
-            if (_currentSelectable != null)
-            {
-                _currentSelectable.Deselect();
-                _currentSelectable = null;
-            }
-
-            _currentSelectable = null;
+            ISelectable newSelectable = null;
             float closestDistance = Mathf.Infinity;
             foreach (RaycastHit hit in raycastHits)
             {
                 if (!hit.transform.gameObject.TryGetComponent<ISelectable>(out var selectable))
                     continue;
 
-                //
-                Vector3 objPosition = hit.transform.position;
+                Vector3 itemPosition = hit.transform.position;
+                var mousePosition = new Vector3(_currentPosition.x, _currentPosition.y, Camera.main.nearClipPlane);
                 Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                float distance = Vector3.Distance(worldMousePosition, objPosition);
+                float distance = Vector3.Distance(worldMousePosition, itemPosition);
 
                 //
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    _currentSelectable = selectable;
+                    newSelectable = selectable;
                 }
             }
 
-            //
-            _currentSelectable?.Select();
-            _onItemSelected?.Invoke(_currentSelectable);
+            // 
+            if (_currentSelectable != newSelectable)
+            {
+                _currentSelectable?.Deselect();
+                _currentSelectable = newSelectable;
+                _currentSelectable?.Select();
+                _onItemSelected?.Invoke(_currentSelectable);
+            }
         }
 
         private void OnClick(CallbackContext context)
