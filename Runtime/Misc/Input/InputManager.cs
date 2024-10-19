@@ -13,6 +13,7 @@ namespace GameUtils
 
         [Tab("Events")]
         [SerializeField] private SelectableEventAsset _onItemSelected;
+        [SerializeField] private SelectableEventAsset _onItemDeselected;
 
         [Space]
         [SerializeField] private VoidEventAsset _onMouseUp;
@@ -22,7 +23,6 @@ namespace GameUtils
         [SerializeField, ReadOnly] private Vector2 _currentPosition;
 
         //
-        private ISelectable _previousSelectable = null;
         private ISelectable _currentSelectable = null;
 
         //
@@ -31,10 +31,6 @@ namespace GameUtils
 
         protected override void OnPostAwake()
         {
-            //
-            _previousSelectable = null;
-            _currentSelectable = null;
-
             //
             _pointAction.action.performed += OnCursorChangePosition;
             _clickAction.action.performed += OnClick;
@@ -71,7 +67,11 @@ namespace GameUtils
             // 
             if (_currentSelectable != newSelectable)
             {
+                //
                 _currentSelectable?.Deselect();
+                _onItemDeselected?.Invoke(_currentSelectable);
+                
+                //
                 _currentSelectable = newSelectable;
                 _currentSelectable?.Select();
                 _onItemSelected?.Invoke(_currentSelectable);
