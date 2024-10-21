@@ -8,7 +8,7 @@ A curated list of scripts for Unity.
 
 * Addressables (https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
 
-* New Input System ()
+* New Input System (https://docs.unity3d.com/Packages/com.unity.inputsystem@1.10/manual/index.html)
 
 ### Third parts:
 
@@ -64,6 +64,23 @@ public class CardDataCollection : ScriptableObjectCollection<CardData>
     public override void LoadAssets()
     {
         base.LoadAssets();
+    }
+}
+```
+
+### Generic Asset List Viewer
+
+Make a subclass, then enjoy!
+
+```cs
+public class MaterialEditorWindow : GenericAssetEditorWindow<Material>
+{
+    [MenuItem("Window/Material Editor")]
+    public static void ShowWindow()
+    {
+        var window = GetWindow<MaterialEditorWindow>();
+        window.titleContent = new GUIContent("Material Editor");
+        window.Show();
     }
 }
 ```
