@@ -99,6 +99,8 @@ namespace GameUtils
 
         //
         public int Count => _list.Count;
+        public bool IsNullOrEmpty() => _list == null || _list.IsNullOrEmpty();
+        public bool Contains(T item) => _list.Contains(item);
         public bool TryGetFirstOrDefault(out T item) => TryGet(0, out item);
         public void Add(T item) => _list.Add(item);
         public void AddRange(BetterList<T> list) => AddRange(list.ToList());
