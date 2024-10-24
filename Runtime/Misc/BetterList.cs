@@ -20,9 +20,18 @@ namespace GameUtils
             _list = list;
         }
 
+        public T Get(int index)
+        {
+            if (TryGet(index, out var item))
+            {
+                return item;
+            }
+
+            return default;
+        }
+
         public bool TryGet(int index, out T item)
         {
-            //
             if (_list.Count > 0 && index >= 0 && index < _list.Count)
             {
                 item = _list[index];
