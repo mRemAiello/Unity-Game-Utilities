@@ -36,7 +36,7 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryLoad<T>(string key, out T result, string suffix = "")
+        public bool TryLoad<T>(string key, out T result, T defaultValue = default, string suffix = "")
         {
             CheckFileSave();
 
@@ -45,11 +45,14 @@ namespace GameUtils
 
             //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
-            if (saveReader.TryRead<T>(id, out result))
+            if (saveReader.Exists(id))
             {
+                result = saveReader.Read<T>(id);
                 return true;
             }
 
+            //
+            result = defaultValue;
             return false;
         }
 
@@ -69,7 +72,7 @@ namespace GameUtils
             _keys[id] = amount.ToString();
         }
 
-        public T Load<T>(string key, string suffix = "")
+        public T Load<T>(string key, T defaultValue = default, string suffix = "")
         {
             CheckFileSave();
 
@@ -78,12 +81,12 @@ namespace GameUtils
 
             //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
-            if (saveReader.TryRead<T>(id, out T result))
+            if (saveReader.TryRead(id, out T result))
             {
                 return result;
             }
 
-            return default;
+            return defaultValue;
         }
 
         public void RemoveKey<T>(string key, string suffix = "")
