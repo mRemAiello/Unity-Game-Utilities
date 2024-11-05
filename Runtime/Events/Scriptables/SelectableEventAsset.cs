@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Events/UI/Selectable")]
+    [CreateAssetMenu(menuName = "Game Utils/Events/UI/Selectable")]
     public class SelectableEventAsset : GameEventAsset<ISelectable>
     {
     }

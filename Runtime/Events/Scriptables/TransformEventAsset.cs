@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Events/Components/Transform")]
+    [CreateAssetMenu(menuName = "Game Utils/Events/Components/Transform")]
     public class TransformEventAsset : GameEventAsset<Transform>
     {
     }

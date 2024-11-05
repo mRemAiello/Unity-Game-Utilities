@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Events/Components/Quaternion")]
+    [CreateAssetMenu(menuName = "Game Utils/Events/Components/Quaternion")]
     public class QuaternionEventAsset : GameEventAsset<Quaternion>
     {
     }
