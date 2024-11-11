@@ -23,12 +23,16 @@ namespace GameUtils
         [SerializeField, ReadOnly] private Vector2 _currentPosition;
 
         //
+        private GameObject _currentGameObject = null;
         private ISelectable _currentSelectable = null;
 
         //
+        public GameObject CurrentGameObject => _currentGameObject;
+        public ISelectable CurrentSelectable => _currentSelectable;
         public Vector2 CurrentPositionVector2 => _currentPosition;
         public Vector3 CurrentPositionVector3 => new(_currentPosition.x, _currentPosition.y, 0);
 
+        //
         protected override void OnPostAwake()
         {
             //
@@ -44,6 +48,7 @@ namespace GameUtils
             var raycastHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(_currentPosition));
 
             //
+            GameObject newGameObject = null;
             ISelectable newSelectable = null;
             float closestDistance = Mathf.Infinity;
             foreach (RaycastHit hit in raycastHits)
@@ -51,6 +56,7 @@ namespace GameUtils
                 if (!hit.transform.gameObject.TryGetComponent<ISelectable>(out var selectable))
                     continue;
 
+                //
                 Vector3 itemPosition = hit.transform.position;
                 var mousePosition = new Vector3(_currentPosition.x, _currentPosition.y, Camera.main.nearClipPlane);
                 Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -61,6 +67,7 @@ namespace GameUtils
                 {
                     closestDistance = distance;
                     newSelectable = selectable;
+                    newGameObject = hit.transform.gameObject;
                 }
             }
 
@@ -73,6 +80,9 @@ namespace GameUtils
                 
                 //
                 _currentSelectable = newSelectable;
+                _currentGameObject = newGameObject;
+
+                //
                 _currentSelectable?.Select();
                 _onItemSelected?.Invoke(_currentSelectable);
             }
