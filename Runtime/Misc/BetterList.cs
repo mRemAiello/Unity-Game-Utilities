@@ -1,11 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GameUtils
 {
-    public class BetterList<T>
+    public class BetterList<T> : IEnumerator, IEnumerable where T : class
     {
         private readonly string _listName;
         private readonly List<T> _list = new();
+
+        //
+        private int _position = -1;
 
         //
         public BetterList(string name)
@@ -87,6 +91,17 @@ namespace GameUtils
             return -1;
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return this;
+        }
+
+        public bool MoveNext()
+        {
+            _position++;
+            return _position < _list.Count;
+        }
+
         public List<T> ToList()
         {
             List<T> list = new();
@@ -108,13 +123,17 @@ namespace GameUtils
 
         //
         public int Count => _list.Count;
+        public object Current => _list[_position];
         public bool IsNullOrEmpty() => _list.IsNullOrEmpty();
         public bool Contains(T item) => _list.Contains(item);
         public bool TryGetFirstOrDefault(out T item) => TryGet(0, out item);
+        public T GetFirstElement() => (_list.Count <= 0) ? null : _list[0];
+        public T GetLastElement() => (_list.Count <= 0) ? null : _list[^1];
         public void Add(T item) => _list.Add(item);
         public void AddRange(BetterList<T> list) => AddRange(list.ToList());
         public void Remove(T item) => _list.Remove(item);
         public void Shuffle() => _list.Shuffle();
         public void Clear() => _list.Clear();
+        public void Reset() => _position = 0;
     }
 }

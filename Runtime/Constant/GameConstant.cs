@@ -2,11 +2,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public class Constant<T> : ScriptableObject
+    public abstract class GameConstant : ScriptableObject
     {
-        [SerializeField] private T _value;
-
-        //
-        public T Value => _value;
+        public abstract string StringValue { get; }
     }
 }
