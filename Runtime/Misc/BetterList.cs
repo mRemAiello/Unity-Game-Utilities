@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameUtils
 {
-    public class BetterList<T> : IEnumerator, IEnumerable where T : class
+    public class BetterList<T> : IEnumerator, IEnumerable
     {
         private readonly string _listName;
         private readonly List<T> _list = new();
@@ -127,8 +127,8 @@ namespace GameUtils
         public bool IsNullOrEmpty() => _list.IsNullOrEmpty();
         public bool Contains(T item) => _list.Contains(item);
         public bool TryGetFirstOrDefault(out T item) => TryGet(0, out item);
-        public T GetFirstElement() => (_list.Count <= 0) ? null : _list[0];
-        public T GetLastElement() => (_list.Count <= 0) ? null : _list[^1];
+        public T GetFirstElement() => (_list.Count <= 0) ? default : _list[0];
+        public T GetLastElement() => (_list.Count <= 0) ? default : _list[^1];
         public void Add(T item) => _list.Add(item);
         public void AddRange(BetterList<T> list) => AddRange(list.ToList());
         public void Remove(T item) => _list.Remove(item);
