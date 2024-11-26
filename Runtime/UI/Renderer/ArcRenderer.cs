@@ -29,7 +29,7 @@ namespace GameUtils
 
         void Update()
         {
-            if (InputManager.Instance == null)
+            if (!InputManager.InstanceExists)
             {
                 return;
             }
