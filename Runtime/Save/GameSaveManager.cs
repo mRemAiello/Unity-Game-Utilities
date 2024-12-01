@@ -9,8 +9,7 @@ namespace GameUtils
 {
     public class GameSaveManager : Singleton<GameSaveManager>
     {
-        [SerializeField] private int _currentSaveSlot;
-        [Space]
+        [SerializeField, ReadOnly] private int _currentSaveSlot;
         [SerializeField, ReadOnly] private SerializedDictionary<string, string> _keys;
 
         protected override void OnPostAwake()
