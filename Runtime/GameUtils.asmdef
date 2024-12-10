@@ -4,6 +4,7 @@
     "references": [
         "Unity.ResourceManager",
         "Unity.Addressables",
+        "Unity.Localization",
         "Unity.InputSystem",
         "Unity.TextMeshPro",
         "VInspector",

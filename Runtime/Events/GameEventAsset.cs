@@ -16,6 +16,7 @@ namespace GameUtils
         // public
         public T CurrentValue => _currentValue;
 
+        //
         public void AddListener(UnityAction<T> call)
         {
             if (call == null)
