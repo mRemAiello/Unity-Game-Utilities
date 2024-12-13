@@ -11,5 +11,6 @@ namespace GameUtils
         public GameObject Target;
         public StatusEffectData Data;
         public int Amount;
+        public int Intensity;
     }
 }

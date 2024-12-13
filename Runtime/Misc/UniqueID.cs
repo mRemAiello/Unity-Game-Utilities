@@ -11,18 +11,18 @@ namespace GameUtils
 
         private void OnValidate()
         {
-            RegenerateID();
+            if (string.IsNullOrEmpty(_id))
+            {
+                RegenerateID();
+            }
         }
 
         [Button]
         private void RegenerateID()
         {
 #if UNITY_EDITOR
-            if (string.IsNullOrEmpty(_id))
-            {
-                _id = GUID.Generate().ToString();
-                EditorUtility.SetDirty(this);
-            }
+            _id = GUID.Generate().ToString();
+            EditorUtility.SetDirty(this);
 #endif
         }
 

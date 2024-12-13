@@ -13,6 +13,12 @@ namespace GameUtils
 
         [Tab("Effects")]
         [SerializeField] private int _order = 0;
+        [SerializeField] private StatusEffectStackType _stackType;
+        
+        //
+        [ShowIf("_stackType", StatusEffectStackType.Duration)]
+        [SerializeField] private int _maxDuration;
+        [EndIf]
 
         //
         public string EffectName => _effectName.GetLocalizedString();
@@ -21,6 +27,8 @@ namespace GameUtils
         public int Order => _order;
 
         //
+        public StatusEffectStackType StackType => _stackType;
+        public int MaxDuration => _maxDuration;
 
         //
         public abstract void ApplyEffect(StatusEffect effect);

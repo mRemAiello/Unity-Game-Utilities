@@ -112,6 +112,8 @@ namespace GameUtils
         }
 
         //
+        public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
+        public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
         private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Amount).ToList();
     }
 }
