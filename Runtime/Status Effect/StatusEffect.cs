@@ -10,7 +10,7 @@ namespace GameUtils
         public GameObject Source;
         public GameObject Target;
         public StatusEffectData Data;
-        public int Amount;
+        public int Duration;
         public int Intensity;
     }
 }

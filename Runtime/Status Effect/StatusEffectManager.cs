@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,24 +23,25 @@ namespace GameUtils
         [Button]
         public void ApplyEffect(GameObject source, GameObject target, StatusEffectData data, int amount)
         {
-            // TODO: Fixare qui
-            StatusEffect statusEffect = new()
+            StatusEffect effect = FindEffect(data.ID) ?? new()
             {
                 ID = data.ID,
                 Source = source,
                 Target = target,
-                Amount = amount,
+                Duration = amount,
                 Data = data
             };
 
-            //
-            //if (data.CanStack)
+            // 
+            if (data.StackType == StatusEffectStackType.Duration)
             {
-                _statusEffects.Add(statusEffect);
+                effect.Duration = Mathf.Min(effect.Duration + amount, data.MaxDuration);
             }
-            //else
+
+            //
+            if (data.StackType == StatusEffectStackType.Intensity)
             {
-                
+                effect.Intensity += amount;
             }
 
             //
@@ -49,19 +51,23 @@ namespace GameUtils
         [Button]
         public void UpdateEffect()
         {
+            //
+            var statusEffects = _statusEffects.Where(x => x.Data.StackType == StatusEffectStackType.Duration).ToList();
+
+            //
             foreach (var effect in _statusEffects)
             {
-                if (effect.Amount > 0)
+                if (effect.Duration > 0)
                 {
                     effect.Data.UpdateEffect(effect);
                     _onUpdateEffect?.Invoke(effect);
 
                     //
-                    effect.Amount--;
+                    effect.Duration--;
                 }
 
                 //
-                if (effect.Amount <= 0)
+                if (effect.Duration <= 0)
                 {
                     effect.Data.EndEffect(effect);
                     _onEndEffect?.Invoke(effect);
@@ -69,7 +75,7 @@ namespace GameUtils
             }
 
             //
-            _statusEffects.RemoveAll(item => item.Amount == 0);
+            _statusEffects.RemoveAll(item => item.Duration == 0);
         }
 
         [Button]
@@ -112,8 +118,11 @@ namespace GameUtils
         }
 
         //
+        public StatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
+        public StatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
+        public List<StatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
         public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
         public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
-        private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Amount).ToList();
+        private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Duration).ToList();
     }
 }
