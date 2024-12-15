@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Events/GameObject")]
+    [CreateAssetMenu(menuName = "GD/Events/GameObject")]
     public class GameObjectEventAsset : GameEventAsset<GameObject>
     {
     }

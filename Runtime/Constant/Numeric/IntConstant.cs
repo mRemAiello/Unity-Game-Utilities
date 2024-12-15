@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Constants/Integer")]
+    [CreateAssetMenu(menuName = "GD/Constants/Integer")]
     public class IntConstant : NumericGameConstant
     {
         [SerializeField] private int _value;

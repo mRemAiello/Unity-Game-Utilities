@@ -9,7 +9,7 @@ using VInspector;
 
 namespace UnityEditor.GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Auto Bundles/Auto Bundles")]
+    [CreateAssetMenu(menuName = "GD/Auto Bundles/Auto Bundles")]
     public class AutoBundles : ScriptableObject
     {
         [SerializeField] private List<AutoBundleData> _bundleDatas;

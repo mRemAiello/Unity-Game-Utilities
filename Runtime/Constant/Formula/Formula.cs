@@ -6,7 +6,7 @@ using VInspector;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Constants/Float Formula")]
+    [CreateAssetMenu(menuName = "GD/Constants/Float Formula")]
     public class FloatFormulaConstant : NumericGameConstant
     {
         [SerializeField] private string _formula = "1 / {0}";

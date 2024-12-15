@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Game Utils/Audio/Play Audio")]
+    [CreateAssetMenu(menuName = "GD/Audio/Play Audio")]
     public class PlayAudioScriptableObject : ScriptableObject
     {
         [SerializeField] private AudioClip _audioClip;
