@@ -6,11 +6,11 @@ namespace GameUtils
     [Serializable]
     public class StatusEffect
     {
-        public string ID;
-        public GameObject Source;
-        public GameObject Target;
-        public StatusEffectData Data;
-        public int Duration;
-        public int Intensity;
+        public string ID = "";
+        public GameObject Source = null;
+        public GameObject Target = null;
+        public StatusEffectData Data = null;
+        public int Duration = 0;
+        public int Intensity = 0;
     }
 }

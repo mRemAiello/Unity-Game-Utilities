@@ -1,6 +1,7 @@
 using CI.QuickSave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VInspector;
@@ -10,8 +11,12 @@ namespace GameUtils
     public class GameSaveManager : Singleton<GameSaveManager>
     {
         [SerializeField, ReadOnly] private int _currentSaveSlot;
-        [SerializeField, ReadOnly] private SerializedDictionary<string, string> _keys;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, string> _dict;
 
+        //
+        public List<string> GetKeys() => _dict.Keys.ToList();
+
+        //
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
@@ -68,7 +73,7 @@ namespace GameUtils
             saveWriter.Commit();
 
             //
-            _keys[id] = amount.ToString();
+            _dict[id] = amount.ToString();
         }
 
         public T Load<T>(string key, T defaultValue = default, string suffix = "")
@@ -103,7 +108,7 @@ namespace GameUtils
                 saveWriter.Commit();
 
                 //
-                _keys.Remove(id);
+                _dict.Remove(id);
             }
         }
 
@@ -121,7 +126,7 @@ namespace GameUtils
             saveWriter.Commit();
 
             //
-            _keys.Clear();
+            _dict.Clear();
         }
 
         [Button]
@@ -134,20 +139,20 @@ namespace GameUtils
             var saveKeys = saveReader.GetAllKeys().ToList();
 
             //
-            _keys.Clear();
+            _dict.Clear();
             foreach (var key in saveKeys)
             {
-                if (!_keys.ContainsKey(key))
+                if (!_dict.ContainsKey(key))
                 {
                     if (saveReader.TryRead(key, out JObject jObj))
                     {
-                        _keys.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
+                        _dict.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
                     }
                     else
                     {
                         if (saveReader.TryRead(key, out object obj))
                         {
-                            _keys.Add(key, obj.ToString());
+                            _dict.Add(key, obj.ToString());
                         }
                     }
                 }
