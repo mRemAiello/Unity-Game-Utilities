@@ -1,33 +1,23 @@
+using System;
 using UnityEngine;
 
 namespace GameUtils
 {
-    public struct DamageInfo
+    [Serializable]
+    public class DamageInfo
     {
+        public GameObject Source;
+        public GameObject Target;
         public float Amount;
         public bool IsCrit;
-        public GameObject Instigator;
-        public GameObject Source;
-        public GameObject Victim;
         public object AdditionalArgs;
 
-        public DamageInfo(float amount, bool isCrit, GameObject instigator, GameObject source, GameObject victim)
+        public DamageInfo(GameObject source, GameObject target, float amount, bool isCrit, object additionalArgs = null)
         {
             Amount = amount;
             IsCrit = isCrit;
-            Instigator = instigator;
             Source = source;
-            Victim = victim;
-            AdditionalArgs = null;
-        }
-
-        public DamageInfo(float amount, bool isCrit, GameObject instigator, GameObject source, GameObject victim, object additionalArgs)
-        {
-            Amount = amount;
-            IsCrit = isCrit;
-            Instigator = instigator;
-            Source = source;
-            Victim = victim;
+            Target = target;
             AdditionalArgs = additionalArgs;
         }
     }
