@@ -4,7 +4,7 @@ using VInspector;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Events/Void")]
+    [CreateAssetMenu(menuName = "GD/Events/Void", order = 99)]
     public class VoidEventAsset : GameEventBaseAsset
     {
         [SerializeField] private bool _log = false;
