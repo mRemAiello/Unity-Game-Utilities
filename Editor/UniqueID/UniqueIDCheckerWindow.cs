@@ -10,7 +10,7 @@ namespace UnityEditor.GameUtils
         private Dictionary<string, List<UniqueID>> _duplicateIDs = new();
 
         //
-        [MenuItem("Window/Game Utils/Unique ID Checker")]
+        [MenuItem("Window/GD/Tools/Unique ID Checker")]
         public static void ShowWindow()
         {
             GetWindow<UniqueIDCheckerWindow>("Unique ID Checker");
