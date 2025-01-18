@@ -14,9 +14,6 @@ namespace GameUtils
         [SerializeField, ReadOnly] private SerializedDictionary<string, string> _dict;
 
         //
-        public List<string> GetKeys() => _dict.Keys.ToList();
-
-        //
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
@@ -192,6 +189,7 @@ namespace GameUtils
         }
 
         // 
+        public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
         [Button] public void SetActiveSaveSlot(int slot) => _currentSaveSlot = slot;
     }
