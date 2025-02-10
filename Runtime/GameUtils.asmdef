@@ -9,7 +9,6 @@
         "Unity.TextMeshPro",
         "VInspector",
         "DOTween.Modules",
-        "QFSW.QC",
         "QuickSave"
     ],
     "includePlatforms": [],

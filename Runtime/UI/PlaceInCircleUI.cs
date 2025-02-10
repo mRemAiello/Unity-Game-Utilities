@@ -1,4 +1,3 @@
-using QFSW.QC;
 using UnityEngine;
 using VInspector;
 
@@ -12,7 +11,7 @@ namespace GameUtils
         //
         [SerializeField] private GameObject[] _items;
 
-        [Button, Command]
+        [Button]
         public void Refresh()
         {
             if (_items == null)
