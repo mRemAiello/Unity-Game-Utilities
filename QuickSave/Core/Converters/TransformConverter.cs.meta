@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2d2a8e07acb92084b8ca09aa3d3e8ece
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/Core/Converters/TransformConverter.cs
+  uploadId: 644299

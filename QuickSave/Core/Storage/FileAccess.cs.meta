@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: fd7a5e68caceef54ba5b9efdc0037c2f
+timeCreated: 1513892294
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/Core/Storage/FileAccess.cs
+  uploadId: 644299

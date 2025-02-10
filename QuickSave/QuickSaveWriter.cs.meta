@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 86c5f4a341135974ca246ffbd221d19a
+timeCreated: 1513278606
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/QuickSaveWriter.cs
+  uploadId: 644299
