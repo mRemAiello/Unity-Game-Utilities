@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 02f94f9474f289e4e81b76480e48cf8a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/Core/Converters/Texture2DConverter.cs
+  uploadId: 644299

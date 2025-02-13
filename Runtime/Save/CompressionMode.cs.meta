@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 817de1a2bae69cd4ea6ae0f597461257
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/CompressionMode.cs
+  uploadId: 644299

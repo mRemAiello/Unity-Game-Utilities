@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: a3607ecce63bbb541810322269139caf
+timeCreated: 1513278606
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107676
+  packageName: Quick Save
+  packageVersion: 3.1.0
+  assetPath: Assets/QuickSave/QuickSaveRaw.cs
+  uploadId: 644299
