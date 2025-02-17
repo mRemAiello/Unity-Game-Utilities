@@ -8,7 +8,8 @@
         "Unity.InputSystem",
         "Unity.TextMeshPro",
         "VInspector",
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "QuickSave"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
