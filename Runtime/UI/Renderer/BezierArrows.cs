@@ -11,7 +11,7 @@ namespace GameUtils
         [SerializeField] private int _arrowNodeNum;
         [SerializeField] private float _scaleFactor = 1f;
 
-        //
+        [Tab("Debug")]
         [SerializeField, ReadOnly] private RectTransform _origin;
         [SerializeField, ReadOnly] private List<RectTransform> _arrowNodes = new();
         [SerializeField, ReadOnly] private List<Vector2> _controlPoints = new();

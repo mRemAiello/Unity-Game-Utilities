@@ -28,6 +28,16 @@ namespace GameUtils
 
         public abstract bool Visible { get; set; }
 
+        //
+        protected override void OnPostAwake()
+        {
+            base.OnPostAwake();
+
+            //
+            _buttons = new();
+            _ignorable = false;
+        }
+
         [Button]
         public virtual void SetHeaderText(string headerText)
         {

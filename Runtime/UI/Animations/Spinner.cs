@@ -11,7 +11,7 @@ namespace GameUtils
         [SerializeField] private float _rotationSpeedX = 0f;
         [SerializeField] private float _rotationSpeedY = 10f;
         [SerializeField] private float _rotationSpeedZ = 0f;
-        
+
         //
         [Tab("Debug")]
         [SerializeField, ReadOnly] private bool _spinEnabled = false;
@@ -19,7 +19,12 @@ namespace GameUtils
         //
         public bool RotateLeft => _rotateLeft;
         public float RotationSpeed => _rotationSpeedY;
-       
+
+        void Start()
+        {
+            _spinEnabled = false;
+        }
+
         private void Update()
         {
             if (_spinEnabled)

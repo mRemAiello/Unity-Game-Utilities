@@ -9,7 +9,15 @@ namespace GameUtils
         [SerializeField] private VoidEventAsset _onPeriodicTask;
 
         [Tab("Debug")]
-        [SerializeField, ReadOnly] private float _timeElapsed;
+        [SerializeField, ReadOnly] private float _timeElapsed = 0;
+
+        protected override void OnPostAwake()
+        {
+            base.OnPostAwake();
+
+            //
+            _timeElapsed = 0;
+        }
 
         void Update()
         {

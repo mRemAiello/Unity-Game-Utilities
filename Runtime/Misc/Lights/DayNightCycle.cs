@@ -21,6 +21,13 @@ namespace GameUtils
         [ReadOnly] private float _currentTime = 0f;
         [ReadOnly] private int _currentColorIndex = 0;
 
+        void Start()
+        {
+            // Inizializza il tempo del ciclo
+            _currentTime = 0f;
+            _currentColorIndex = 0;
+        }
+
         void Update()
         {
             UpdateTimeOfDay();

@@ -18,6 +18,12 @@ namespace GameUtils
 
         void Start()
         {
+            //
+            _time = 0;
+            _random = 0;
+            _startingIntensity = 0;
+
+            //
             _light = GetComponent<Light>();
             _startingIntensity = _light.intensity;
         }

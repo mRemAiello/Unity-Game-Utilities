@@ -36,6 +36,9 @@ namespace GameUtils
         protected override void OnPostAwake()
         {
             //
+            _currentPosition = Vector2.zero;
+
+            //
             _pointAction.action.performed += OnCursorChangePosition;
             _clickAction.action.performed += OnClick;
         }

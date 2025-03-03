@@ -25,6 +25,20 @@ namespace GameUtils
         public float MaxFPS => _maxFPS;
         public float AverageFPS => _averageFPS;
 
+        //
+        protected override void OnPostAwake()
+        {
+            base.OnPostAwake();
+
+            //
+            _trackFPS = false;
+            _frameCount = 0;
+            _totalDeltaTime = 0.0f;
+            _minFPS = float.MaxValue;
+            _maxFPS = float.MinValue;
+            _averageFPS = 0.0f;
+        }
+
         void Update()
         {
             //

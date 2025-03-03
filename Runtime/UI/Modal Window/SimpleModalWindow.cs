@@ -31,9 +31,10 @@ namespace GameUtils
             base.OnPostAwake();
 
             //
-            _uiAnimations = GetComponentsInChildren<UIAnimation>().ToList();
+            _visible = false;
 
             //
+            _uiAnimations = GetComponentsInChildren<UIAnimation>().ToList();
             foreach (var animation in _uiAnimations)
             {
                 animation.Hide(false);
