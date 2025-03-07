@@ -19,7 +19,7 @@ namespace GameUtils
             AchievementManager.OnAchievementCompleted -= OnAchievementUnlocked;
         }
 
-        private void OnAchievementUnlocked(Achievement achievement)
+        private void OnAchievementUnlocked(AchievementData achievement)
         {
             // Instantiate notification
             AchievementNotification notification = Instantiate(_notificationPrefab, transform);

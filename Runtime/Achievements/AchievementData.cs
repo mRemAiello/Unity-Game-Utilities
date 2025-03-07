@@ -3,8 +3,8 @@ using VInspector;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(fileName = "New Achievement", menuName = "Achievements")]
-    public class Achievement : UniqueID
+    [CreateAssetMenu(menuName = "GD/Achievement", order = 99)]
+    public class AchievementData : UniqueID
     {
         [Tab("General")]
         [SerializeField] private string _name;

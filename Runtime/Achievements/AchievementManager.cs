@@ -7,7 +7,7 @@ namespace GameUtils
 {
     public class AchievementManager : MonoBehaviour
     {
-        [SerializeField] private List<Achievement> _achievements;
+        [SerializeField] private List<AchievementData> _achievements;
 
         // Private fields
         private static AchievementManager _instance;
@@ -17,10 +17,10 @@ namespace GameUtils
 
         // Public events
         // TODO: When sdk of different platform (steam, xbox, etc) are implemented listen to those events
-        public static event Action<Achievement> OnAchievementCompleted;
-        public static event Action<Achievement> OnAchievementUncompleted;
+        public static event Action<AchievementData> OnAchievementCompleted;
+        public static event Action<AchievementData> OnAchievementUncompleted;
 
-
+        //
         private void Awake()
         {
             // Singleton
@@ -43,20 +43,20 @@ namespace GameUtils
         public void OnAchievementEvent(string achievementEventName, int value)
         {
             // Get all achievements with the same event name
-            List<Achievement> achievements = _achievements.FindAll(a => a.EventName == achievementEventName);
+            List<AchievementData> achievements = _achievements.FindAll(a => a.EventName == achievementEventName);
 
-            foreach (Achievement achievement in achievements)
+            foreach (AchievementData achievement in achievements)
             {
                 achievement.UpdateState(value);
             }
         }
 
-        public void AchievementCompleted(Achievement achievement)
+        public void AchievementCompleted(AchievementData achievement)
         {
             OnAchievementCompleted?.Invoke(achievement);
         }
 
-        public void AchievementUncompleted(Achievement achievement)
+        public void AchievementUncompleted(AchievementData achievement)
         {
             OnAchievementUncompleted?.Invoke(achievement);
         }
