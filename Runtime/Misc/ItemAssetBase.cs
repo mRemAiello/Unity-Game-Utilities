@@ -2,16 +2,17 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using VInspector;
 
 namespace GameUtils
 {
     public class ItemAssetBase : UniqueID
     {
-        [Header("Graphics")]
-        [SerializeField] private AssetReferenceSprite _itemIcon = null;
+        [Tab("Graphics")]
+        [SerializeField] private string _internalItemName = null;
 
         [Space]
-        [SerializeField] private string _internalItemName = null;
+        [SerializeField] private AssetReferenceSprite _itemIcon = null;
         [SerializeField] private LocalizedString _itemName = null;
         [SerializeField] private LocalizedString _itemDescription = null;
 

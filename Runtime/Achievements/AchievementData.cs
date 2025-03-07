@@ -3,25 +3,24 @@ using VInspector;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Achievement", order = 99)]
+    [CreateAssetMenu(menuName = "GD/Achievements/Base", order = 99)]
     public class AchievementData : UniqueID
     {
-        [Tab("General")]
-        [SerializeField] private string _name;
-        [SerializeField] private string _description;
-        [SerializeField] private Sprite _uncompletedIcon;
-        [SerializeField] private Sprite _completedIcon;
-
-        [Tab("Identification")]
+        [Tab("Settings")]
         [SerializeField] private string _eventName;
-        [SerializeField] private string _id;
-        [SerializeField] private string _steamId;
+         [SerializeField] private string _steamId;
         [SerializeField] private string _epicId;
         [SerializeField] private string _playstationId;
         [SerializeField] private string _xboxId;
         [SerializeField] private string _androidId;
         [SerializeField] private string _iosId;
         [SerializeField] private string _appGalleryId;
+
+        [Tab("Graphics")]
+        [SerializeField] private string _name;
+        [SerializeField] private string _description;
+        [SerializeField] private Sprite _uncompletedIcon;
+        [SerializeField] private Sprite _completedIcon;
 
         [Tab("Progress")]
         [SerializeField] private AchievementType _type;
@@ -38,7 +37,6 @@ namespace GameUtils
 
         //
         public string EventName => _eventName;
-        public string Id => _id;
         public string SteamId => _steamId;
         public string EpicId => _epicId;
         public string PlaystationId => _playstationId;
