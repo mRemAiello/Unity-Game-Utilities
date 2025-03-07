@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace GameUtils
 {
-    public class HealthBar : MonoBehaviour
+    public class WorldHealthBar : MonoBehaviour
     {
        /*[Header("Components")]
         [SerializeField] private GameObject _uiRoot;

@@ -1,6 +1,6 @@
 {
   "name": "com.gedemy.gameutils",
-  "version": "2.4.0",
+  "version": "2.4.5",
   "displayName": "Some Game Utils",
   "description": "Some Game Utils to improve Unity workflows",
   "unity": "2022.3",

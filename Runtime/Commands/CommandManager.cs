@@ -8,7 +8,9 @@ namespace GameUtils
     {
         [Tab("Variables")]
         [SerializeField] private bool _enableLog = false;
-        [SerializeField, ShowIf("_enableLog", true)] private string _logCategory = "Command";
+        [ShowIf(nameof(_enableLog), true)]
+        [SerializeField] private string _logCategory = "Command";
+        [EndIf]
         [SerializeField] private int _maxCommandsInLogList = 20;
 
         [Tab("Debug")]

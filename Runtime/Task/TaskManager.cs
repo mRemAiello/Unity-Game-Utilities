@@ -9,7 +9,10 @@ namespace GameUtils
     {
         [SerializeField] private List<ITask> _tasks = new();
         [SerializeField] private bool _enableLog = false;
-        [SerializeField, ShowIf(nameof(_enableLog), true)] private string _logCategory;
+
+        [ShowIf(nameof(_enableLog), true)]
+        [SerializeField] private string _logCategory;
+        [EndIf]
 
         // Get
         public List<ITask> Tasks => _tasks;
@@ -35,8 +38,11 @@ namespace GameUtils
             //
             foreach (ITask task in Tasks)
             {
-                var message = string.Format("Task {0} completed in {1}", task.ShortName, task.TimeElapsed);
-                DebugManager.Instance.GetCategory(_logCategory).Log(message);
+                if (_enableLog)
+                {
+                    var message = string.Format("Task {0} completed in {1}", task.ShortName, task.TimeElapsed);
+                    DebugManager.Instance.GetCategory(_logCategory).Log(message);
+                }
             }
         }
     }
