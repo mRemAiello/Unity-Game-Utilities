@@ -3,7 +3,7 @@ using VInspector;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Achievements/Base", order = 99)]
+    [CreateAssetMenu(menuName = "GD/Achievements/Base")]
     public class AchievementData : UniqueID
     {
         [Tab("Settings")]
