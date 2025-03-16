@@ -4,13 +4,10 @@ using VInspector;
 
 namespace GameUtils
 {
-    public class CommandManager : Singleton<CommandManager>
+    public class CommandManager : Singleton<CommandManager>, ILoggable
     {
         [Tab("Variables")]
-        [SerializeField] private bool _enableLog = false;
-        [ShowIf(nameof(_enableLog), true)]
-        [SerializeField] private string _logCategory = "Command";
-        [EndIf]
+        [SerializeField] private bool _logEnabled = false;
         [SerializeField] private int _maxCommandsInLogList = 20;
 
         [Tab("Debug")]
@@ -21,6 +18,8 @@ namespace GameUtils
 
         //
         public bool IsCommandPlaying => _playingQueue;
+        public Command CurrentCommand => _currentCommand;
+        public bool LogEnabled => _logEnabled;
 
         protected override void OnPostAwake()
         {
@@ -45,11 +44,7 @@ namespace GameUtils
             _commandQueue.Add(commandTuple);
 
             //
-            if (_enableLog)
-            {
-                var debugger = DebugManager.Instance.GetCategory(_logCategory);
-                debugger.Log("Command " + commandTuple.Item1.name + " added to Queue");
-            }
+            this.Log($"Command {commandTuple.Item1.name} added to Queue");
 
             //
             if (!_playingQueue)
@@ -80,11 +75,7 @@ namespace GameUtils
             _currentCommand = command.Item1;
 
             //
-            if (_enableLog)
-            {
-                var debugger = DebugManager.Instance.GetCategory(_logCategory);
-                debugger.Log("Executing Command " + command.Item1.name);
-            }
+            this.Log($"Executing Command {command.Item1.name} from Queue");
 
             //
             _commandList.Add(command.Item1.name);
