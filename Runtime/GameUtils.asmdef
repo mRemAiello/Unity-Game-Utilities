@@ -7,7 +7,7 @@
         "Unity.Localization",
         "Unity.InputSystem",
         "Unity.TextMeshPro",
-        "VInspector",
+        "TriInspector",
         "DOTween.Modules",
         "QuickSave"
     ],

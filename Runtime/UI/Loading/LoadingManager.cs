@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {

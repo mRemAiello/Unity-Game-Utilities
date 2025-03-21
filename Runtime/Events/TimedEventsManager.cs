@@ -1,5 +1,5 @@
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {

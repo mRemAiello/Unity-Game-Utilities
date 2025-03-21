@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {

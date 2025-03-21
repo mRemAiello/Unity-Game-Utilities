@@ -1,5 +1,5 @@
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {
@@ -8,7 +8,7 @@ namespace GameUtils
     {
         [Tab("Settings")]
         [SerializeField] private string _eventName;
-         [SerializeField] private string _steamId;
+        [SerializeField] private string _steamId;
         [SerializeField] private string _epicId;
         [SerializeField] private string _playstationId;
         [SerializeField] private string _xboxId;

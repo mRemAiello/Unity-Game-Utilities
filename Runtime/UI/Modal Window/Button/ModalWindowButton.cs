@@ -1,8 +1,8 @@
 ﻿using TMPro;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using VInspector;
 
 namespace GameUtils
 {

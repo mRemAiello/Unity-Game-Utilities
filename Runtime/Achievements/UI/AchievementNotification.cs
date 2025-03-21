@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections;
-using VInspector;
+using TriInspector;
 
 namespace GameUtils
 {

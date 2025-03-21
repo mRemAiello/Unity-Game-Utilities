@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {
@@ -20,10 +20,7 @@ namespace GameUtils
         public virtual bool Ignorable
         {
             get => _ignorable;
-            protected set
-            {
-                _ignorable = value;
-            }
+            protected set => _ignorable = value;
         }
 
         public abstract bool Visible { get; set; }

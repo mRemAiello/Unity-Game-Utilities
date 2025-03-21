@@ -1,6 +1,6 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Localization;
-using VInspector;
 
 namespace GameUtils
 {

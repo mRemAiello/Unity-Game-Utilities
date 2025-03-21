@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {

@@ -1,6 +1,6 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using VInspector;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace GameUtils

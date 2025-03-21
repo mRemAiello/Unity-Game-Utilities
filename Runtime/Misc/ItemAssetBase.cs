@@ -1,20 +1,18 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using VInspector;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("graphics", Title = "Graphics")]
     public class ItemAssetBase : UniqueID
     {
-        [Tab("Graphics")]
-        [SerializeField] private string _internalItemName = null;
-
-        [Space]
-        [SerializeField] private AssetReferenceSprite _itemIcon = null;
-        [SerializeField] private LocalizedString _itemName = null;
-        [SerializeField] private LocalizedString _itemDescription = null;
+        [SerializeField, Group("internal")] private string _internalItemName = null;
+        [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
+        [SerializeField, Group("graphics")] private LocalizedString _itemName = null;
+        [SerializeField, Group("graphics")] private LocalizedString _itemDescription = null;
 
         //
         public Sprite Icon

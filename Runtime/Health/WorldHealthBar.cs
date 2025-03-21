@@ -1,6 +1,6 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
-using VInspector;
 
 namespace GameUtils
 {

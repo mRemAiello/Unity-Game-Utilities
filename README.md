@@ -10,10 +10,9 @@ A curated list of scripts for Unity.
 
 * New Input System (https://docs.unity3d.com/Packages/com.unity.inputsystem@1.10/manual/index.html)
 
-### Third parts:
+### Terze parti:
 
-* Quantum Console (https://assetstore.unity.com/packages/tools/utilities/quantum-console-211046)
-* VInspector 2 (https://assetstore.unity.com/packages/tools/utilities/vinspector-2-252297)
+* Tri-Inspector (https://github.com/codewriter-packages/Tri-Inspector)
 * Quick Save (https://www.claytoninds.com/quick-save)
 * DOTween (http://dotween.demigiant.com/)
 

@@ -1,7 +1,6 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using VInspector;
-using ReadOnlyAttribute = VInspector.ReadOnlyAttribute;
 
 namespace GameUtils
 {

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
-using VInspector;
-using ReadOnlyAttribute = VInspector.ReadOnlyAttribute;
 
 namespace GameUtils
 {

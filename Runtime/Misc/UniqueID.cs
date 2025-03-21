@@ -1,13 +1,13 @@
+using TriInspector;
 using UnityEditor;
 using UnityEngine;
-using VInspector;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("internal", Title = "Internal")]
     public abstract class UniqueID : ScriptableObject
     {
-        [BoxField("Settings")]
-        [SerializeField, ReadOnly] private string _id = "";
+        [SerializeField, Group("internal"), ReadOnly] private string _id = "";
 
         private void OnValidate()
         {

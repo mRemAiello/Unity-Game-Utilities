@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using VInspector;
 
 namespace GameUtils
 {
     public abstract class ScriptableObjectCollection : ScriptableObject
     {
-        [SerializeField] private List<string> _keys;
+        [SerializeField, ReadOnly] private List<string> _keys;
 
         //
         public List<ScriptableObject> Items { get; private set; }
