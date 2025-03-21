@@ -26,9 +26,7 @@ namespace GameUtils
         [SerializeField] private AchievementType _type;
 
         //
-        [ShowIf("_type", AchievementType.Simple)]
-        [SerializeField] private AchievementCondition _condition;
-        [EndIf]
+        [SerializeField, ShowIf("_type", AchievementType.Simple)] private AchievementCondition _condition;
 
         //
         [SerializeField] private int _targetValue;

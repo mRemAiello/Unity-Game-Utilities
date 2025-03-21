@@ -3,7 +3,7 @@
     "rootNamespace": "",
     "references": [
         "GameUtils",
-        "VInspector",
+        "TriInspector",
         "UnityEditor.UI",
         "Unity.Addressables",
         "Unity.Addressables.Editor"

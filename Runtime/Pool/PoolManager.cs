@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using TriInspector;
 using UnityEngine;
 

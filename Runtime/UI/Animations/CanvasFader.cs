@@ -8,24 +8,20 @@ namespace GameUtils
     {
         [Tab("Settings")]
         [SerializeField] private CanvasGroup _canvasGroup;
-        
+
         [Tab("Fade In")]
         [SerializeField] private bool _useFadeInCurve = false;
         [SerializeField, Range(0.1f, 100f)] private float _fadeInSpeed = 1.0f;
-        
+
         //
-        [ShowIf(nameof(_useFadeInCurve))]
-        [SerializeField] private AnimationCurve _fadeInCurve = AnimationCurve.Linear(0, 0, 1, 1);
-        [EndIf]
-        
+        [SerializeField, ShowIf(nameof(_useFadeInCurve))] private AnimationCurve _fadeInCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
         [Tab("Fade Out")]
         [SerializeField] private bool _useFadeOutCurve = false;
         [SerializeField, Range(0.1f, 100f)] private float _fadeOutSpeed = 1.0f;
 
         //     
-        [ShowIf(nameof(_useFadeOutCurve))]
-        [SerializeField] private AnimationCurve _fadeOutCurve = AnimationCurve.Linear(0, 1, 1, 0);
-        [EndIf]
+        [SerializeField, ShowIf(nameof(_useFadeOutCurve))] private AnimationCurve _fadeOutCurve = AnimationCurve.Linear(0, 1, 1, 0);
 
         protected override void OnShow(bool showAnimation = true)
         {
@@ -63,7 +59,7 @@ namespace GameUtils
                 }
                 else
                 {
-                    _canvasGroup.DOFade(0, _fadeInSpeed).OnComplete(() =>  EndAnimation(UIAnimationStatus.Hided));
+                    _canvasGroup.DOFade(0, _fadeInSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
                 }
             }
             else

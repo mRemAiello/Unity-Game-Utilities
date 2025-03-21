@@ -1,29 +1,16 @@
 using TriInspector;
 using UnityEngine;
-using UnityEngine.Localization;
 
 namespace GameUtils
 {
-    public abstract class StatusEffectData : UniqueID
+    [DeclareBoxGroup("effect", Title = "Status Effect")]
+    public abstract class StatusEffectData : ItemAssetBase
     {
-        [Tab("Graphics")]
-        [SerializeField] private LocalizedString _effectName;
-        [SerializeField] private LocalizedString _effectDescription;
-        [SerializeField] private Sprite _icon;
-
-        [Tab("Effects")]
-        [SerializeField] private int _order = 0;
-        [SerializeField] private StatusEffectStackType _stackType;
-        
-        //
-        [ShowIf("_stackType", StatusEffectStackType.Duration)]
-        [SerializeField] private int _maxDuration;
-        [EndIf]
+        [SerializeField, Group("effect")] private int _order = 0;
+        [SerializeField, Group("effect")] private StatusEffectStackType _stackType;
+        [ShowIf(nameof(_stackType), StatusEffectStackType.Duration), SerializeField, Group("effect")] private int _maxDuration;
 
         //
-        public string EffectName => _effectName.GetLocalizedString();
-        public string EffectDescription => _effectDescription.GetLocalizedString();
-        public Sprite Icon => _icon;
         public int Order => _order;
 
         //
