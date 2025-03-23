@@ -6,8 +6,7 @@ namespace GameUtils
 {
     public abstract class GameEventAsset<T> : GameEventBaseAsset
     {
-        [SerializeField] private bool _log = false;
-        [SerializeField, ReadOnly] private T _currentValue;
+        [SerializeField, Group("debug"), ReadOnly] private T _currentValue;
 
         // private readonly
         private UnityEvent<T> _onInvoked;
@@ -51,12 +50,12 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Invoke(T param)
         {
-            if (_log)
+            if (LogEnabled)
             {
-                Debug.Log($"{name} event invoked: {param}", this);
+                this.Log($"Event invoked: {param}");
             }              
             
             //

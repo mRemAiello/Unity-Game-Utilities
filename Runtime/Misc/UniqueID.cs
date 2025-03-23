@@ -17,7 +17,7 @@ namespace GameUtils
             }
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         private void RegenerateID()
         {
 #if UNITY_EDITOR

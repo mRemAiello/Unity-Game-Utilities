@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public class GameEventBaseAsset : ScriptableObject
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    public class GameEventBaseAsset : ScriptableObject, ILoggable
     {
-        [SerializeField, ReadOnly] private List<EventTuple> _listeners;
-        
+        [SerializeField] private bool _logEnabled = false;
+        [SerializeField, Group("debug"), ReadOnly] private List<EventTuple> _listeners;
+
+        //
+        public bool LogEnabled => _logEnabled;
+
         //
         public List<EventTuple> Listeners
         {

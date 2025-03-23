@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public static class ObjectExtensions
+    public static class ObjectExtension
     {
         public static void Log(this Object context, string message)
         {

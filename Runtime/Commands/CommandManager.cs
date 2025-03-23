@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class CommandManager : Singleton<CommandManager>, ILoggable
     {
-        [Tab("Variables")]
         [SerializeField] private bool _logEnabled = false;
         [SerializeField] private int _maxCommandsInLogList = 20;
 
-        [Tab("Debug")]
-        [ReadOnly] private Command _currentCommand = null;
-        [ReadOnly] private List<CommandTuple> _commandQueue = new();
-        [ReadOnly] private List<string> _commandList = new();
-        [ReadOnly] private bool _playingQueue = false;
+        //
+        [SerializeField, ReadOnly, Group("debug")] private bool _playingQueue = false;
+        [SerializeField, ReadOnly, Group("debug")] private Command _currentCommand = null;
+        [SerializeField, ReadOnly, Group("debug")] private List<CommandTuple> _commandQueue = new();
+        [SerializeField, ReadOnly, Group("debug")] private List<string> _commandList = new();
 
         //
         public bool IsCommandPlaying => _playingQueue;

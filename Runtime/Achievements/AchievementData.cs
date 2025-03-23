@@ -3,35 +3,32 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("graphics", Title = "Graphics")]
+    [DeclareBoxGroup("progress", Title = "Progress")]
     [CreateAssetMenu(menuName = "GD/Achievements/Base")]
     public class AchievementData : UniqueID
     {
-        [Tab("Settings")]
-        [SerializeField] private string _eventName;
-        [SerializeField] private string _steamId;
-        [SerializeField] private string _epicId;
-        [SerializeField] private string _playstationId;
-        [SerializeField] private string _xboxId;
-        [SerializeField] private string _androidId;
-        [SerializeField] private string _iosId;
-        [SerializeField] private string _appGalleryId;
-
-        [Tab("Graphics")]
-        [SerializeField] private string _name;
-        [SerializeField] private string _description;
-        [SerializeField] private Sprite _uncompletedIcon;
-        [SerializeField] private Sprite _completedIcon;
-
-        [Tab("Progress")]
-        [SerializeField] private AchievementType _type;
+        [SerializeField, Group("internal")] private string _eventName;
+        [SerializeField, Group("internal")] private string _steamId;
+        [SerializeField, Group("internal")] private string _epicId;
+        [SerializeField, Group("internal")] private string _playstationId;
+        [SerializeField, Group("internal")] private string _xboxId;
+        [SerializeField, Group("internal")] private string _androidId;
+        [SerializeField, Group("internal")] private string _iosId;
+        [SerializeField, Group("internal")] private string _appGalleryId;
 
         //
-        [SerializeField, ShowIf("_type", AchievementType.Simple)] private AchievementCondition _condition;
+        [SerializeField, Group("graphics")] private string _name;
+        [SerializeField, Group("graphics")] private string _description;
+        [SerializeField, Group("graphics")] private Sprite _uncompletedIcon;
+        [SerializeField, Group("graphics")] private Sprite _completedIcon;
 
         //
-        [SerializeField] private int _targetValue;
-        [SerializeField] private int _currentValue;
-        [SerializeField] private bool _isCompleted;
+        [SerializeField, Group("progress")] private AchievementType _type;
+        [SerializeField, ShowIf(nameof(_type), AchievementType.Simple), Group("progress")] private AchievementCondition _condition;
+        [SerializeField, Group("progress")] private int _targetValue;
+        [SerializeField, Group("progress")] private int _currentValue;
+        [SerializeField, Group("progress")] private bool _isCompleted;
 
         //
         public string EventName => _eventName;

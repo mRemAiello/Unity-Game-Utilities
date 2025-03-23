@@ -2,7 +2,7 @@
 
 A curated list of scripts for Unity.  
 
-## Requirements
+## Requisiti
 
 ### Unity Packages:
 
@@ -15,6 +15,16 @@ A curated list of scripts for Unity.
 * Tri-Inspector (https://github.com/codewriter-packages/Tri-Inspector)
 * Quick Save (https://www.claytoninds.com/quick-save)
 * DOTween (http://dotween.demigiant.com/)
+
+## Editor 
+
+### Button
+
+```cs
+[Button]
+[Button("Click me!")]
+[Button(ButtonSizes.Large)]
+```
 
 ## Generate a Seed
 
