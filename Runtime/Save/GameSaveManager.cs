@@ -1,4 +1,3 @@
-using AYellowpaper.SerializedCollections;
 using CI.QuickSave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,10 +8,11 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class GameSaveManager : Singleton<GameSaveManager>
     {
-        [SerializeField, ReadOnly] private int _currentSaveSlot;
-        [SerializeField, ReadOnly] private SerializedDictionary<string, string> _dict;
+        [SerializeField, ReadOnly, Group("debug")] private int _currentSaveSlot;
+        [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, string> _dict;
 
         //
         protected override void OnPostAwake()

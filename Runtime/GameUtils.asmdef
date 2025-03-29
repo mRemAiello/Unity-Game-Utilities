@@ -9,8 +9,7 @@
         "Unity.TextMeshPro",
         "TriInspector",
         "DOTween.Modules",
-        "QuickSave",
-        "AYellowpaper.SerializedCollections"
+        "QuickSave"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
