@@ -20,12 +20,12 @@ namespace GameUtils
             DebugCurrentFileSave();
         }
 
-        public bool Exists<T>(string key, string suffix = "")
+        public bool Exists<T>(string context, string key)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(key, suffix);
+            var id = GetID<T>(context, key);
 
             //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
@@ -38,12 +38,12 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryLoad<T>(string key, out T result, T defaultValue = default, string suffix = "")
+        public bool TryLoad<T>(string context, string key, out T result, T defaultValue = default)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(key, suffix);
+            var id = GetID<T>(context, key);
 
             //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
@@ -58,12 +58,12 @@ namespace GameUtils
             return false;
         }
 
-        public void Save<T>(string key, T amount, string suffix = "")
+        public void Save<T>(string context, string key, T amount)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(key, suffix);
+            var id = GetID<T>(context, key);
 
             //
             var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
@@ -74,12 +74,12 @@ namespace GameUtils
             _dict[id] = amount.ToString();
         }
 
-        public T Load<T>(string key, T defaultValue = default, string suffix = "")
+        public T Load<T>(string context, string key, T defaultValue = default)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(key, suffix);
+            var id = GetID<T>(context, key);
 
             //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
@@ -91,12 +91,12 @@ namespace GameUtils
             return defaultValue;
         }
 
-        public void RemoveKey<T>(string key, string suffix = "")
+        public void RemoveKey<T>(string context, string key)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(key, suffix);
+            var id = GetID<T>(context, key);
             var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
 
             //
@@ -110,6 +110,38 @@ namespace GameUtils
             }
         }
 
+        [Button(ButtonSizes.Medium)]
+        private void DebugCurrentFileSave()
+        {
+            CheckFileSave();
+
+            //
+            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var saveKeys = saveReader.GetAllKeys().ToList();
+
+            //
+            _dict.Clear();
+            foreach (var key in saveKeys)
+            {
+                if (_dict.ContainsKey(key))
+                    continue;
+
+                //
+                if (saveReader.TryRead(key, out JObject jObj))
+                {
+                    _dict.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
+                }
+                else
+                {
+                    if (saveReader.TryRead(key, out object obj))
+                    {
+                        _dict.Add(key, obj.ToString());
+                    }
+                }
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
         public void Clear()
         {
             CheckFileSave();
@@ -125,47 +157,6 @@ namespace GameUtils
 
             //
             _dict.Clear();
-        }
-
-        [Button]
-        private void DebugCurrentFileSave()
-        {
-            CheckFileSave();
-
-            //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
-            var saveKeys = saveReader.GetAllKeys().ToList();
-
-            //
-            _dict.Clear();
-            foreach (var key in saveKeys)
-            {
-                if (!_dict.ContainsKey(key))
-                {
-                    if (saveReader.TryRead(key, out JObject jObj))
-                    {
-                        _dict.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
-                    }
-                    else
-                    {
-                        if (saveReader.TryRead(key, out object obj))
-                        {
-                            _dict.Add(key, obj.ToString());
-                        }
-                    }
-                }
-            }
-        }
-
-        private string GetID<T>(string key, string suffix = "")
-        {
-            var id = string.Format("{0}-{1}", key, typeof(T).Name);
-            if (!string.IsNullOrEmpty(suffix))
-            {
-                id += $"-{suffix}";
-            }
-
-            return id;
         }
 
         private void CheckFileSave()
@@ -189,9 +180,22 @@ namespace GameUtils
             return ret;
         }
 
+        //
+        public bool TryLoad<T>(ISaveable suffix, string key, out T result, T defaultValue = default)
+        {
+            return TryLoad(suffix.SaveContext, key, out result, defaultValue);
+        }
+
+        //
+        private string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
+        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
+        public void Save<T>(ISaveable suffix, string key, T amount) => Save(suffix.SaveContext, key, amount);
+        public T Load<T>(ISaveable suffix, string key, T defaultValue = default) => Load(suffix.SaveContext, key, defaultValue);
+        public void RemoveKey<T>(ISaveable suffix, string key) => RemoveKey<T>(key, suffix.SaveContext);
+
         // 
         public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
-        [Button] public void SetActiveSaveSlot(int slot) => _currentSaveSlot = slot;
+        [Button(ButtonSizes.Medium)] public void SetActiveSaveSlot(int slot) => _currentSaveSlot = slot;
     }
 }
