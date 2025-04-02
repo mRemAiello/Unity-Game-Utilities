@@ -17,7 +17,7 @@ namespace GameUtils
             // 
             foreach (Pool pool in _pools)
             {
-                Queue<GameObject> objectPool = new Queue<GameObject>();
+                Queue<GameObject> objectPool = new();
 
                 for (int i = 0; i < pool.Size; i++)
                 {
