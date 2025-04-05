@@ -6,7 +6,7 @@ namespace GameUtils
 {
     public abstract class GameEventAsset<T> : GameEventBaseAsset
     {
-        [SerializeField, Group("debug"), ReadOnly] private T _currentValue;
+        [SerializeField, PropertyOrder(1), ReadOnly] private T _currentValue;
 
         // private readonly
         private UnityEvent<T> _onInvoked;

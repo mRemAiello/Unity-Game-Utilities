@@ -8,16 +8,44 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    // TODO: Eventi
     [DeclareBoxGroup("debug", Title = "Debug")]
-    public class GameSaveManager : Singleton<GameSaveManager>
+    [DeclareBoxGroup("save", Title = "Save")]
+    [DeclareBoxGroup("events", Title = "Events")]
+    public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
+        [SerializeField, Group("save")] private bool _logEnabled = true;
+        [SerializeField, Group("save")] private int _minSaveSlot = 0;
+        [SerializeField, Group("save")] private int _maxSaveSlot = 5;
         [SerializeField, ReadOnly, Group("debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, string> _dict;
+
+        public bool LogEnabled => _logEnabled;
 
         //
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
+        }
+
+        [Button(ButtonSizes.Medium)] 
+        public void SetActiveSaveSlot(int slot)
+        {
+            if (slot < _minSaveSlot || slot > _maxSaveSlot)
+            {
+                this.LogError($"Invalid save slot: {slot}. Must be between {_minSaveSlot} and {_maxSaveSlot}.");
+                return;
+            }
+
+            //
+            if (_currentSaveSlot == slot)
+            {
+                this.LogWarning($"Save slot {slot} is already active.");
+                return;
+            }
+
+            //
+            _currentSaveSlot = slot;
         }
 
         public bool Exists<T>(string context, string key)
@@ -196,6 +224,5 @@ namespace GameUtils
         // 
         public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
-        [Button(ButtonSizes.Medium)] public void SetActiveSaveSlot(int slot) => _currentSaveSlot = slot;
     }
 }

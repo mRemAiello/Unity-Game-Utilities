@@ -48,10 +48,17 @@ string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
 ## Debug
 
 ```cs
-var gameplayLogger = DebugManager.GetCategory("Gameplay");
-gameplayLogger.Log("Gameplay log.");
-gameplayLogger.LogWarning("Gameplay warning log.");
-gameplayLogger.LogError("Gameplay error log.");
+public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
+{
+    public void SetActiveSaveSlot(int slot)
+    {
+        if (slot < _minSaveSlot || slot > _maxSaveSlot)
+        {
+            this.LogError($"Invalid save slot: {slot}. Must be between {_minSaveSlot} and {_maxSaveSlot}.");
+            return;
+        }
+    }
+}
 ```
 
 ## Auto Bundles
@@ -188,15 +195,13 @@ public class TestTuple : ElementTuple<string, string>
 }
 ```
 
-## Utilities
-
-### Genera un seed casuale
+## Genera un seed casuale
 
 ```cs
 int seed = SeedGenerator.GenerateSeed();
 ```
 
-### Transform
+## Transform
 
 ```cs
 transform.SetX(0);
@@ -204,7 +209,7 @@ transform.SetY(0);
 transform.SetZ(0);
 ```
 
-### Layers
+## Layers
 
 ```cs
 // GameObject

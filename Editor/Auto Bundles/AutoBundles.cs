@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using GameUtils;
 using TriInspector;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -10,12 +11,16 @@ using UnityEngine;
 namespace UnityEditor.GameUtils
 {
     [CreateAssetMenu(menuName = "GD/Auto Bundles/Auto Bundles")]
-    public class AutoBundles : ScriptableObject
+    public class AutoBundles : ScriptableObject, ILoggable
     {
-        [SerializeField] private List<AutoBundleData> _bundleDatas;
         [SerializeField] private bool _showLog = false;
+        [SerializeField, TableList()] private List<AutoBundleData> _bundleDatas;
 
-        [Button]
+        //
+        public bool LogEnabled => _showLog;
+
+        //
+        [Button(ButtonSizes.Medium)]
         public void MarkAllFilesAsAddressables()
         {
             // 
@@ -24,9 +29,9 @@ namespace UnityEditor.GameUtils
             {
                 if (_showLog)
                 {
-                    Debug.LogError("No Addressables settings found.");
+                    this.LogError("No Addressables settings found.");
                 }
-                
+
                 return;
             }
 
@@ -76,7 +81,7 @@ namespace UnityEditor.GameUtils
             if (_showLog)
             {
                 Debug.Log("All files marked as Addressables.");
-            }                
+            }
         }
 
         private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
@@ -110,7 +115,7 @@ namespace UnityEditor.GameUtils
                 if (!entry.labels.Contains(label))
                 {
                     entry.SetLabel(label, true, true);
-                }            
+                }
             }
         }
 
