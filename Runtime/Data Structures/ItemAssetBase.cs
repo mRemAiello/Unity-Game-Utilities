@@ -5,7 +5,7 @@ using UnityEngine.AddressableAssets;
 namespace GameUtils
 {
     [DeclareBoxGroup("graphics", Title = "Graphics")]
-    public class ItemAssetBase : ItemLocalizationData
+    public abstract class ItemAssetBase : ItemLocalizationData
     {
         [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
         [SerializeField, Group("graphics")] private Color _itemColor = Color.white;
