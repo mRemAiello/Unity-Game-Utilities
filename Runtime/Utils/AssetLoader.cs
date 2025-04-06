@@ -6,6 +6,28 @@ namespace GameUtils
 {
     public class AssetLoader
     {
+        public static T LoadAssetSync<T>(AssetReference assetReference) where T : UnityEngine.Object
+        {
+            if (assetReference == null)
+                return default;
+
+            //
+            if (assetReference.IsValid() && assetReference.OperationHandle.IsValid())
+            {
+                if (assetReference.OperationHandle.Status == AsyncOperationStatus.None)
+                {
+                    return assetReference.LoadAssetAsync<T>().WaitForCompletion();
+                }
+                else
+                {
+                    return assetReference.OperationHandle.Result as T;
+                }
+            }
+
+            //
+            return assetReference.LoadAssetAsync<T>().WaitForCompletion();
+        }
+
         public static void LoadAssetAsync<T>(AssetReference assetReference, Action<AsyncOperationHandle<T>> callback)
         {
             if (assetReference.IsValid() && assetReference.OperationHandle.IsValid())
