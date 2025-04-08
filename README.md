@@ -26,6 +26,11 @@ A curated list of scripts for Unity.
 [Button(ButtonSizes.Large)]
 ```
 
+### TableList
+```cs
+[TableList(Draggable = true, HideAddButton = false, HideRemoveButton = false, AlwaysExpanded = false)]
+```
+
 ## Salvataggio
 
 ```cs

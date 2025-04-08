@@ -5,8 +5,8 @@ namespace GameUtils
 {
     [DeclareBoxGroup("graphics", Title = "Graphics")]
     [DeclareBoxGroup("progress", Title = "Progress")]
-    [CreateAssetMenu(menuName = "GD/Achievements/Base")]
-    public class AchievementData : UniqueID
+    [CreateAssetMenu(menuName = Constant.ACH_NAME + "Achivement")]
+    public class AchievementData : ItemAssetBase
     {
         [SerializeField, Group("internal")] private string _eventName;
         [SerializeField, Group("internal")] private string _steamId;
@@ -18,8 +18,6 @@ namespace GameUtils
         [SerializeField, Group("internal")] private string _appGalleryId;
 
         //
-        [SerializeField, Group("graphics")] private string _name;
-        [SerializeField, Group("graphics")] private string _description;
         [SerializeField, Group("graphics")] private Sprite _uncompletedIcon;
         [SerializeField, Group("graphics")] private Sprite _completedIcon;
 
@@ -39,8 +37,6 @@ namespace GameUtils
         public string AndroidId => _androidId;
         public string IosId => _iosId;
         public string AppGalleryId => _appGalleryId;
-        public string Name => _name;
-        public string Description => _description;
         public Sprite UncompletedIcon => _uncompletedIcon;
         public Sprite CompletedIcon => _completedIcon;
         public AchievementType Type => _type;

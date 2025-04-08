@@ -10,11 +10,11 @@ using UnityEngine;
 
 namespace UnityEditor.GameUtils
 {
-    [CreatableScriptableObject("Auto Bundles")]
+    [CreateAssetMenu(menuName = Constant.CURRENCY_NAME + "Currency Data")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
         [SerializeField] private bool _showLog = false;
-        [SerializeField, TableList()] private List<AutoBundleData> _bundleDatas;
+        [SerializeField, TableList(Draggable = true)] private List<AutoBundleData> _bundleDatas;
 
         //
         public bool LogEnabled => _showLog;
@@ -27,11 +27,7 @@ namespace UnityEditor.GameUtils
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings == null)
             {
-                if (_showLog)
-                {
-                    this.LogError("No Addressables settings found.");
-                }
-
+                this.LogError("No Addressables settings found.");
                 return;
             }
 
@@ -66,10 +62,7 @@ namespace UnityEditor.GameUtils
                         SetupAddress(entry);
 
                         // 
-                        if (_showLog)
-                        {
-                            Debug.Log($"Added {relativePath} as Addressable.");
-                        }
+                        this.Log($"Added {relativePath} as Addressable.");
                     }
                 }
             }
@@ -78,10 +71,8 @@ namespace UnityEditor.GameUtils
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            if (_showLog)
-            {
-                Debug.Log("All files marked as Addressables.");
-            }
+            //
+            this.Log("All files marked as Addressables.");
         }
 
         private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
