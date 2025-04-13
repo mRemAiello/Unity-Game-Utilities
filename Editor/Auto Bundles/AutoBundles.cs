@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace UnityEditor.GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.CURRENCY_NAME + "Currency Data")]
+    [CreateAssetMenu(menuName = Constant.ADDR_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-        [SerializeField] private bool _showLog = false;
+        [SerializeField] private bool _logEnabled = false;
         [SerializeField, TableList(Draggable = true)] private List<AutoBundleData> _bundleDatas;
 
         //
-        public bool LogEnabled => _showLog;
+        public bool LogEnabled => _logEnabled;
 
         //
         [Button(ButtonSizes.Medium)]

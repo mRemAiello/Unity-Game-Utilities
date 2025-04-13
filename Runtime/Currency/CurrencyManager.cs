@@ -7,11 +7,12 @@ namespace GameUtils
     [DeclareBoxGroup("debug", Title = "Debug")]
     public class CurrencyManager : Singleton<CurrencyManager>, ISaveable, ILoggable
     {
+        [SerializeField] private bool _logEnabled = true;
         [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, int> _currencies = new();
 
         //
         public string SaveContext => "Currency";
-        public bool LogEnabled => true;
+        public bool LogEnabled => _logEnabled;
 
         //
         protected override void OnPostAwake()

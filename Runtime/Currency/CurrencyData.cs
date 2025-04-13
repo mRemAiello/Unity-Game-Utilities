@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(fileName = "Currency Data", menuName = "GD/Currency/Currency Data", order = 1)]
+    [CreateAssetMenu(menuName = Constant.CURRENCY_NAME + "Currency")]
     [DeclareBoxGroup("currency", Title = "Currency")]
     public class CurrencyData : ItemAssetBase
     {
