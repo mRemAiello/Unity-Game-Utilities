@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    public class EventManager : MonoBehaviour, ILoggable
+    public class EventManager : Singleton<EventManager>, ILoggable
     {
         [SerializeField] private bool _logEnabled = true;
         [SerializeField] private List<EventCollectionData> _eventDatabase;
@@ -12,11 +12,7 @@ namespace GameUtils
         //
         public bool LogEnabled => _logEnabled;
 
-        /// <summary>
-        /// Get the Event Base Asset by the name
-        /// </summary>
-        /// <param name="eventName">The name of the desired Event Base Asset</param>
-        /// <returns>The found Event Base Asset (if any)</returns>
+        //
         public virtual GameEventBaseAsset GetEventBaseAssetByName(string eventName)
         {
             foreach (var database in _eventDatabase)
