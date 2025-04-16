@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Constants/String")]
+    [CreateAssetMenu(menuName = Constant.CONSTANTS_NAME + "String")]
     public class StringConstant : GameConstant
     {
         [SerializeField] private string _value;

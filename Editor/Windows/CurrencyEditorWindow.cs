@@ -5,7 +5,7 @@ namespace UnityEditor.GameUtils
 {
     public class CurrencyEditorWindow : GenericAssetEditorWindow<CurrencyData>
     {
-        [MenuItem("Tools/Window/Material Editor")]
+        [MenuItem(Constant.MENU_NAME + "Material Editor")]
         public static void ShowWindow()
         {
             var window = GetWindow<CurrencyEditorWindow>();

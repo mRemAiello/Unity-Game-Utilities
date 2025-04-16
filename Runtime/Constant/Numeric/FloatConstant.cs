@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Constants/Float")]
+    [CreateAssetMenu(menuName = Constant.CONSTANTS_NAME + "Float")]
     public class FloatConstant : NumericGameConstant
     {
         [SerializeField] private float _value;

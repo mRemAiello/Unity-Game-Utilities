@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Events/Numeric/Int")]
+    [CreateAssetMenu(menuName = Constant.EVENT_NAME + "Numeric/Int")]
     public class IntEventAsset : GameEventAsset<int>
     {
     }

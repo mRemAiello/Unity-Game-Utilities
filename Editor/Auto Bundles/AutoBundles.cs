@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace UnityEditor.GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.ADDR_NAME + "Auto Bundle")]
+    [CreateAssetMenu(menuName = Constant.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
         [SerializeField] private bool _logEnabled = false;

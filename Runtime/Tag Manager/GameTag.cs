@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Tags/Game Tag")]
+    [CreateAssetMenu(menuName = Constant.TAG_NAME + "Tag")]
     public class GameTag : ItemAssetBase
     {
     }

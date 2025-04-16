@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Events/Damage/Damage Info")]
+    [CreateAssetMenu(menuName = Constant.EVENT_NAME + "Health/Damage")]
     public class DamageInfoEventAsset : GameEventAsset<DamageInfo>
     {
     }

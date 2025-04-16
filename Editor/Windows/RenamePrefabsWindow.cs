@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using GameUtils;
 
 namespace UnityEditor.GameUtils
 {
@@ -13,7 +14,7 @@ namespace UnityEditor.GameUtils
         [SerializeField] private List<Object> _prefabs = new();
 
         //
-        [MenuItem("Tools/Game Utils/Prefab Renamer", false, 1)]
+        [MenuItem(Constant.MENU_NAME + "Prefab Renamer")]
         public static void ShowWindow()
         {
             GetWindow<RenamePrefabsWindow>("Rename Prefabs");

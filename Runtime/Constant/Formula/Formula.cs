@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "GD/Constants/Float Formula")]
+    [CreateAssetMenu(menuName = Constant.CONSTANTS_NAME + "Formula")]
     public class FloatFormulaConstant : NumericGameConstant
     {
         [SerializeField] private string _formula = "1 / {0}";

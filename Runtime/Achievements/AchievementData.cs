@@ -5,7 +5,7 @@ namespace GameUtils
 {
     [DeclareBoxGroup("graphics", Title = "Graphics")]
     [DeclareBoxGroup("progress", Title = "Progress")]
-    [CreateAssetMenu(menuName = Constant.ACH_NAME + "Achivement")]
+    [CreateAssetMenu(menuName = Constant.ACHIEVEMENT_NAME + "Achievement")]
     public class AchievementData : ItemAssetBase
     {
         [SerializeField, Group("internal")] private string _eventName;

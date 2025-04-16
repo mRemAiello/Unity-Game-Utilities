@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.EVENT_NAME + "Event Collection")]
+    [CreateAssetMenu(menuName = Constant.EVENT_NAME + "Event Collection", order = 99)]
     [DeclareBoxGroup("Events")]
     public class EventCollectionData : ScriptableObject
     {
