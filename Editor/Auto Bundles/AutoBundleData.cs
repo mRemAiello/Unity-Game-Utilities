@@ -27,5 +27,13 @@ namespace UnityEditor.GameUtils
                 return list;
             }
         }
+
+        //
+        public AutoBundleData(string folderName)
+        {
+            _folderName = folderName;
+            _groupName = "";
+            _labels = new List<string>();
+        }
     }
 }

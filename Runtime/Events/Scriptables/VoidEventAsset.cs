@@ -7,8 +7,6 @@ namespace GameUtils
     [CreateAssetMenu(menuName = Constant.EVENT_NAME + "Void", order = 99)]
     public class VoidEventAsset : GameEventBaseAsset
     {
-        [SerializeField] private bool _log = false;
-
         // private
         private UnityEvent _onInvoked;
 
@@ -50,12 +48,7 @@ namespace GameUtils
         [Button]
         public void Invoke()
         {
-            if (_log)
-            {
-                Debug.Log($"{name} event invoked", this);
-            }
-
-            //
+            this.Log($"{name} event invoked", this);
             _onInvoked?.Invoke();
         }
     }

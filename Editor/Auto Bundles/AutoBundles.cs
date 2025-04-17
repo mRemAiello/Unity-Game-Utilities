@@ -21,6 +21,40 @@ namespace UnityEditor.GameUtils
 
         //
         [Button(ButtonSizes.Medium)]
+        private List<string> CreateAutoAssetFolders(int depth)
+        {
+            List<string> result = new();
+            string assetsPath = Application.dataPath;
+
+            //
+            ExploreFolders(assetsPath, 1, depth, result);
+
+            //
+            _bundleDatas = new List<AutoBundleData>();
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i] = "Assets" + result[i].Replace(assetsPath, "").Replace("\\", "/");
+                _bundleDatas.Add(new AutoBundleData(result[i]));
+            }
+
+            return result;
+        }
+
+        private void ExploreFolders(string currentPath, int currentDepth, int maxDepth, List<string> result)
+        {
+            if (currentDepth > maxDepth)
+                return;
+
+            //
+            string[] subFolders = Directory.GetDirectories(currentPath);
+            foreach (string folder in subFolders)
+            {
+                result.Add(folder);
+                ExploreFolders(folder, currentDepth + 1, maxDepth, result);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
         public void MarkAllFilesAsAddressables()
         {
             // 
