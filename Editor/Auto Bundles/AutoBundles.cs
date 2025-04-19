@@ -13,24 +13,28 @@ namespace UnityEditor.GameUtils
     [CreateAssetMenu(menuName = Constant.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-        [SerializeField] private bool _logEnabled = false;
         [SerializeField, TableList(Draggable = true)] private List<AutoBundleData> _bundleDatas;
+
+        //
+        [SerializeField] private bool _logEnabled = false;
+        [SerializeField] private List<string> _excludedFolders = new();
+        [SerializeField] private List<string> _mergedFolders = new();
 
         //
         public bool LogEnabled => _logEnabled;
 
         //
         [Button(ButtonSizes.Medium)]
-        private List<string> CreateAutoAssetFolders(int depth)
+        protected virtual List<string> CreateAutoAssetFolders(int depth)
         {
             List<string> result = new();
             string assetsPath = Application.dataPath;
 
             //
-            ExploreFolders(assetsPath, 1, depth, result);
-
-            //
             _bundleDatas = new List<AutoBundleData>();
+
+            // 
+            ExploreFolders(assetsPath, 1, depth, result, _excludedFolders, _mergedFolders);
             for (int i = 0; i < result.Count; i++)
             {
                 result[i] = "Assets" + result[i].Replace(assetsPath, "").Replace("\\", "/");
@@ -40,7 +44,9 @@ namespace UnityEditor.GameUtils
             return result;
         }
 
-        private void ExploreFolders(string currentPath, int currentDepth, int maxDepth, List<string> result)
+        // Funzione ricorsiva per esplorare le cartelle
+        protected virtual void ExploreFolders(string currentPath, int currentDepth, int maxDepth,
+                                                List<string> result, List<string> excludedFolders, List<string> mergedFolders)
         {
             if (currentDepth > maxDepth)
                 return;
@@ -49,13 +55,26 @@ namespace UnityEditor.GameUtils
             string[] subFolders = Directory.GetDirectories(currentPath);
             foreach (string folder in subFolders)
             {
+                string folderName = Path.GetFileName(folder);
+
+                //
+                if (excludedFolders.Contains(folderName))
+                    continue;
+
+                //
                 result.Add(folder);
-                ExploreFolders(folder, currentDepth + 1, maxDepth, result);
+
+                //
+                if (mergedFolders.Contains(folderName))
+                    continue;
+
+                // 
+                ExploreFolders(folder, currentDepth + 1, maxDepth, result, excludedFolders, mergedFolders);
             }
         }
 
         [Button(ButtonSizes.Medium)]
-        public void MarkAllFilesAsAddressables()
+        protected virtual void MarkAllFilesAsAddressables()
         {
             // 
             var settings = AddressableAssetSettingsDefaultObject.Settings;
