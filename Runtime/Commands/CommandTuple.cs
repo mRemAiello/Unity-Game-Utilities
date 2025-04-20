@@ -8,5 +8,9 @@ namespace GameUtils
         public CommandTuple(Command firstData, CommandInput secondData) : base(firstData, secondData)
         {
         }
+
+        //
+        public Command Command => Item1;
+        public CommandInput CommandInput => Item2;
     }
 }

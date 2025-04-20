@@ -44,7 +44,7 @@ namespace GameUtils
             _commandQueue.Add(commandTuple);
 
             //
-            this.Log($"Command {commandTuple.Item1.name} added to Queue");
+            this.Log($"Command {commandTuple.Command.name} added to Queue");
 
             //
             if (!_playingQueue)
@@ -72,20 +72,20 @@ namespace GameUtils
 
             //
             var command = _commandQueue.Pop(0);
-            _currentCommand = command.Item1;
+            _currentCommand = command.Command;
 
             //
-            this.Log($"Executing Command {command.Item1.name} from Queue");
+            this.Log($"Executing Command {command.Command.name} from Queue");
 
             //
-            _commandList.Add(command.Item1.name);
+            _commandList.Add(command.Command.name);
             if (_commandList.Count > _maxCommandsInLogList)
             {
                 _commandList.RemoveAt(0);
             }
 
             //
-            command.Item1.Execute(command.Item2);
+            command.Command.Execute(command.CommandInput);
         }
     }
 }
