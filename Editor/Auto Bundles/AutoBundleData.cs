@@ -29,10 +29,10 @@ namespace UnityEditor.GameUtils
         }
 
         //
-        public AutoBundleData(string folderName)
+        public AutoBundleData(string folderName, string groupName = "")
         {
             _folderName = folderName;
-            _groupName = "";
+            _groupName = groupName;
             _labels = new List<string>();
         }
     }

@@ -38,7 +38,8 @@ namespace UnityEditor.GameUtils
             for (int i = 0; i < result.Count; i++)
             {
                 result[i] = "Assets" + result[i].Replace(assetsPath, "").Replace("\\", "/");
-                _bundleDatas.Add(new AutoBundleData(result[i]));
+                string groupName = GetGroupName(result[i]);
+                _bundleDatas.Add(new AutoBundleData(result[i], groupName));
             }
 
             return result;
@@ -103,8 +104,6 @@ namespace UnityEditor.GameUtils
 
                     //
                     string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
-
-                    //
                     var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
 
                     // 
@@ -126,6 +125,13 @@ namespace UnityEditor.GameUtils
 
             //
             this.Log("All files marked as Addressables.");
+        }
+
+        private string GetGroupName(string folderName)
+        {
+            // 
+            string groupName = folderName.Replace("Assets/", "").Replace("/", "").Replace("\\", "").Replace(" ", "");
+            return groupName;
         }
 
         private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
