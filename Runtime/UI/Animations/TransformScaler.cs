@@ -1,4 +1,3 @@
-using DG.Tweening;
 using TriInspector;
 using UnityEngine;
 
@@ -24,11 +23,11 @@ namespace GameUtils
             {
                 if (_useFadeOutCurve)
                 {
-                    transform.DOScale(Vector3.one, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
+                    //transform.DOScale(Vector3.one, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
                 }
                 else
                 {
-                    transform.DOScale(Vector3.one, _fadeOutSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
+                    //transform.DOScale(Vector3.one, _fadeOutSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
                 }
             }
             else
@@ -48,11 +47,11 @@ namespace GameUtils
             {
                 if (_useFadeInCurve)
                 {
-                    transform.DOScale(Vector3.zero, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
+                    //transform.DOScale(Vector3.zero, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
                 }
                 else
                 {
-                    transform.DOScale(Vector3.zero, _fadeInSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
+                    //transform.DOScale(Vector3.zero, _fadeInSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
                 }
             }
             else

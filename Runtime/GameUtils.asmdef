@@ -8,7 +8,6 @@
         "Unity.InputSystem",
         "Unity.TextMeshPro",
         "TriInspector",
-        "DOTween.Modules",
         "QuickSave"
     ],
     "includePlatforms": [],

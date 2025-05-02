@@ -1,4 +1,3 @@
-using DG.Tweening;
 using TriInspector;
 using UnityEngine;
 
@@ -31,11 +30,11 @@ namespace GameUtils
             {
                 if (_useFadeOutCurve)
                 {
-                    _canvasGroup.DOFade(1, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
+                    //_canvasGroup.DOFade(1, _fadeOutSpeed).SetEase(_fadeOutCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
                 }
                 else
                 {
-                    _canvasGroup.DOFade(1, _fadeOutSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
+                    //_canvasGroup.DOFade(1, _fadeOutSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Showed));
                 }
             }
             else
@@ -55,11 +54,11 @@ namespace GameUtils
             {
                 if (_useFadeInCurve)
                 {
-                    _canvasGroup.DOFade(0, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
+                    //_canvasGroup.DOFade(0, _fadeInSpeed).SetEase(_fadeInCurve).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
                 }
                 else
                 {
-                    _canvasGroup.DOFade(0, _fadeInSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
+                    //_canvasGroup.DOFade(0, _fadeInSpeed).OnComplete(() => EndAnimation(UIAnimationStatus.Hided));
                 }
             }
             else

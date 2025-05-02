@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 using System.Collections;
 using TriInspector;
 
@@ -33,7 +32,7 @@ namespace GameUtils
 
             //
             _rectTransform.sizeDelta = new Vector2(100, _rectTransform.sizeDelta.y);
-            _rectTransform.DOSizeDelta(new Vector2(400, _rectTransform.sizeDelta.y), _animationDuration).SetEase(Ease.OutBack);
+            //_rectTransform.DOSizeDelta(new Vector2(400, _rectTransform.sizeDelta.y), _animationDuration).SetEase(Ease.OutBack);
 
             // Start coroutine to hide after duration
             StartCoroutine(HideAfterDuration());
@@ -48,7 +47,7 @@ namespace GameUtils
         public void Hide()
         {
             Vector2 size = new(100, _rectTransform.sizeDelta.y);
-            _rectTransform.DOSizeDelta(size, _animationDuration).SetEase(Ease.InBack).OnComplete(() => Destroy(gameObject));
+            //_rectTransform.DOSizeDelta(size, _animationDuration).SetEase(Ease.InBack).OnComplete(() => Destroy(gameObject));
         }
     }
 }
