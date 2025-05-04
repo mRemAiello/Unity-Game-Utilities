@@ -5,6 +5,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(-100)]
     public class InputManager : Singleton<InputManager>
     {
         [Tab("References")]

@@ -35,28 +35,19 @@ namespace GameUtils
             return base.GetHashCode();
         }
 
-        public CurrencyConversionRate GetCurrencyConversion(CurrencyData currency)
+        public bool TryGetCurrencyConversionRate(CurrencyData currency, out CurrencyConversionRate conversionRate)
         {
+            conversionRate = null;
             foreach (var conversion in _currencyConversions)
             {
                 if (conversion.CurrencyData.Equals(currency))
                 {
-                    return conversion;
+                    conversionRate = conversion;
+                    return true;
                 }
             }
 
-            return null;
-        }
-
-        public float GetConversionRate(CurrencyData currency)
-        {
-            var conversion = GetCurrencyConversion(currency);
-            if (conversion != null)
-            {
-                return conversion.ConversionRate;
-            }
-
-            return 1.0f;
+            return false;
         }
     }
 }

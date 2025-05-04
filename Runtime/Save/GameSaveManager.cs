@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    // TODO: Eventi
     [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("save", Title = "Save")]
     [DeclareBoxGroup("events", Title = "Events")]
+    [DefaultExecutionOrder(-200)]
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
         [SerializeField, Group("save")] private bool _logEnabled = true;
@@ -197,15 +197,15 @@ namespace GameUtils
             }
         }
 
-        private string CleanJObjectString(string str)
+        private string CleanJObjectString(string original)
         {
-            var ret = str.Replace("{", "");
-            ret = ret.Replace("}", "");
-            ret = ret.Replace(":", ": ");
-            ret = ret.Replace(",", ", ");
-            ret = ret.Replace("\"", "");
-
-            return ret;
+            var cleaned = original.Replace("{", "");
+            cleaned = cleaned.Replace("}", "");
+            cleaned = cleaned.Replace(":", ": ");
+            cleaned = cleaned.Replace(",", ", ");
+            cleaned = cleaned.Replace("\"", "");
+            
+            return cleaned;
         }
 
         //
