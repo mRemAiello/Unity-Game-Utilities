@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 namespace GameUtils
@@ -10,10 +12,10 @@ namespace GameUtils
     public class CurrencyUITracker : MonoBehaviour, ILoggable
     {
         [SerializeField] private bool _logEnabled = true;
-        [SerializeField, Group("currency")] private CurrencyData _currencyData;
-        [SerializeField, Group("currency")] private TextMeshProUGUI _currencyText;
-        [SerializeField, Group("currency")] private Image _currencyIcon;
-        [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
+        [SerializeField, Required, Group("currency")] private CurrencyData _currencyData;
+        [SerializeField, Required, Group("currency")] private TextMeshProUGUI _currencyText;
+        [SerializeField, Required, Group("currency")] private Image _currencyIcon;
+        [SerializeField, Required, Group("events")] private CurrencyChangeEvent _onChangeEvent;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -24,39 +26,28 @@ namespace GameUtils
             _onChangeEvent?.AddListener(OnCurrencyChangeEvent);
 
             //
+            if (_currencyData.AssetReferenceIcon != null)
+            {
+                // TODO: Fix
+                //AssetLoader.LoadAssetAsync<Sprite>(_currencyData.AssetReferenceIcon, OnIconLoaded);
+            }
+
+            //
             UpdateUI();
         }
 
-        private void OnCurrencyChangeEvent(CurrencyChangeEventArgs input)
+        private void OnIconLoaded(AsyncOperationHandle<Sprite> handle)
         {
-            UpdateUI();
+            _currencyIcon.sprite = handle.Result;
         }
+
+        private void OnCurrencyChangeEvent(CurrencyChangeEventArgs input) => UpdateUI();
 
         private void UpdateUI()
         {
-            if (_currencyText == null)
-            {
-                this.LogError("Currency Text is not assigned in the inspector.");
-                return;
-            }
-
-            //
-            if (_currencyIcon == null)
-            {
-                this.LogError("Currency Icon is not assigned in the inspector.");
-                return;
-            }
-
-            //
-            if (_currencyData == null)
-            {
-                this.LogError("Currency Data is not assigned in the inspector.");
-                return;
-            }
-
             //
             _currencyIcon.sprite = _currencyData.Icon;
-            _currencyText.text = CurrencyManager.Instance.GetCurrencyAmount(_currencyData).ToString();  
+            _currencyText.text = CurrencyManager.Instance.GetCurrencyAmount(_currencyData).ToString();
         }
     }
 }
