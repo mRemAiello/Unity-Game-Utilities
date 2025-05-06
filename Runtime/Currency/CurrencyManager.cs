@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using TriInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace GameUtils
@@ -9,8 +11,12 @@ namespace GameUtils
     [DefaultExecutionOrder(-100)]
     public class CurrencyManager : Singleton<CurrencyManager>, ISaveable, ILoggable
     {
+        [SerializeField] private string _currencyFolderPath = "Assets/Currencies/";
         [SerializeField] private bool _logEnabled = true;
         [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
+
+        //
+        [SerializeField, ReadOnly, Group("debug")] private List<CurrencyData> _currencies = new();
         [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
 
         //
@@ -20,6 +26,13 @@ namespace GameUtils
         //
         protected override void OnPostAwake()
         {
+            base.OnPostAwake();
+
+#if UNITY_EDITOR
+            InitCurrencies();
+#endif
+
+            //
             LoadAllCurrencies();
         }
 
@@ -103,9 +116,10 @@ namespace GameUtils
         [Button]
         public void ResetCurrencies()
         {
-            // TODO: Fix
-            _savedCurrencies.Clear();
-            SaveAllCurrencies();
+            foreach (var currency in _currencies)
+            {
+                SetCurrencyAmount(currency, 0);
+            }
         }
 
         private void SaveCurrency(string currencyID)
@@ -130,13 +144,21 @@ namespace GameUtils
             }
         }
 
-        private void SaveAllCurrencies()
+#if UNITY_EDITOR
+        [Button]
+        private void InitCurrencies()
         {
-            foreach (var currency in _savedCurrencies)
+            var assetsGuid = AssetDatabase.FindAssets($"t:{typeof(CurrencyData)}", new string[] { _currencyFolderPath });
+            var assetPaths = assetsGuid.Select(guid => AssetDatabase.GUIDToAssetPath(guid));
+
+            //
+            _currencies.Clear();
+            foreach (var path in assetPaths)
             {
-                SaveCurrency(currency.Key);
+                _currencies.Add(AssetDatabase.LoadAssetAtPath<CurrencyData>(path));
             }
         }
+#endif
 
         //
         public Dictionary<string, int> GetAllCurrencies() => new(_savedCurrencies);
