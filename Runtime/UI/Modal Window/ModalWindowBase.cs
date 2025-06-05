@@ -5,25 +5,25 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public abstract class ModalWindow : Singleton<ModalWindow>
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("references", Title = "References")]
+    public abstract class ModalWindowBase : Singleton<ModalWindowBase>, ILoggable
     {
-        [Tab("References")]
-        [SerializeField] private TextMeshProUGUI _headerText;
-        [SerializeField] private TextMeshProUGUI _questionText;
-        [SerializeField] private Transform _buttonsRoot;
+        [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
+        [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
+        [SerializeField, Group("references")] private Transform _buttonsRoot;
+        [SerializeField, Group("debug")] private bool _logEnabled = false;
+        [SerializeField, ReadOnly, Group("debug")] protected List<ModalWindowButton> _buttons = new();
+        [SerializeField, ReadOnly, Group("debug")] private bool _ignorable;
 
-        [Tab("Debug")]
-        [SerializeField, ReadOnly] protected List<ModalWindowButton> _buttons = new();
-
-        [SerializeField, ReadOnly] private bool _ignorable;
-
+        //
         public virtual bool Ignorable
         {
             get => _ignorable;
             protected set => _ignorable = value;
         }
-
         public abstract bool Visible { get; set; }
+        public bool LogEnabled => _logEnabled;
 
         //
         protected override void OnPostAwake()
@@ -65,7 +65,7 @@ namespace GameUtils
         }
 
         [Button]
-        public virtual void Show()
+        public void Show()
         {
             OnBeforeShow();
 
@@ -75,16 +75,16 @@ namespace GameUtils
         }
 
         [Button]
-        public virtual void Close()
+        public void Close()
         {
             Visible = false;
-            
+
             //
             OnPostClose();
         }
 
         //
-        protected virtual void OnBeforeShow() {}
-        protected virtual void OnPostClose() {}
+        protected virtual void OnBeforeShow() { }
+        protected virtual void OnPostClose() { }
     }
 }

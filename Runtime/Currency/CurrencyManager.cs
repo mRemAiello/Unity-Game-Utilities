@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using TriInspector;
-using UnityEditor;
 using UnityEngine;
 
 namespace GameUtils
@@ -9,30 +7,19 @@ namespace GameUtils
     [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("events", Title = "Events")]
     [DefaultExecutionOrder(-100)]
-    public class CurrencyManager : Singleton<CurrencyManager>, ISaveable, ILoggable
+    public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>, ISaveable
     {
-        [SerializeField] private string _currencyFolderPath = "Assets/Currencies/";
-        [SerializeField] private bool _logEnabled = true;
         [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
-
-        //
         [SerializeField, ReadOnly, Group("debug")] private List<CurrencyData> _currencies = new();
         [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
 
         //
         public string SaveContext => "Currency";
-        public bool LogEnabled => _logEnabled;
 
         //
         protected override void OnPostAwake()
         {
             base.OnPostAwake();
-
-#if UNITY_EDITOR
-            InitCurrencies();
-#endif
-
-            //
             LoadAllCurrencies();
         }
 
@@ -143,22 +130,6 @@ namespace GameUtils
                 }
             }
         }
-
-#if UNITY_EDITOR
-        [Button]
-        private void InitCurrencies()
-        {
-            var assetsGuid = AssetDatabase.FindAssets($"t:{typeof(CurrencyData)}", new string[] { _currencyFolderPath });
-            var assetPaths = assetsGuid.Select(guid => AssetDatabase.GUIDToAssetPath(guid));
-
-            //
-            _currencies.Clear();
-            foreach (var path in assetPaths)
-            {
-                _currencies.Add(AssetDatabase.LoadAssetAtPath<CurrencyData>(path));
-            }
-        }
-#endif
 
         //
         public Dictionary<string, int> GetAllCurrencies() => new(_savedCurrencies);

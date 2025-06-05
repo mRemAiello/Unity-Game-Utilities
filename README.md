@@ -1,6 +1,10 @@
 # Game Utils
 
-A curated list of scripts for Unity.  
+Una lista di utility script per Unity. Includono:
+- Un sistema di Singleton / Persistent Singleton e 
+- Un sistema di gestione delle valute (currency)
+- Un sistema di salvataggio / caricamento
+
 
 ## Requisiti
 
@@ -16,22 +20,17 @@ A curated list of scripts for Unity.
 * Quick Save (https://www.claytoninds.com/quick-save)
 * DOTween (http://dotween.demigiant.com/)
 
-## Editor 
+## Gestione di un Database di Assets comuni
 
-### Button
+Ti basta creare una sottoclasse di GenericDataManager<T1, T2>, dove T1 è il Manager e T2 è la classe di Scriptable Objects da caricare.
 
 ```cs
-[Button]
-[Button("Click me!")]
-[Button(ButtonSizes.Large)]
+public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>
 ```
 
-### TableList
-```cs
-[TableList(Draggable = true, HideAddButton = false, HideRemoveButton = false, AlwaysExpanded = false)]
-```
+Inserisci poi lo script in un Prefab e carica gli assets per gestirne la lista.
 
-## Salvataggio
+## Salvataggio e caricamento
 
 ```cs
 // Semplice salvataggio implementando l'interfaccia ISave
@@ -87,21 +86,6 @@ public class DrawCardAction : Command
 }
 ```
 
-## Scriptable Object Collections
-
-Create a subclass of ScriptableObjectCollection:
-
-```cs
-public class CardDataCollection : ScriptableObjectCollection<CardData>
-{
-    [Button]
-    public override void LoadAssets()
-    {
-        base.LoadAssets();
-    }
-}
-```
-
 ### Generic Asset List Viewer
 
 Make a subclass, then enjoy!
@@ -117,23 +101,6 @@ public class MaterialEditorWindow : GenericAssetEditorWindow<Material>
         window.Show();
     }
 }
-```
-
-Then make a new Scriptable Object and click "Load Assets".
-
-## UI Animations
-
-Simply add one (or more) of this script to a GameObject:
-
-* TransformScaler
-* CanvasFader
-* Spinner
-
-Then you can show / hide
-
-```cs
-component.Show();
-component.Hide();
 ```
 
 ## Loading Manager
