@@ -13,12 +13,14 @@ namespace UnityEditor.GameUtils
     [CreateAssetMenu(menuName = Constant.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-        [SerializeField, TableList(Draggable = true)] private List<AutoBundleData> _bundleDatas;
+        [Title("Results")]
+        [SerializeField, ListDrawerSettings(Draggable = false, AlwaysExpanded = true)] private List<AutoBundleData> _bundleDatas;
 
-        //
+        [Title("Settings")]
         [SerializeField] private bool _logEnabled = false;
         [SerializeField] private List<string> _excludedFolders = new();
         [SerializeField] private List<string> _mergedFolders = new();
+        [SerializeField] private List<string> _excludedExtensions = new() { ".meta", ".cs" };
 
         //
         public bool LogEnabled => _logEnabled;
@@ -34,7 +36,18 @@ namespace UnityEditor.GameUtils
             _bundleDatas = new List<AutoBundleData>();
 
             // 
-            ExploreFolders(assetsPath, 1, depth, result, _excludedFolders, _mergedFolders);
+            AutoBundleArgs args = new()
+            {
+                CurrentPath = assetsPath,
+                CurrentDepth = 1,
+                MaxDepth = depth,
+                Result = result,
+                ExcludedFolders = _excludedFolders,
+                MergedFolders = _mergedFolders
+            };
+            ExploreFolders(args);
+
+            //
             for (int i = 0; i < result.Count; i++)
             {
                 result[i] = "Assets" + result[i].Replace(assetsPath, "").Replace("\\", "/");
@@ -46,31 +59,31 @@ namespace UnityEditor.GameUtils
         }
 
         // Funzione ricorsiva per esplorare le cartelle
-        protected virtual void ExploreFolders(string currentPath, int currentDepth, int maxDepth,
-                                                List<string> result, List<string> excludedFolders, List<string> mergedFolders)
+        protected virtual void ExploreFolders(AutoBundleArgs args)
         {
-            if (currentDepth > maxDepth)
+            if (args.CurrentDepth > args.MaxDepth)
                 return;
 
             //
-            string[] subFolders = Directory.GetDirectories(currentPath);
+            string[] subFolders = Directory.GetDirectories(args.CurrentPath);
             foreach (string folder in subFolders)
             {
                 string folderName = Path.GetFileName(folder);
 
                 //
-                if (excludedFolders.Contains(folderName))
+                if (args.ExcludedFolders.Contains(folderName))
                     continue;
 
                 //
-                result.Add(folder);
+                args.Result.Add(folder);
 
                 //
-                if (mergedFolders.Contains(folderName))
+                if (args.MergedFolders.Contains(folderName))
                     continue;
 
                 // 
-                ExploreFolders(folder, currentDepth + 1, maxDepth, result, excludedFolders, mergedFolders);
+                args.CurrentDepth += 1;
+                ExploreFolders(args);
             }
         }
 
@@ -99,15 +112,23 @@ namespace UnityEditor.GameUtils
                         continue;
 
                     //
-                    if (file.EndsWith(".meta"))
-                        continue;
+                    foreach (string ext in _excludedExtensions)
+                    {
+                        if (file.EndsWith(ext))
+                            continue;
+                    }
 
                     //
                     string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
                     var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
+                    if (entry == null)
+                    {
+                        this.Log($"Failed to make an entry for {relativePath}");
+                        continue;
+                    }
 
                     // 
-                    var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
+                        var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
                     if (assetType != null)
                     {
                         SetupLabel(assetType, entry, bundleData);

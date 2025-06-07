@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 
 namespace UnityEditor.GameUtils
@@ -7,13 +8,15 @@ namespace UnityEditor.GameUtils
     [Serializable]
     public class AutoBundleData
     {
-        [SerializeField] private string _folderName;
-        [SerializeField] private string _groupName;
+        [SerializeField, ReadOnly] private string _folderName;
+        [SerializeField, ReadOnly] private string _groupName;
         [SerializeField] private List<string> _labels;
 
         // public fields
         public string FolderName => _folderName;
         public string GroupName => _groupName;
+
+        //
         public List<string> Labels
         {
             get
