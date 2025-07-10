@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Enumeration representing the possible statuses of a redemption code in a reward system.
 /// </summary>
-public enum ReededCodeStatus
+public enum RedeemCodeStatus
 {
     /// <summary>
     /// The code is valid and has not been redeemed yet.
