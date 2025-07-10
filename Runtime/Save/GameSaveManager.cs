@@ -219,7 +219,7 @@ namespace GameUtils
         public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
         public void Save<T>(ISaveable suffix, string key, T amount) => Save(suffix.SaveContext, key, amount);
         public T Load<T>(ISaveable suffix, string key, T defaultValue = default) => Load(suffix.SaveContext, key, defaultValue);
-        public void RemoveKey<T>(ISaveable suffix, string key) => RemoveKey<T>(key, suffix.SaveContext);
+        public void RemoveKey<T>(ISaveable suffix, string key) => RemoveKey<T>(suffix.SaveContext, key);
 
         // 
         public List<string> GetKeys() => _dict.Keys.ToList();
