@@ -1,24 +1,39 @@
-# Game Utils
+# Unity Game Utilities
 
-Una lista di utility script per Unity. Includono:
-- Un sistema di Singleton / Persistent Singleton e 
-- Un sistema di gestione delle valute (currency)
-- Un sistema di salvataggio / caricamento
-
+Questo pacchetto contiene una serie di script di utility per progetti che utilizzano l'engine Unity.
 
 ## Requisiti
 
 ### Unity Packages:
 
-* Addressables (https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
+* [Addressables](https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
 
-* New Input System (https://docs.unity3d.com/Packages/com.unity.inputsystem@1.10/manual/index.html)
+* [New Input System](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.10/manual/index.html)
 
 ### Terze parti:
 
-* Tri-Inspector (https://github.com/codewriter-packages/Tri-Inspector)
-* Quick Save (https://www.claytoninds.com/quick-save)
-* DOTween (http://dotween.demigiant.com/)
+* [Tri-Inspector](https://github.com/codewriter-packages/Tri-Inspector)
+
+* [Quick Save](https://www.claytoninds.com/quick-save)
+
+* [DOTween](http://dotween.demigiant.com/)
+
+## Pacchetti
+
+### Runtime
+
+* [Salvataggio / Caricamento](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Save)
+
+
+
+
+
+
+
+
+
+
+
 
 ## Gestione di un Database di Assets comuni
 
@@ -29,25 +44,6 @@ public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>
 ```
 
 Inserisci poi lo script in un Prefab e carica gli assets per gestirne la lista.
-
-## Salvataggio e caricamento
-
-```cs
-// Semplice salvataggio implementando l'interfaccia ISave
-GameSaveManager.Instance.Save(this, "Money", 100);
-
-// Salvataggio più strutturato
-GameSaveManager.Instance.Save("Deck", "Card1", "123x1123");
-GameSaveManager.Instance.Save("Deck", "Card2", "123x1123");
-GameSaveManager.Instance.Save("Deck", "Card3", "123x1123");
-
-// Caricamento
-int money = GameSaveManager.Instance.Load<int>(this, "Money", 0);
-int cardsCount = GameSaveManager.Instance.Load<int>("Deck", "CardsCount", 0);
-string card1 = GameSaveManager.Instance.Load<string>("Deck", "Card1", "");
-string card2 = GameSaveManager.Instance.Load<string>("Deck", "Card2", "");
-string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
-```
 
 ## Debug
 
@@ -167,11 +163,7 @@ public class TestTuple : ElementTuple<string, string>
 }
 ```
 
-## Genera un seed casuale
 
-```cs
-int seed = SeedGenerator.GenerateSeed();
-```
 
 ## Transform
 
