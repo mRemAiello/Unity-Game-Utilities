@@ -13,35 +13,29 @@ namespace GameUtils
         [SerializeField] private StatusEffectEventAsset _onEndEffect;
 
         [Tab("Debug")]
-        [SerializeField, ReadOnly] private List<StatusEffect> _statusEffects = new();
+        [SerializeField, ReadOnly, TableList] private List<RuntimeStatusEffect> _statusEffects = new();
 
         //
-        public List<StatusEffect> StatusEffects => _statusEffects;
+        public List<RuntimeStatusEffect> StatusEffects => _statusEffects;
 
         //
         [Button]
         public void ApplyEffect(GameObject source, GameObject target, StatusEffectData data, int amount)
         {
-            StatusEffect effect = FindEffect(data.ID) ?? new()
+            RuntimeStatusEffect effect = FindEffect(data.ID);
+            if (effect == null)
             {
-                ID = data.ID,
-                Source = source,
-                Target = target,
-                Duration = amount,
-                Data = data
-            };
+                effect = new RuntimeStatusEffect(data.ID, source, target, data);
+                _statusEffects.Add(effect);
+            }
 
             // 
             if (data.StackType == StatusEffectStackType.Duration)
-            {
                 effect.Duration = Mathf.Min(effect.Duration + amount, data.MaxDuration);
-            }
 
             //
             if (data.StackType == StatusEffectStackType.Intensity)
-            {
                 effect.Intensity += amount;
-            }
 
             //
             ReorderEffects();
@@ -78,7 +72,7 @@ namespace GameUtils
         }
 
         [Button]
-        public void RemoveEffect(StatusEffect effect, bool launchEndEvent = false)
+        public void RemoveEffect(RuntimeStatusEffect effect, bool launchEndEvent = false)
         {
             _statusEffects.Remove(effect);
             if (launchEndEvent)
@@ -101,10 +95,10 @@ namespace GameUtils
             }
         }
 
-        public List<StatusEffect> FindEffects(string ID)
+        public List<RuntimeStatusEffect> FindEffects(string ID)
         {
-            List<StatusEffect> effects = new();
-            foreach (StatusEffect effect in _statusEffects)
+            List<RuntimeStatusEffect> effects = new();
+            foreach (RuntimeStatusEffect effect in _statusEffects)
             {
                 if (effect.ID.Equals(ID))
                 {
@@ -117,9 +111,9 @@ namespace GameUtils
         }
 
         //
-        public StatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
-        public StatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
-        public List<StatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
+        public RuntimeStatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
+        public RuntimeStatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
+        public List<RuntimeStatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
         public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
         public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
         public bool HasEffect<T>() where T : StatusEffectData => _statusEffects.Any(x => x.Data is T);

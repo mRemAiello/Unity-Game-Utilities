@@ -6,6 +6,7 @@ namespace GameUtils
         public const string MENU_NAME = "Tools/Game Utils/";
 
         //
+        public const string ATTRIBUTES_NAME = PACKAGE_NAME + "/Attributes/";
         public const string AUDIO_NAME = PACKAGE_NAME + "/Audio/";
         public const string COLLECTABLES_NAME = PACKAGE_NAME + "/Collectables/";
         public const string CONSTANTS_NAME = PACKAGE_NAME + "/Game Constants/";

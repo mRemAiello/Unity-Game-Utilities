@@ -20,8 +20,8 @@ namespace GameUtils
         public int MaxDuration => _maxDuration;
 
         //
-        public abstract void ApplyEffect(StatusEffect effect);
-        public abstract void UpdateEffect(StatusEffect effect);
-        public abstract void EndEffect(StatusEffect effect);
+        public abstract void ApplyEffect(RuntimeStatusEffect effect);
+        public abstract void UpdateEffect(RuntimeStatusEffect effect);
+        public abstract void EndEffect(RuntimeStatusEffect effect);
     }
 }
