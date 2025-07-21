@@ -165,22 +165,3 @@ public class TestTuple : ElementTuple<string, string>
 
 
 
-## Transform
-
-```cs
-transform.SetX(0);
-transform.SetY(0);
-transform.SetZ(0);
-```
-
-## Layers
-
-```cs
-// GameObject
-gameObject.SetLayerMask(layerMask);
-var layerMask = gameObject.GetLayerMask();
-bool contains = gameObject.ContainsLayerMask(layerMask);
-
-// Layer Mask
-bool contains = layerMask.Contains(gameObject);
-```

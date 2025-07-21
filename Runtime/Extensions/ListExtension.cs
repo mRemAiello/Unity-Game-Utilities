@@ -5,7 +5,7 @@ namespace GameUtils
 {
     public static class ListExtension
     {
-        public static T Pop<T>(this List<T> list, int index)
+        public static T Pop<T>(this IList<T> list, int index)
         {
             if (list == null)
             {
@@ -20,6 +20,17 @@ namespace GameUtils
             T item = list[index];
             list.RemoveAt(index);
             return item;
+        }
+
+        public static T Place<T>(this IList<T> self, T newItem)
+        {
+            self.Add(newItem);
+            return newItem;
+        }
+
+        public static T FromEnd<T>(this IList<T> self, int index)
+        {
+            return self[self.Count - (index + 1)];
         }
     }
 }
