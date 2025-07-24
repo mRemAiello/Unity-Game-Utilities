@@ -1,20 +1,28 @@
-
-using TriInspector;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameUtils
+namespace RPGSystem
 {
-    [DeclareBoxGroup("graphics", Title = "Graphics")]
-    [DeclareBoxGroup("progress", Title = "Progress")]
-    [CreateAssetMenu(menuName = Constant.ATTRIBUTES_NAME + "Attribute")]
-    public class AttributeData : ItemAssetBase
+    public class AttributeData : Datablock
     {
         public Sprite icon;
         public float minValue;
         public float maxValue;
         public string description;
         public bool isVital;
-        //public AttributeClampType clampType;
-        //public List<CustomValueAll> customValues;
+        public AttributeClampType clampType;
+        public List<CustomValueAll> customValues;
+
+        public AttributeData() : base()
+        {
+            icon = default;
+            minValue = 0;
+            maxValue = 0;
+            description = "";
+            isVital = false;
+            clampType = AttributeClampType.Floor;
+            customValues = new List<CustomValueAll>();
+        }
     }
 }
+
