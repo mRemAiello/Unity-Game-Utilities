@@ -28,18 +28,69 @@ namespace GameUtils
             _data = attributeData;
             _baseValue = baseValue;
             _modifiers = new List<Modifier>();
+
+            //
+            RefreshCurrentValue();
         }
 
         public void AddModifier(Modifier modifier)
         {
             _modifiers.Add(modifier);
-            _currentValue = GetCurrentValue();
+            RefreshCurrentValue();
 
             /*OnChangeValue?.Invoke();
             if (CurrentValue == m_Data.minValue && OnMinValue != null)
                 OnMinValue();
             if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
                 OnMaxValue();*/
+        }
+
+        public void RemoveModifier(Modifier modifier)
+        {
+            _modifiers.Remove(modifier);
+            RefreshCurrentValue();
+
+            /*OnChangeValue?.Invoke();
+            if (CurrentValue == m_Data.minValue && OnMinValue != null)
+                OnMinValue();
+            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
+                OnMaxValue();*/
+        }
+
+        public void ClearModifiers()
+        {
+            _modifiers.Clear();
+            RefreshCurrentValue();
+
+            /*OnChangeValue?.Invoke();
+            if (CurrentValue == m_Data.minValue && OnMinValue != null)
+                OnMinValue();
+            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
+                OnMaxValue();*/
+        }
+
+        public void Refresh()
+        {
+            var mods = _modifiers.OrderBy(m => m.Order);
+            foreach (var modifier in mods)
+            {
+                if (modifier.Duration > 0.0f)
+                {
+                    modifier.Duration -= Time.deltaTime;
+                    if (modifier.Duration < 0.0f)
+                    {
+                        RemoveModifier(modifier);
+                    }
+                }
+            }
+        }
+
+        protected virtual void RefreshCurrentValue()
+        {
+            _currentValue = _baseValue;
+            _currentValue = ApplyModifiers(_currentValue);
+            _currentValue = Mathf.Clamp(_currentValue, MinValue, MaxValue);
+            _currentValue = ClampAttributeValue(_currentValue, _data.ClampType);
         }
 
         protected virtual float ApplyModifiers(float modValue)
@@ -52,7 +103,7 @@ namespace GameUtils
             return modValue;
         }
 
-        private float ClampAttributeValue(float baseValue, AttributeClampType clampType)
+        protected float ClampAttributeValue(float baseValue, AttributeClampType clampType)
         {
             return clampType switch
             {
@@ -63,53 +114,6 @@ namespace GameUtils
                 AttributeClampType.Integer => Mathf.RoundToInt(baseValue),
                 _ => baseValue,
             };
-        }
-
-        public void Refresh()
-        {
-            var mods = _modifiers.OrderBy(m => m.Order);
-            foreach (var modifier in mods)
-            {
-                if (modifier.Duration > 0.0f)
-                {
-                    modifier.Duration -= Time.deltaTime;
-                    if (modifier.Duration < 0.0f)
-                        RemoveModifier(modifier);
-                }
-            }
-        }
-
-        public virtual float GetCurrentValue()
-        {
-            float returnValue = _baseValue;
-            returnValue = ApplyModifiers(returnValue);
-            returnValue = Mathf.Clamp(returnValue, MinValue, MaxValue);
-            returnValue = ClampAttributeValue(returnValue, _data.ClampType);
-            return returnValue;
-        }
-
-        public void RemoveModifier(Modifier modifier)
-        {
-            _modifiers.Remove(modifier);
-            _currentValue = GetCurrentValue();
-
-            /*OnChangeValue?.Invoke();
-            if (CurrentValue == m_Data.minValue && OnMinValue != null)
-                OnMinValue();
-            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
-                OnMaxValue();*/
-        }
-
-        public void ClearModifiers()
-        {
-            _modifiers.Clear();
-            _currentValue = GetCurrentValue();
-
-            /*OnChangeValue?.Invoke();
-            if (CurrentValue == m_Data.minValue && OnMinValue != null)
-                OnMinValue();
-            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
-                OnMaxValue();*/
         }
     }
 }

@@ -9,7 +9,7 @@ namespace GameUtils
     public class RuntimeClass : MonoBehaviour, ILoggable
     {
         [SerializeField, Group("class")] private bool _startWithClass = true;
-        [SerializeField, Group("class")] private ClassData _classData;
+        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true)] private ClassData _classData;
         [SerializeField, Group("class")] private bool _refreshClassOnUpdate = false;
 
         //
@@ -25,7 +25,7 @@ namespace GameUtils
         {
             if (_startWithClass && _classData != null)
             {
-                //RefreshAttributes();
+                SetClass(_classData);
             }
         }
 
@@ -37,13 +37,26 @@ namespace GameUtils
             }
         }
 
+        [Button]
         public void SetClass(ClassData classData)
         {
             _classData = classData;
-            if (_startWithClass)
+            _attributes = new List<RuntimeAttribute>();
+            foreach (var data in classData.Attributes)
             {
-                //RefreshAttributes();
+                var runtimeAttribute = CreateRuntimeAttribute(data.Data, data.Value);
+                if (runtimeAttribute != null)
+                    _attributes.Add(runtimeAttribute);
             }
+        }
+
+        private RuntimeAttribute CreateRuntimeAttribute(AttributeData data, float value)
+        {
+            if (data.IsVital)
+                return new RuntimeVital(data, value);
+
+            //
+            return new RuntimeAttribute(data, value);
         }
 
         //
@@ -62,7 +75,7 @@ namespace GameUtils
         {
             foreach (var attribute in _attributes)
             {
-                if (attribute.Data is T data)
+                if (attribute.Data is T)
                 {
                     return attribute;
                 }
