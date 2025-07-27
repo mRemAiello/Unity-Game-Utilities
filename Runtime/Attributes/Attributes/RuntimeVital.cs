@@ -10,8 +10,7 @@ namespace GameUtils
         [SerializeField, ReadOnly] private float _currentVitalValue;
         [SerializeField, ReadOnly] private float _currentMaxValue;
 
-        public event EventHandler OnCurrentValueChange;
-
+        //
         public new float CurrentValue
         {
             get => _currentVitalValue;
@@ -21,7 +20,7 @@ namespace GameUtils
                 if (!Mathf.Approximately(_currentVitalValue, clamped))
                 {
                     _currentVitalValue = clamped;
-                    OnCurrentValueChange?.Invoke(this, EventArgs.Empty);
+                    //OnCurrentValueChange?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
