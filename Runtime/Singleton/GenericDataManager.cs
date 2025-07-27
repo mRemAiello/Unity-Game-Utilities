@@ -61,6 +61,31 @@ namespace GameUtils
             return false;
         }
 
+        public T2 SearchAssetByID(string id)
+        {
+            if (TrySearchAssetByID(id, out var result))
+            {
+                return result;
+            }
+
+            this.LogError($"Asset with ID '{id}' not found.");
+            return null;
+        }
+
+        public T SearchAsset<T>() where T : T2
+        {
+            foreach (var item in _dataList)
+            {
+                if (item is T data)
+                {
+                    return data;
+                }
+            }
+
+            this.LogError($"No asset of type {typeof(T).Name} found.");
+            return null;
+        }
+
         [Button]
         protected void LoadAssets()
         {
@@ -78,6 +103,7 @@ namespace GameUtils
         }
 
         //
+        public bool HasAsset<T>() where T : T2 => _dataList.Any(x => x is T);
         protected virtual void OnPostAwake() { }
         protected virtual void OnPostDestroy() { }
     }

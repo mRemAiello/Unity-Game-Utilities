@@ -1,10 +1,11 @@
 ﻿using System;
+using GameUtils;
 
-namespace RPGSystem
+namespace GameUtils
 {
-    public class Vital : Attribute
+    public class RuntimeVital : RuntimeAttribute
     {
-        private float m_CurrentValue;
+        /*private float m_CurrentValue;
 
         public event EventHandler OnCurrentValueChange;
 
@@ -27,6 +28,9 @@ namespace RPGSystem
         {
             m_CurrentValue = base.CurrentValue;
             CurrentMaxValue = base.CurrentValue;
+        }*/
+        public RuntimeVital(AttributeData attributeData, float baseValue) : base(attributeData, baseValue)
+        {
         }
     }
 }
