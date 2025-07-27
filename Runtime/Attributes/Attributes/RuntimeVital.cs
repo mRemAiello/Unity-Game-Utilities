@@ -1,36 +1,44 @@
-﻿using System;
-using GameUtils;
+using System;
+using TriInspector;
+using UnityEngine;
 
 namespace GameUtils
 {
+    [Serializable]
     public class RuntimeVital : RuntimeAttribute
     {
-        /*private float m_CurrentValue;
+        [SerializeField, ReadOnly] private float _currentVitalValue;
+        [SerializeField, ReadOnly] private float _currentMaxValue;
 
         public event EventHandler OnCurrentValueChange;
 
         public new float CurrentValue
         {
-            get { return m_CurrentValue; }
+            get => _currentVitalValue;
             set
             {
-                if (m_CurrentValue != value)
+                float clamped = Mathf.Clamp(value, MinValue, _currentMaxValue);
+                if (!Mathf.Approximately(_currentVitalValue, clamped))
                 {
-                    m_CurrentValue = value;
-                    OnCurrentValueChange?.Invoke(this, null);
+                    _currentVitalValue = clamped;
+                    OnCurrentValueChange?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
 
-        public float CurrentMaxValue { get; set; }
+        public float CurrentMaxValue => _currentMaxValue;
 
-        public Vital(AttributeData attributeData, float baseValue) : base(attributeData, baseValue)
-        {
-            m_CurrentValue = base.CurrentValue;
-            CurrentMaxValue = base.CurrentValue;
-        }*/
         public RuntimeVital(AttributeData attributeData, float baseValue) : base(attributeData, baseValue)
         {
+            _currentMaxValue = base.CurrentValue;
+            _currentVitalValue = base.CurrentValue;
+        }
+
+        protected override void RefreshCurrentValue()
+        {
+            base.RefreshCurrentValue();
+            _currentMaxValue = base.CurrentValue;
+            _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
         }
     }
 }
