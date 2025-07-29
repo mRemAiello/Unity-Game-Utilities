@@ -20,13 +20,14 @@ namespace GameUtils
                 if (!Mathf.Approximately(_currentVitalValue, clamped))
                 {
                     _currentVitalValue = clamped;
-                    //OnCurrentValueChange?.Invoke(this, EventArgs.Empty);
+                    OnCurrentValueChange();
                 }
             }
         }
 
         public float CurrentMaxValue => _currentMaxValue;
 
+        //
         public RuntimeVital(AttributeData attributeData, float baseValue) : base(attributeData, baseValue)
         {
             _currentMaxValue = base.CurrentValue;
@@ -39,5 +40,8 @@ namespace GameUtils
             _currentMaxValue = base.CurrentValue;
             _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
         }
+
+        //
+        protected virtual void OnCurrentValueChange() { }
     }
 }

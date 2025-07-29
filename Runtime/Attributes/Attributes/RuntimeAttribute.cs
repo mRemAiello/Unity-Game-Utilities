@@ -37,36 +37,31 @@ namespace GameUtils
         {
             _modifiers.Add(modifier);
             RefreshCurrentValue();
-
-            /*OnChangeValue?.Invoke();
-            if (CurrentValue == m_Data.minValue && OnMinValue != null)
-                OnMinValue();
-            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
-                OnMaxValue();*/
+            HandleEvents();
         }
 
         public void RemoveModifier(Modifier modifier)
         {
             _modifiers.Remove(modifier);
             RefreshCurrentValue();
-
-            /*OnChangeValue?.Invoke();
-            if (CurrentValue == m_Data.minValue && OnMinValue != null)
-                OnMinValue();
-            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
-                OnMaxValue();*/
+            HandleEvents();
         }
 
         public void ClearModifiers()
         {
             _modifiers.Clear();
             RefreshCurrentValue();
+            HandleEvents();
+        }
 
-            /*OnChangeValue?.Invoke();
-            if (CurrentValue == m_Data.minValue && OnMinValue != null)
+        private void HandleEvents()
+        {
+            //
+            OnChangeValue();
+            if (CurrentValue == _data.MinValue)
                 OnMinValue();
-            if (CurrentValue == m_Data.maxValue && OnMaxValue != null)
-                OnMaxValue();*/
+            else if (CurrentValue == _data.MaxValue)
+                OnMaxValue();
         }
 
         public void Refresh()
@@ -115,5 +110,10 @@ namespace GameUtils
                 _ => baseValue,
             };
         }
+
+        //
+        protected virtual void OnChangeValue() { }
+        protected virtual void OnMinValue() { }
+        protected virtual void OnMaxValue() { }
     }
 }
