@@ -20,6 +20,58 @@ Per utilizzare questo pacchetto hai bisogno dei seguenti assets:
 
 * [DOTween](http://dotween.demigiant.com/)
 
+## Struttura delle cartelle
+
+### [Runtime](./Runtime)
+Racchiude gli script da utilizzare direttamente nel gioco.
+Principali sottocartelle:
+- [Achievements](./Runtime/Achievements): gestione degli achievement.
+- [Attributes](./Runtime/Attributes): sistema di attributi e classi da RPG.
+- [Audio](./Runtime/Audio): riproduzione di clip audio.
+- [Commands](./Runtime/Commands): coda di comandi eseguibili.
+- [Constant](./Runtime/Constant): valori e costanti globali.
+- [Currency](./Runtime/Currency): logica delle valute di gioco.
+- [Data Structures](./Runtime/Data%20Structures): Scriptable Object comuni.
+- [Debug](./Runtime/Debug): utility di debug e logging.
+- [Dictionary](./Runtime/Dictionary): dizionari serializzabili.
+- [Events](./Runtime/Events): implementazione di game events.
+- [Extensions](./Runtime/Extensions): metodi di estensione vari.
+- [Input](./Runtime/Input): componenti per il sistema input.
+- [Math](./Runtime/Math): funzioni matematiche d'aiuto.
+- [Misc](./Runtime/Misc): utilità generiche.
+- [Movement](./Runtime/Movement): script di movimento.
+- [Placement](./Runtime/Placement): piazzamento oggetti.
+- [Random](./Runtime/Random): strumenti per la randomizzazione.
+- [Renderer](./Runtime/Renderer): renderer personalizzati.
+- [Save](./Runtime/Save): gestione salvataggi e caricamenti.
+- [Singleton](./Runtime/Singleton): classi base per singleton e manager.
+- [Status Effect](./Runtime/Status%20Effect): sistema di effetti di stato.
+- [Tag Manager](./Runtime/Tag%20Manager): tag personalizzate.
+- [Task](./Runtime/Task): gestione di task asincroni.
+- [Tracker](./Runtime/Tracker): tracciamento di variabili.
+- [UI](./Runtime/UI): componenti per l'interfaccia utente.
+- [Utils](./Runtime/Utils): altre utilità.
+
+### [Editor](./Editor)
+Strumenti e finestre per l'editor di Unity.
+- [Auto Bundles](./Editor/Auto%20Bundles): generazione automatica di bundle.
+- [Dictionary](./Editor/Dictionary): drawer per SerializableDictionary.
+- [Utils](./Editor/Utils): piccoli tool di supporto.
+- [Windows](./Editor/Windows): finestre personalizzate dell'editor.
+
+### [WIP](./WIP)
+Funzionalità sperimentali in sviluppo.
+- [Health](./WIP/Health): sistema salute e danno.
+- [Lights](./WIP/Lights): gestione delle luci e ciclo giorno/notte.
+- [Pool](./WIP/Pool): object pooling.
+- [Reedem](./WIP/Reedem): codici premio.
+- [State Machines](./WIP/State%20Machines): implementazione di FSM.
+
+Altre risorse utili:
+- [CHANGELOG.md](./CHANGELOG.md)
+- [LICENSE.md](./LICENSE.md)
+- [package.json](./package.json)
+
 ## Pacchetti
 
 In questa sezione andiamo a vedere i contenuti del pacchetto.
