@@ -11,10 +11,11 @@ namespace GameUtils
         [SerializeField, Group("projectile")] private GameObject _projPrefab;
         [SerializeField, Group("projectile")] private Transform _target;
         [SerializeField, Group("projectile")] private float _shootRate;
-        [SerializeField, Group("projectile")] private float _projMoveSpeed;
+        [SerializeField, Group("projectile")] private float _projMaxMoveSpeed;
         [SerializeField, Group("projectile")] private float _projMaxHeight;
 
         //
+        [SerializeField, Group("curves")] private AnimationCurve _projSpeedCurve;
         [SerializeField, Group("curves")] private AnimationCurve _trajectoryCurve;
         [SerializeField, Group("curves")] private AnimationCurve _axisCorrectionCurve;
 
@@ -33,8 +34,8 @@ namespace GameUtils
             GameObject projGameObject = Instantiate(_projPrefab, transform.position, Quaternion.identity);
             if (projGameObject.TryGetComponent(out IProjectile projectile))
             {
-                projectile.InitProjectile(_target.position, _projMoveSpeed, _projMaxHeight);
-                projectile.InitAnimationCurves(_trajectoryCurve, _axisCorrectionCurve);
+                projectile.InitProjectile(_target.position, _projMaxMoveSpeed, _projMaxHeight);
+                projectile.InitAnimationCurves(_trajectoryCurve, _axisCorrectionCurve, _projSpeedCurve);
             }
         }
     }
