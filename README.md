@@ -4,6 +4,8 @@ Questo pacchetto contiene una serie di script di utility per progetti che utiliz
 
 ## Requisiti
 
+Per utilizzare questo pacchetto hai bisogno dei seguenti assets:
+
 ### Unity Packages:
 
 * [Addressables](https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
@@ -20,9 +22,17 @@ Questo pacchetto contiene una serie di script di utility per progetti che utiliz
 
 ## Pacchetti
 
+In questa sezione andiamo a vedere i contenuti del pacchetto.
+
 ### Runtime
 
-* [Salvataggio / Caricamento](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Save)
+* [Sistema di Attributi e classi da RPG](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Attributes) (Puoi gestire classi, modificatori, statistiche)
+
+* [Salvataggio / Caricamento](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Save) (Sistema strutturato per gestire qualunque tipo di salvataggio / caricamento)
+
+* [Strutture Dati](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Data%20Structures)
+
+* [Tracker System](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Tracker) (Con questo sistema)
 
 
 
