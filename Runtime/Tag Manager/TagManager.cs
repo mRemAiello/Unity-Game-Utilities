@@ -46,7 +46,7 @@ namespace GameUtils
         {
             foreach (var kvp in _values)
             {
-                if (kvp.Value.Value > 0)
+                if (kvp.Value.Name == typeof(T).Name && kvp.Value.Value > 0)
                 {
                     return true;
                 }
