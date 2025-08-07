@@ -6,13 +6,20 @@ using UnityEngine;
 namespace GameUtils
 {
     [Serializable]
+    public struct TagInfo
+    {
+        public string Name;
+        public int Value;
+    }
+
+    [Serializable]
     public class TagManager
     {
-        [SerializeField, ReadOnly] private SerializedDictionary<string, int> _values;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, TagInfo> _values;
 
         public TagManager()
         {
-            _values = new SerializedDictionary<string, int>();
+            _values = new SerializedDictionary<string, TagInfo>();
         }
 
         public void SetTagValue(GameTag tag, bool value)
@@ -23,24 +30,23 @@ namespace GameUtils
 
         private int GetTagValue(string tag)
         {
-            _values.TryGetValue(tag, out int value);
-            return value;
+            if (!_values.TryGetValue(tag, out TagInfo info))
+            {
+                return 0;
+            }
+            return info.Value;
         }
 
         private bool HasTag(string tag)
         {
-            if (!_values.TryGetValue(tag, out int value))
-            {
-                return false;
-            }
-            return value > 0;
+            return _values.TryGetValue(tag, out TagInfo info) && info.Value > 0;
         }
 
         public bool HasTag<T>() where T : GameTag
         {
             foreach (var kvp in _values)
             {
-                if (kvp.Value.GetType() == typeof(T) && kvp.Value > 0)
+                if (kvp.Value.Value > 0)
                 {
                     return true;
                 }
@@ -49,11 +55,10 @@ namespace GameUtils
         }
 
         //
-        public Dictionary<string, int> GetMap() => _values;
-        public bool TryGetValue(string tag, out int value) => _values.TryGetValue(tag, out value);
+        public Dictionary<string, TagInfo> GetMap() => _values;
+        public bool TryGetValue(string tag, out TagInfo info) => _values.TryGetValue(tag, out info);
         public int GetTagValue(GameTag tag) => GetTagValue(tag.ID);
-        private void SetTagValue(string tag, int value) => _values[tag] = value;
-        public void SetTagValue(GameTag tag, int value) => SetTagValue(tag.ID, value);
+        public void SetTagValue(GameTag tag, int value) => _values[tag.ID] = new TagInfo { Name = tag.InternalName, Value = value };
         public bool HasTag(GameTag tag) => HasTag(tag.ID);
         public void Clear() => _values.Clear();
     }
