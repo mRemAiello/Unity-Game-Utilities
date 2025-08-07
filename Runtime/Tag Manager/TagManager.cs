@@ -36,6 +36,19 @@ namespace GameUtils
             return value > 0;
         }
 
+        public bool HasTag<T>() where T : GameTag
+        {
+            foreach (var kvp in _values)
+            {
+                if (kvp.Value.GetType() == typeof(T) && kvp.Value > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //
         public Dictionary<string, int> GetMap() => _values;
         public bool TryGetValue(string tag, out int value) => _values.TryGetValue(tag, out value);
         public int GetTagValue(GameTag tag) => GetTagValue(tag.ID);
