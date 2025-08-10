@@ -92,58 +92,84 @@ namespace GameUtils
 
         private void UpdatePositionWithXCurve()
         {
-            float nextY = transform.position.y + _moveSpeed * Time.deltaTime;
-            float nextPositionYNormalized = (nextY - _trajectoryStartPoint.y) / _trajectoryRange.y;
-
-            //
-            float nextXNormalized = _trajectoryCurve.Evaluate(nextPositionYNormalized);
-            _nextXTrajectoryPosition = nextXNormalized * _trajectoryMaxRelativeHeight;
-
-            //
-            float nextPositionXCorrectionNormalized = _axisCorrectCurve.Evaluate(nextPositionYNormalized);
-            _nextPositionXCorrectionAbsolute = nextPositionXCorrectionNormalized * _trajectoryRange.x;
-
-            //
-            if (_trajectoryRange.x > 0 && _trajectoryRange.y > 0)
+            if (_trajectoryRange.y != 0)
             {
-                _nextXTrajectoryPosition = -_nextXTrajectoryPosition;
-            }
+                float nextY = transform.position.y + _moveSpeed * Time.deltaTime;
+                float nextPositionYNormalized = (nextY - _trajectoryStartPoint.y) / _trajectoryRange.y;
 
-            //
-            if (_trajectoryRange.x < 0 && _trajectoryRange.y < 0)
+                //
+                float nextXNormalized = _trajectoryCurve.Evaluate(nextPositionYNormalized);
+                _nextXTrajectoryPosition = nextXNormalized * _trajectoryMaxRelativeHeight;
+
+                //
+                float nextPositionXCorrectionNormalized = _axisCorrectCurve.Evaluate(nextPositionYNormalized);
+                _nextPositionXCorrectionAbsolute = nextPositionXCorrectionNormalized * _trajectoryRange.x;
+
+                //
+                if (_trajectoryRange.x > 0 && _trajectoryRange.y > 0)
+                {
+                    _nextXTrajectoryPosition = -_nextXTrajectoryPosition;
+                }
+
+                //
+                if (_trajectoryRange.x < 0 && _trajectoryRange.y < 0)
+                {
+                    _nextXTrajectoryPosition = -_nextXTrajectoryPosition;
+                }
+
+                //
+                float nextPositionX = _trajectoryStartPoint.x + _nextXTrajectoryPosition + _nextPositionXCorrectionAbsolute;
+                Vector3 newPos = new(nextPositionX, nextY, 0);
+                CalculateNextProjectileSpeed(nextPositionYNormalized);
+
+                //
+                _projectileMoveDir = newPos - transform.position;
+                transform.position = newPos;
+            }
+            else
             {
-                _nextXTrajectoryPosition = -_nextXTrajectoryPosition;
+                // Fallback to linear movement when there's no vertical range.
+                _nextXTrajectoryPosition = 0f;
+                _nextPositionXCorrectionAbsolute = 0f;
+                Vector3 dir = (_target - transform.position).normalized;
+                Vector3 newPos = transform.position + dir * (_moveSpeed * Time.deltaTime);
+                _projectileMoveDir = newPos - transform.position;
+                transform.position = newPos;
             }
-
-            //
-            float nextPositionX = _trajectoryStartPoint.x + _nextXTrajectoryPosition + _nextPositionXCorrectionAbsolute;
-            Vector3 newPos = new(nextPositionX, nextY, 0);
-            CalculateNextProjectileSpeed(nextPositionYNormalized);
-
-            //
-            _projectileMoveDir = newPos - transform.position;
-            transform.position = newPos;
         }
 
         private void UpdatePositionWithYCurve()
         {
-            //
-            float nextX = transform.position.x + _moveSpeed * Time.deltaTime;
-            float nextXNormalized = (nextX - _trajectoryStartPoint.x) / _trajectoryRange.x;
-            float nextYNormalized = _trajectoryCurve.Evaluate(nextXNormalized);
-            float nextYCorrectionNormalized = _axisCorrectCurve.Evaluate(nextXNormalized);
-            float nextYCorrectionAbsolute = nextYCorrectionNormalized * _trajectoryRange.y;
-            _nextYTrajectoryPosition = nextYNormalized * _trajectoryMaxRelativeHeight;
-            _nextPositionYCorrectionAbsolute = nextYCorrectionAbsolute;
-            float nextY = _trajectoryStartPoint.y + _nextYTrajectoryPosition + _nextPositionYCorrectionAbsolute;
+            if (_trajectoryRange.x != 0)
+            {
+                //
+                float nextX = transform.position.x + _moveSpeed * Time.deltaTime;
+                float nextXNormalized = (nextX - _trajectoryStartPoint.x) / _trajectoryRange.x;
+                float nextYNormalized = _trajectoryCurve.Evaluate(nextXNormalized);
+                float nextYCorrectionNormalized = _axisCorrectCurve.Evaluate(nextXNormalized);
+                float nextYCorrectionAbsolute = nextYCorrectionNormalized * _trajectoryRange.y;
+                _nextYTrajectoryPosition = nextYNormalized * _trajectoryMaxRelativeHeight;
+                _nextPositionYCorrectionAbsolute = nextYCorrectionAbsolute;
+                float nextY = _trajectoryStartPoint.y + _nextYTrajectoryPosition + _nextPositionYCorrectionAbsolute;
 
-            //
-            Vector3 newPos = new(nextX, nextY, 0);
-            CalculateNextProjectileSpeed(nextXNormalized);
+                //
+                Vector3 newPos = new(nextX, nextY, 0);
+                CalculateNextProjectileSpeed(nextXNormalized);
 
-            //
-            _projectileMoveDir = newPos - transform.position;
-            transform.position = newPos;
+                //
+                _projectileMoveDir = newPos - transform.position;
+                transform.position = newPos;
+            }
+            else
+            {
+                // Fallback to linear movement when there's no horizontal range.
+                _nextYTrajectoryPosition = 0f;
+                _nextPositionYCorrectionAbsolute = 0f;
+                Vector3 dir = (_target - transform.position).normalized;
+                Vector3 newPos = transform.position + dir * (_moveSpeed * Time.deltaTime);
+                _projectileMoveDir = newPos - transform.position;
+                transform.position = newPos;
+            }
         }
 
         private void CalculateNextProjectileSpeed(float nextXNormalized)
