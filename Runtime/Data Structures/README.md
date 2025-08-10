@@ -13,7 +13,7 @@ Estende `UniqueID` aggiungendo campi dedicati alla localizzazione:
 ## ItemAssetBase
 Classe astratta che eredita da `ItemLocalizationData`. Gestisce gli aspetti grafici di un item, in particolare:
 - **AssetReferenceIcon**: riferimento `Addressables` a una sprite.
-- **Icon**: la sprite caricata tramite `AssetLoader.LoadAssetSync`.
+- **Icon**: `Task<Sprite>` ottenuto tramite `AssetLoader.LoadAssetAsync`.
 - **ItemColor**: colore associato all'item.
 
 ## Rarity
