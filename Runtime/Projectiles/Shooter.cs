@@ -34,9 +34,14 @@ namespace GameUtils
             GameObject projGameObject = Instantiate(_projPrefab, transform.position, Quaternion.identity);
             if (projGameObject.TryGetComponent(out IProjectile projectile))
             {
-                projectile.InitProjectile(_target.position, _projMaxMoveSpeed, _projMaxHeight);
+                projectile.InitProjectile(_target.position, _projMaxMoveSpeed, _projMaxHeight, onHit: OnProjectileHit);
                 projectile.InitAnimationCurves(_trajectoryCurve, _axisCorrectionCurve, _projSpeedCurve);
             }
+        }
+
+        private void OnProjectileHit(Projectile2D projectile)
+        {
+            Debug.Log("Projectile hit target");
         }
     }
 }
