@@ -43,24 +43,24 @@ namespace GameUtils
         {
             if (ILogCheck(logger, out var target, context))
             {
-                Debug.LogFormat(TryAppendClassName(target, format), target);
+                Debug.LogFormat(target, TryAppendClassName(target, format), args);
             }
         }
 
         public static void LogWarningFormat(string format, ILoggable logger = null, Object context = null, params object[] args)
         {
-            if (!ILogCheck(logger, out var target, context))
+            if (ILogCheck(logger, out var target, context))
             {
-                Debug.LogWarningFormat(TryAppendClassName(target, format), target);
+                Debug.LogWarningFormat(target, TryAppendClassName(target, format), args);
                 TryPingObject(target);
             }
         }
 
         public static void LogErrorFormat(string format, ILoggable logger = null, Object context = null, params object[] args)
         {
-            if (!ILogCheck(logger, out var target, context))
+            if (ILogCheck(logger, out var target, context))
             {
-                Debug.LogErrorFormat(TryAppendClassName(target, format), target);
+                Debug.LogErrorFormat(target, TryAppendClassName(target, format), args);
                 TryPingObject(target);
             }
         }
