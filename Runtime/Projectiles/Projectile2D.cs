@@ -8,6 +8,7 @@ namespace GameUtils
     public class Projectile2D : MonoBehaviour, IProjectile
     {
         [SerializeField, Group("projectile")] private float _thresholdToDestroy = 1f;
+        [SerializeField, Group("projectile")] private ProjectileVisual2D _projectileVisual;
 
         //
         [SerializeField, Group("debug"), ReadOnly] private Vector3 _target;
@@ -15,6 +16,11 @@ namespace GameUtils
         [SerializeField, Group("debug"), ReadOnly] private float _maxMoveSpeed;
         [SerializeField, Group("debug"), ReadOnly] private Vector3 _trajectoryStartPoint;
         [SerializeField, Group("debug"), ReadOnly] private float _trajectoryMaxRelativeHeight;
+        [SerializeField, Group("debug"), ReadOnly] private Vector3 _projectileMoveDir;
+        [SerializeField, Group("debug"), ReadOnly] private float _nextYTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly] private float _nextXTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly] private float _nextPositionYCorrectionAbsolute;
+        [SerializeField, Group("debug"), ReadOnly] private float _nextPositionXCorrectionAbsolute;
         [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _trajectoryCurve;
         [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _axisCorrectCurve;
         [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _projSpeedCurve;
@@ -33,6 +39,9 @@ namespace GameUtils
             //
             float xDistanceToTarget = _target.x - transform.position.x;
             _trajectoryMaxRelativeHeight = Mathf.Abs(xDistanceToTarget) * trajectoryMaxHeight;
+
+            //
+            _projectileVisual.SetTarget(_target);
         }
 
         public void InitAnimationCurves(AnimationCurve trajectoryCurve, AnimationCurve axisCorrectCurve, AnimationCurve projSpeedCurve)
@@ -74,6 +83,9 @@ namespace GameUtils
             //
             Vector3 newPos = new(nextX, nextY, 0);
             CalculateNextProjectileSpeed(nextXNormalized);
+
+            //
+            _projectileMoveDir = newPos - transform.position;
             transform.position = newPos;
         }
 
@@ -82,5 +94,12 @@ namespace GameUtils
             float nextMoveSpeedNormalized = _projSpeedCurve.Evaluate(nextXNormalized);
             _moveSpeed = nextMoveSpeedNormalized * _maxMoveSpeed;
         }
+
+        //
+        public Vector3 GetProjectileMoveDir() => _projectileMoveDir;
+        public float GetNextYTrajectoryPosition() => _nextYTrajectoryPosition;
+        public float GetNextPositionYCorrectionAbsolute() => _nextPositionYCorrectionAbsolute;
+        public float GetNextXTrajectoryPosition() => _nextXTrajectoryPosition;
+        public float GetNextPositionXCorrectionAbsolute() => _nextPositionXCorrectionAbsolute;
     }
 }
