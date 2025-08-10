@@ -34,7 +34,8 @@ Metodi utili:
 Evento asset che notifica le variazioni di una valuta. Gli argomenti includono la `CurrencyData` interessata e il nuovo importo.
 
 ### `CurrencyUITracker`
-Collega gli elementi dell'interfaccia all'evento di cambio valuta mostrando icona e valore corrente.
+Collega gli elementi dell'interfaccia all'evento di cambio valuta mostrando icona e valore corrente. L'icona è caricata
+asincronamente tramite Addressables e, in caso di errore, viene usata quella di fallback.
 
 ## Istruzioni di setup
 1. Crea gli asset `CurrencyData` dal menu **Game Utils/Currency/Currency**.
