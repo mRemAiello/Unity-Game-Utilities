@@ -1,3 +1,4 @@
+using System;
 using TriInspector;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ namespace GameUtils
     {
         [SerializeField, Group("projectile")] private float _thresholdToDestroy = 1f;
         [SerializeField, Group("projectile")] private ProjectileVisual2D _projectileVisual;
+
+        public event Action<Projectile2D> OnHit;
+
+        private IPoolable _pool;
 
         //
         [SerializeField, Group("debug"), ReadOnly] private Vector3 _target;
@@ -32,10 +37,13 @@ namespace GameUtils
             _trajectoryStartPoint = transform.position;
         }
 
-        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight)
+        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null, Action<Projectile2D> onHit = null)
         {
             _target = target;
             _maxMoveSpeed = maxMoveSpeed;
+            _pool = pool;
+            if (onHit != null)
+                OnHit += onHit;
 
             //
             float xDistanceToTarget = _target.x - transform.position.x;
@@ -58,8 +66,16 @@ namespace GameUtils
             UpdateProjectilePosition();
             if (Vector3.Distance(transform.position, _target) < _thresholdToDestroy)
             {
-                Destroy(gameObject);
-                // TODO: Evento
+                OnHit?.Invoke(this);
+                enabled = false;
+                if (_pool != null)
+                {
+                    _pool.ReturnToPool();
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
 
