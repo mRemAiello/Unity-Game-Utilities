@@ -133,7 +133,9 @@ namespace GameUtils
             float nextYNormalized = _trajectoryCurve.Evaluate(nextXNormalized);
             float nextYCorrectionNormalized = _axisCorrectCurve.Evaluate(nextXNormalized);
             float nextYCorrectionAbsolute = nextYCorrectionNormalized * _trajectoryRange.y;
-            float nextY = _trajectoryStartPoint.y + nextYNormalized * _trajectoryMaxRelativeHeight + nextYCorrectionAbsolute;
+            _nextYTrajectoryPosition = nextYNormalized * _trajectoryMaxRelativeHeight;
+            _nextPositionYCorrectionAbsolute = nextYCorrectionAbsolute;
+            float nextY = _trajectoryStartPoint.y + _nextYTrajectoryPosition + _nextPositionYCorrectionAbsolute;
 
             //
             Vector3 newPos = new(nextX, nextY, 0);
