@@ -2,6 +2,8 @@ using System;
 using TMPro;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 namespace GameUtils
@@ -14,6 +16,7 @@ namespace GameUtils
         [SerializeField, Required, Group("currency")] private CurrencyData _currencyData;
         [SerializeField, Required, Group("currency")] private TextMeshProUGUI _currencyText;
         [SerializeField, Required, Group("currency")] private Image _currencyIcon;
+        [SerializeField, Group("currency")] private Sprite _fallbackIcon;
         [SerializeField, Required, Group("events")] private CurrencyChangeEvent _onChangeEvent;
 
         //
@@ -30,18 +33,39 @@ namespace GameUtils
 
         private void OnCurrencyChangeEvent(CurrencyChangeEventArgs input) => UpdateUI();
 
-        private async void UpdateUI()
+        /// <summary>
+        /// Refreshes text and loads the currency icon using Addressables. The handle is
+        /// released in <see cref="OnIconLoaded"/>. A fallback icon is shown if loading fails.
+        /// </summary>
+        private void UpdateUI()
         {
-            try
+            if (_currencyData.AssetReferenceIcon != null)
             {
-                _currencyIcon.sprite = await _currencyData.Icon;
+                var handle = Addressables.LoadAssetAsync<Sprite>(_currencyData.AssetReferenceIcon);
+                handle.Completed += OnIconLoaded;
             }
-            catch (Exception e)
+            else if (_fallbackIcon != null)
             {
-                Debug.LogError($"Failed to load currency icon: {e}");
+                _currencyIcon.sprite = _fallbackIcon;
             }
 
             _currencyText.text = CurrencyManager.Instance.GetCurrencyAmount(_currencyData).ToString();
+        }
+
+        private void OnIconLoaded(AsyncOperationHandle<Sprite> handle)
+        {
+            if (handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+            {
+                _currencyIcon.sprite = handle.Result;
+            }
+            else
+            {
+                Debug.LogWarning("Failed to load currency icon; using fallback sprite.");
+                if (_fallbackIcon != null)
+                    _currencyIcon.sprite = _fallbackIcon;
+            }
+
+            Addressables.Release(handle);
         }
     }
 }
