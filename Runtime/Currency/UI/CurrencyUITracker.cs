@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using TriInspector;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 namespace GameUtils
@@ -25,28 +24,23 @@ namespace GameUtils
         {
             _onChangeEvent?.AddListener(OnCurrencyChangeEvent);
 
-            //
-            if (_currencyData.AssetReferenceIcon != null)
-            {
-                // TODO: Fix
-                //AssetLoader.LoadAssetAsync<Sprite>(_currencyData.AssetReferenceIcon, OnIconLoaded);
-            }
-
-            //
+            // Prime the UI
             UpdateUI();
-        }
-
-        private void OnIconLoaded(AsyncOperationHandle<Sprite> handle)
-        {
-            _currencyIcon.sprite = handle.Result;
         }
 
         private void OnCurrencyChangeEvent(CurrencyChangeEventArgs input) => UpdateUI();
 
-        private void UpdateUI()
+        private async void UpdateUI()
         {
-            //
-            _currencyIcon.sprite = _currencyData.Icon;
+            try
+            {
+                _currencyIcon.sprite = await _currencyData.Icon;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load currency icon: {e}");
+            }
+
             _currencyText.text = CurrencyManager.Instance.GetCurrencyAmount(_currencyData).ToString();
         }
     }
