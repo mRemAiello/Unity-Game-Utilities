@@ -32,7 +32,7 @@ namespace GameUtils
                 _arrowNodes.Add(Instantiate(_arrowNodePrefab, transform).GetComponent<RectTransform>());
             }
             _arrowNodes.Add(Instantiate(_arrowHeadPrefab, transform).GetComponent<RectTransform>());
-        
+
             // Hide arrow nodes
             _arrowNodes.ForEach(a => a.GetComponent<RectTransform>().position = new Vector2(-1000, 1000));
 
@@ -45,17 +45,12 @@ namespace GameUtils
 
         void Update()
         {
-            if (!InputManager.InstanceExists)
-            {
-                return;
-            }
-
             // P0 arrow start
             _controlPoints[0] = new Vector2(_origin.position.x, _origin.position.y);
 
             // P3 mouse position
-            _controlPoints[3] = new Vector2(InputManager.Instance.CurrentPositionVector2.x, InputManager.Instance.CurrentPositionVector2.y);
-            
+            _controlPoints[3] = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
             // P1, P2 determinated by P0 / P3 position
             _controlPoints[1] = _controlPoints[0] + (_controlPoints[3] - _controlPoints[0]) * _controlPointFactors[0];
             _controlPoints[2] = _controlPoints[0] + (_controlPoints[3] - _controlPoints[0]) * _controlPointFactors[1];
@@ -66,7 +61,7 @@ namespace GameUtils
                 var t = Mathf.Log(1f * i / (_arrowNodes.Count - 1) + 1f, 2f);
 
                 // Cubic Bezier curves
-                _arrowNodes[i].position = Mathf.Pow(1 - t, 3) * _controlPoints[0] + 
+                _arrowNodes[i].position = Mathf.Pow(1 - t, 3) * _controlPoints[0] +
                                             3 * Mathf.Pow(1 - t, 2) * t * _controlPoints[1] +
                                             3 * (1 - t) * Mathf.Pow(t, 2) * _controlPoints[2] +
                                             Mathf.Pow(t, 3) * _controlPoints[3];
