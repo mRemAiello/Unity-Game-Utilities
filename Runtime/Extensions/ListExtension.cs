@@ -7,6 +7,22 @@ namespace GameUtils
 {
     public static class ListExtension
     {
+        public static T RandomItem<T>(this IList<T> list)
+        {
+            if (list.Count == 0)
+                throw new IndexOutOfRangeException("List is Empty");
+
+            var randomIndex = Random.Range(0, list.Count);
+            return list[randomIndex];
+        }
+
+        public static T RandomItemRemove<T>(this IList<T> list)
+        {
+            var item = list.RandomItem();
+            list.Remove(item);
+            return item;
+        }
+
         public static T Pop<T>(this IList<T> list, int index)
         {
             if (list == null)
