@@ -43,10 +43,12 @@ Principali sottocartelle:
 - [Misc](./Runtime/Misc): utilità generiche.
 - [Movement](./Runtime/Movement): script di movimento.
 - [Placement](./Runtime/Placement): piazzamento oggetti.
+- [Projectiles](./Runtime/Projectiles): gestione di proiettili 2D.
 - [Random](./Runtime/Random): strumenti per la randomizzazione.
 - [Renderer](./Runtime/Renderer): renderer personalizzati.
 - [Save](./Runtime/Save): gestione salvataggi e caricamenti.
 - [Singleton](./Runtime/Singleton): classi base per singleton e manager.
+- [States](./Runtime/States): semplici macchine a stati.
 - [Status Effect](./Runtime/Status%20Effect): sistema di effetti di stato.
 - [Tag Manager](./Runtime/Tag%20Manager): tag personalizzate.
 - [Task](./Runtime/Task): gestione di task asincroni.
@@ -67,7 +69,6 @@ Funzionalità sperimentali in sviluppo.
 - [Lights](./WIP/Lights): gestione delle luci e ciclo giorno/notte.
 - [Pool](./WIP/Pool): object pooling.
 - [Reedem](./WIP/Reedem): codici premio.
-- [State Machines](./WIP/State%20Machines): implementazione di FSM.
 
 Altre risorse utili:
 - [CHANGELOG.md](./CHANGELOG.md)
