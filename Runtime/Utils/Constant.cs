@@ -10,6 +10,7 @@ namespace GameUtils
         public const string AUDIO_NAME = PACKAGE_NAME + "/Audio/";
         public const string COLLECTABLES_NAME = PACKAGE_NAME + "/Collectables/";
         public const string CONSTANTS_NAME = PACKAGE_NAME + "/Game Constants/";
+        public const string CARDS_NAME = PACKAGE_NAME + "/Cards/";
         public const string ADDRESSABLES_NAME = PACKAGE_NAME + "/Addressables/";
         public const string ACHIEVEMENT_NAME = PACKAGE_NAME + "/Achievements/";
         public const string CURRENCY_NAME = PACKAGE_NAME + "/Currency/";
