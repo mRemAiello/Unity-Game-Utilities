@@ -77,7 +77,7 @@ namespace GameUtils
         /// <param name="a">Alpha color to set.</param>
         public static void SetBackgroundColorRA(this Camera camera, float r, float a)
         {
-            camera.backgroundColor = camera.backgroundColor.WithGA(r, a);
+            camera.backgroundColor = camera.backgroundColor.WithRA(r, a);
         }
 
         /// <summary>
