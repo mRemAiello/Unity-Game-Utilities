@@ -4,6 +4,8 @@ Questo pacchetto contiene una serie di script di utility per progetti che utiliz
 
 ## Requisiti
 
+Per utilizzare questo pacchetto hai bisogno dei seguenti assets:
+
 ### Unity Packages:
 
 * [Addressables](https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
@@ -20,167 +22,55 @@ Questo pacchetto contiene una serie di script di utility per progetti che utiliz
 
 ## Pacchetti
 
-### Runtime
+In questa sezione andiamo a vedere i contenuti del pacchetto.
 
-* [Salvataggio / Caricamento](https://github.com/mRemAiello/Unity-Game-Utilities/tree/master/Runtime/Save)
+### [Runtime](./Runtime)
+Racchiude gli script da utilizzare direttamente nel gioco.
+Principali sottocartelle:
+- [Achievements](./Runtime/Achievements): gestione degli achievement.
+- [Attributes](./Runtime/Attributes): sistema di attributi e classi da RPG.
+- [Audio](./Runtime/Audio): riproduzione di clip audio.
+- [Commands](./Runtime/Commands): coda di comandi eseguibili.
+- [Constant](./Runtime/Constant): valori e costanti globali.
+- [Currency](./Runtime/Currency): logica delle valute di gioco.
+- [Data Structures](./Runtime/Data%20Structures): Scriptable Object comuni.
+- [Debug](./Runtime/Debug): utility di debug e logging.
+- [Dictionary](./Runtime/Dictionary): dizionari serializzabili.
+- [Events](./Runtime/Events): implementazione di game events.
+- [Extensions](./Runtime/Extensions): metodi di estensione vari.
+- [Input](./Runtime/Input): componenti per il sistema input.
+- [Math](./Runtime/Math): funzioni matematiche d'aiuto.
+- [Misc](./Runtime/Misc): utilità generiche.
+- [Movement](./Runtime/Movement): script di movimento.
+- [Placement](./Runtime/Placement): piazzamento oggetti.
+- [Projectiles](./Runtime/Projectiles): gestione di proiettili 2D.
+- [Random](./Runtime/Random): strumenti per la randomizzazione.
+- [Renderer](./Runtime/Renderer): renderer personalizzati.
+- [Save](./Runtime/Save): gestione salvataggi e caricamenti.
+- [Singleton](./Runtime/Singleton): classi base per singleton e manager.
+- [States](./Runtime/States): semplici macchine a stati.
+- [Status Effect](./Runtime/Status%20Effect): sistema di effetti di stato.
+- [Tag Manager](./Runtime/Tag%20Manager): tag personalizzate.
+- [Task](./Runtime/Task): gestione di task asincroni.
+- [Tracker](./Runtime/Tracker): tracciamento di variabili.
+- [UI](./Runtime/UI): componenti per l'interfaccia utente.
+- [Utils](./Runtime/Utils): altre utilità.
 
+### [Editor](./Editor)
+Strumenti e finestre per l'editor di Unity.
+- [Auto Bundles](./Editor/Auto%20Bundles): generazione automatica di bundle.
+- [Dictionary](./Editor/Dictionary): drawer per SerializableDictionary.
+- [Utils](./Editor/Utils): piccoli tool di supporto.
+- [Windows](./Editor/Windows): finestre personalizzate dell'editor.
 
+### [WIP](./WIP)
+Funzionalità sperimentali in sviluppo.
+- [Health](./WIP/Health): sistema salute e danno.
+- [Lights](./WIP/Lights): gestione delle luci e ciclo giorno/notte.
+- [Pool](./WIP/Pool): object pooling.
+- [Reedem](./WIP/Reedem): codici premio.
 
-
-
-
-
-
-
-
-
-
-## Gestione di un Database di Assets comuni
-
-Ti basta creare una sottoclasse di GenericDataManager<T1, T2>, dove T1 è il Manager e T2 è la classe di Scriptable Objects da caricare.
-
-```cs
-public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>
-```
-
-Inserisci poi lo script in un Prefab e carica gli assets per gestirne la lista.
-
-## Debug
-
-```cs
-public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
-{
-    public void SetActiveSaveSlot(int slot)
-    {
-        if (slot < _minSaveSlot || slot > _maxSaveSlot)
-        {
-            this.LogError($"Invalid save slot: {slot}. Must be between {_minSaveSlot} and {_maxSaveSlot}.");
-            return;
-        }
-    }
-}
-```
-
-## Auto Bundles
-
-
-## Task
-
-
-
-## Commands
-
-Create a subclass of Command, then implements Execute method.
-
-```cs
-public class DrawCardAction : Command
-{
-    public override void Execute(CommandInput input)
-    {
-        // Add codes here
-    }
-}
-```
-
-### Generic Asset List Viewer
-
-Make a subclass, then enjoy!
-
-```cs
-public class MaterialEditorWindow : GenericAssetEditorWindow<Material>
-{
-    [MenuItem("Window/Material Editor")]
-    public static void ShowWindow()
-    {
-        var window = GetWindow<MaterialEditorWindow>();
-        window.titleContent = new GUIContent("Material Editor");
-        window.Show();
-    }
-}
-```
-
-## Loading Manager
-
-```cs
-void Start()
-{
-    LoadingScreenData data = new LoadingScreenData
-    {
-        EnableLoadingAnimation = true,
-        Text = "Test Progress",
-        Type = LoadingType.Fullscreen
-    };
-
-    LoadingManager.Instance.StartLoading(CustomLoadAction, data);
-}
-
-private void CustomLoadAction(Action<float> updateProgress)
-{
-    // Custom loading logic goes here
-    StartCoroutine(SimulateLoading(updateProgress));
-}
-
-private IEnumerator SimulateLoading(Action<float> updateProgress)
-{
-    // Simulated loading process
-    float progress = 0f;
-    while (progress < 1f)
-    {
-        progress += Time.deltaTime / 5f; // Simulate a loading operation taking 5 seconds
-        updateProgress(Mathf.Clamp01(progress));
-        yield return null;
-    }
-}
-```
-
-## Asset Loader
-
-```cs
-public class AddressableTest : MonoBehaviour
-{
-    public AssetReferenceT<Sprite> assetReference;
-
-    void Start()
-    {
-        AssetLoader.LoadAssetAsync<Sprite>(assetReference, OnLoadComplete);
-    }
-
-    private void OnLoadComplete(AsyncOperationHandle<Sprite> handle)
-    {
-        Debug.Log(handle.Result);
-    }
-}
-```
-
-## Element Tuple
-
-```cs
-public class TestTuple : ElementTuple<string, string>
-{
-    public TestTuple(string firstData, string secondData) : base(firstData, secondData)
-    {
-    }
-}
-```
-
-
-
-## Transform
-
-```cs
-transform.SetX(0);
-transform.SetY(0);
-transform.SetZ(0);
-```
-
-## Layers
-
-```cs
-// GameObject
-gameObject.SetLayerMask(layerMask);
-var layerMask = gameObject.GetLayerMask();
-bool contains = gameObject.ContainsLayerMask(layerMask);
-
-// Layer Mask
-bool contains = layerMask.Contains(gameObject);
-```
+Altre risorse utili:
+- [CHANGELOG.md](./CHANGELOG.md)
+- [LICENSE.md](./LICENSE.md)
+- [package.json](./package.json)

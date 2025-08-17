@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,7 +13,8 @@ namespace GameUtils
 
         //
         public AssetReferenceSprite AssetReferenceIcon => _itemIcon;
-        public Sprite Icon => AssetLoader.LoadAssetSync<Sprite>(_itemIcon);
+        // Icon sprite loaded asynchronously. Await the returned Task; if loading fails the task faults and the result is null.
+        public Task<Sprite> Icon => AssetLoader.LoadAssetAsync<Sprite>(_itemIcon);
         public Color ItemColor => _itemColor;
     }
 }

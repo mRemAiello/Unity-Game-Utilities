@@ -29,13 +29,7 @@ namespace GameUtils
 
         void Update()
         {
-            if (!InputManager.InstanceExists)
-            {
-                return;
-            }
-            
-            //
-            var mousePosition = InputManager.Instance.CurrentPositionVector3;
+            var mousePosition = Input.mousePosition;
             mousePosition.z = 0;
 
             //
