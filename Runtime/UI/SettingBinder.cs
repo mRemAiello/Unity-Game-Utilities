@@ -18,7 +18,9 @@ namespace GameUtils
         {
             if (_data != null)
             {
+                _data.Load();
                 _data.OnValueChanged += SetUIValue;
+                SetUIValue(_data.CurrentValue);
             }
 
             if (_uiComponent != null)
@@ -37,14 +39,6 @@ namespace GameUtils
             if (_uiComponent != null)
             {
                 RemoveUIListener();
-            }
-        }
-
-        protected virtual void Start()
-        {
-            if (_data != null)
-            {
-                SetUIValue(_data.CurrentValue);
             }
         }
 
