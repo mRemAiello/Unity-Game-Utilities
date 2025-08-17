@@ -16,3 +16,15 @@ string card1 = GameSaveManager.Instance.Load<string>("Deck", "Card1", "");
 string card2 = GameSaveManager.Instance.Load<string>("Deck", "Card2", "");
 string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
 ```
+
+### Aggiornamenti delle impostazioni
+
+I binder dell'interfaccia utente possono sottoscriversi all'evento `OnValueChanged`
+esposto da `BaseSettingData<T>` per ricevere notifiche quando il valore cambia.
+
+```cs
+mySetting.OnValueChanged += value => mySlider.value = value;
+```
+
+L'evento viene invocato sia quando il valore viene modificato tramite `SetValue`
+sia quando viene caricato con `Load`.
