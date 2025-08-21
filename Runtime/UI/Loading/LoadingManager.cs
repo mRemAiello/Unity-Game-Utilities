@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(0)]
     public class LoadingManager : Singleton<LoadingManager>
     {
         [Tab("References")]
