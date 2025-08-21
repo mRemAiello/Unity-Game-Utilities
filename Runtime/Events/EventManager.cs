@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(-50)]
     public class EventManager : Singleton<EventManager>, ILoggable
     {
         [SerializeField] private bool _logEnabled = true;
