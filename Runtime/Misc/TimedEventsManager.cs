@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(0)]
     public class TimedEventsManager : Singleton<TimedEventsManager>
     {
         [SerializeField] private float _intervalInSeconds = 5f;
