@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(0)]
     public class TaskManager : Singleton<TaskManager>, ILoggable
     {
         [SerializeField] private List<ITask> _tasks = new();

@@ -10,8 +10,8 @@ namespace GameUtils
         [SerializeField] private T2 _item2;
 
         // private fields
-        public T1 Item1 => _item1;
-        public T2 Item2 => _item2;
+        protected T1 Item1 => _item1;
+        protected T2 Item2 => _item2;
 
         public ElementTuple(T1 firstData, T2 secondData)
         {

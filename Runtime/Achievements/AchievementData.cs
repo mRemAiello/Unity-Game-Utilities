@@ -25,8 +25,6 @@ namespace GameUtils
         [SerializeField, Group("progress")] private AchievementType _type;
         [SerializeField, ShowIf(nameof(_type), AchievementType.Simple), Group("progress")] private AchievementCondition _condition;
         [SerializeField, Group("progress")] private int _targetValue;
-        [SerializeField, Group("progress")] private int _currentValue;
-        [SerializeField, Group("progress")] private bool _isCompleted;
 
         //
         public string EventName => _eventName;
@@ -40,102 +38,7 @@ namespace GameUtils
         public Sprite UncompletedIcon => _uncompletedIcon;
         public Sprite CompletedIcon => _completedIcon;
         public AchievementType Type => _type;
+        public AchievementCondition Condition => _condition;
         public int TargetValue => _targetValue;
-        public int CurrentValue => _currentValue;
-        public bool IsCompleted => _isCompleted;
-
-        //
-        public void Complete()
-        {
-            if (!_isCompleted)
-            {
-                _isCompleted = true;
-                AchievementManager.Instance?.AchievementCompleted(this);
-                _currentValue = _targetValue;
-            }
-        }
-
-        public void Uncomplete()
-        {
-            if (_isCompleted)
-            {
-                _isCompleted = false;
-                AchievementManager.Instance?.AchievementUncompleted(this);
-            }
-        }
-
-        public void UpdateState(int value)
-        {
-            if (!_isCompleted)
-            {
-                switch (_type)
-                {
-                    case AchievementType.Simple:
-                        if (CheckCondition(value))
-                        {
-                            Complete();
-                        }
-                        break;
-
-                    case AchievementType.Progress:
-                        IncrementProgress(value);
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private bool CheckCondition(int value)
-        {
-            return _condition switch
-            {
-                AchievementCondition.Equal => value == _targetValue,
-                AchievementCondition.Greater => value > _targetValue,
-                AchievementCondition.Less => value < _targetValue,
-                AchievementCondition.GreaterOrEqual => value >= _targetValue,
-                AchievementCondition.LessOrEqual => value <= _targetValue,
-                _ => false,
-            };
-        }
-
-        public void IncrementProgress(int value)
-        {
-            _currentValue += value;
-
-            CheckCompletition();
-        }
-
-        public void SetProgress(int value)
-        {
-            _currentValue = value;
-
-            CheckCompletition();
-        }
-
-        [Button]
-        public void ResetProgress()
-        {
-            _currentValue = 0;
-
-            CheckCompletition();
-        }
-
-        public bool CheckCompletition()
-        {
-            bool isCompleted = _currentValue >= _targetValue;
-
-            if (isCompleted)
-            {
-                Complete();
-            }
-            else if (_isCompleted)
-            {
-                Uncomplete();
-            }
-
-            return isCompleted;
-        }
     }
 }

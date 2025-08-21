@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(-50)]
     [DeclareBoxGroup("debug", Title = "Debug")]
     public class CommandManager : Singleton<CommandManager>, ILoggable
     {

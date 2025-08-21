@@ -10,7 +10,7 @@ namespace GameUtils
     public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>, ISaveable
     {
         [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
-        [SerializeField, ReadOnly, Group("debug")] private List<CurrencyData> _currencies = new();
+        [SerializeField, ReadOnly, Group("debug"), ShowProperties] private List<CurrencyData> _currencies = new();
         [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
 
         //
