@@ -6,7 +6,6 @@ namespace GameUtils
     {
         [SerializeField] private AchievementNotification _notificationPrefab;
 
-        //
         private void Awake()
         {
             // Subscribe to event
@@ -19,7 +18,7 @@ namespace GameUtils
             AchievementManager.OnAchievementCompleted -= OnAchievementUnlocked;
         }
 
-        private void OnAchievementUnlocked(AchievementData achievement)
+        private void OnAchievementUnlocked(RuntimeAchievement achievement)
         {
             // Instantiate notification
             AchievementNotification notification = Instantiate(_notificationPrefab, transform);
