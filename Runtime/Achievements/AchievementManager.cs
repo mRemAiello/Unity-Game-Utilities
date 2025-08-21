@@ -7,20 +7,17 @@ namespace GameUtils
 {
     public class AchievementManager : MonoBehaviour
     {
-        [SerializeField] private List<AchievementData> _achievements;
+        [SerializeField] private List<AchievementData> _achievementData;
 
-        // Private fields
+        private List<RuntimeAchievement> _achievements;
         private static AchievementManager _instance;
 
-        // Public readonly fields
         public static AchievementManager Instance => _instance;
 
-        // Public events
         // TODO: When sdk of different platform (steam, xbox, etc) are implemented listen to those events
-        public static event Action<AchievementData> OnAchievementCompleted;
-        public static event Action<AchievementData> OnAchievementUncompleted;
+        public static event Action<RuntimeAchievement> OnAchievementCompleted;
+        public static event Action<RuntimeAchievement> OnAchievementUncompleted;
 
-        //
         private void Awake()
         {
             // Singleton
@@ -32,31 +29,33 @@ namespace GameUtils
             {
                 _instance = this;
             }
+
+            _achievements = _achievementData.Select(data => new RuntimeAchievement(data)).ToList();
         }
 
         private void OnValidate()
         {
             // Remove duplicates
-            _achievements = _achievements.Distinct().ToList();
+            _achievementData = _achievementData.Distinct().ToList();
         }
 
         public void OnAchievementEvent(string achievementEventName, int value)
         {
             // Get all achievements with the same event name
-            List<AchievementData> achievements = _achievements.FindAll(a => a.EventName == achievementEventName);
+            List<RuntimeAchievement> achievements = _achievements.FindAll(a => a.Data.EventName == achievementEventName);
 
-            foreach (AchievementData achievement in achievements)
+            foreach (RuntimeAchievement achievement in achievements)
             {
                 achievement.UpdateState(value);
             }
         }
 
-        public void AchievementCompleted(AchievementData achievement)
+        public void AchievementCompleted(RuntimeAchievement achievement)
         {
             OnAchievementCompleted?.Invoke(achievement);
         }
 
-        public void AchievementUncompleted(AchievementData achievement)
+        public void AchievementUncompleted(RuntimeAchievement achievement)
         {
             OnAchievementUncompleted?.Invoke(achievement);
         }

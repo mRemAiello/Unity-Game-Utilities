@@ -19,11 +19,11 @@ namespace GameUtils
         [SerializeField] private float _animationDuration = 1f;
 
         //
-        public void Initialize(AchievementData achievement)
+        public void Initialize(RuntimeAchievement achievement)
         {
-            _icon.sprite = achievement.CompletedIcon;
-            _title.text = achievement.Name;
-            _description.text = achievement.Description;
+            _icon.sprite = achievement.Data.CompletedIcon;
+            _title.text = achievement.Data.Name;
+            _description.text = achievement.Data.Description;
         }
 
         public void Show()
