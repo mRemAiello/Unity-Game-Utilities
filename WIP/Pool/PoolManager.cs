@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DefaultExecutionOrder(0)]
     public class PoolManager : Singleton<PoolManager>
     {
         [SerializeField, ReadOnly] private SerializedDictionary<string, Queue<GameObject>> _poolDict;
