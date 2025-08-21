@@ -8,6 +8,7 @@ namespace GameUtils
     /// <summary>
     /// Manages achievement data and runtime instances.
     /// </summary>
+    [DefaultExecutionOrder(-100)]
     public class AchievementManager : GenericDataManager<AchievementManager, AchievementData>
     {
         private readonly Dictionary<string, RuntimeAchievement> _runtimeAchievements = new();
