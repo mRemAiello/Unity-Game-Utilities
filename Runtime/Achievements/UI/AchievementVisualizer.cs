@@ -6,16 +6,16 @@ namespace GameUtils
     {
         [SerializeField] private AchievementNotification _notificationPrefab;
 
-        private void Awake()
+        private void OnEnable()
         {
-            // Subscribe to event
-            AchievementManager.OnAchievementCompleted += OnAchievementUnlocked;
+            if (AchievementManager.InstanceExists)
+                AchievementManager.Instance.OnAchievementCompleted += OnAchievementUnlocked;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            // Unsubscribe from event
-            AchievementManager.OnAchievementCompleted -= OnAchievementUnlocked;
+            if (AchievementManager.InstanceExists)
+                AchievementManager.Instance.OnAchievementCompleted -= OnAchievementUnlocked;
         }
 
         private void OnAchievementUnlocked(RuntimeAchievement achievement)

@@ -1,52 +1,39 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System;
 
 namespace GameUtils
 {
-    public class AchievementManager : MonoBehaviour
+    /// <summary>
+    /// Manages achievement data and runtime instances.
+    /// </summary>
+    public class AchievementManager : GenericDataManager<AchievementManager, AchievementData>
     {
-        [SerializeField] private List<AchievementData> _achievementData;
-
-        private List<RuntimeAchievement> _achievements;
-        private static AchievementManager _instance;
-
-        public static AchievementManager Instance => _instance;
+        private readonly Dictionary<string, RuntimeAchievement> _runtimeAchievements = new();
 
         // TODO: When sdk of different platform (steam, xbox, etc) are implemented listen to those events
-        public static event Action<RuntimeAchievement> OnAchievementCompleted;
-        public static event Action<RuntimeAchievement> OnAchievementUncompleted;
+        public event Action<RuntimeAchievement> OnAchievementCompleted;
+        public event Action<RuntimeAchievement> OnAchievementUncompleted;
 
-        private void Awake()
+        protected override void OnPostAwake()
         {
-            // Singleton
-            if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                _instance = this;
-            }
+            base.OnPostAwake();
 
-            _achievements = _achievementData.Select(data => new RuntimeAchievement(data)).ToList();
-        }
-
-        private void OnValidate()
-        {
-            // Remove duplicates
-            _achievementData = _achievementData.Distinct().ToList();
+            foreach (var data in Items)
+            {
+                _runtimeAchievements[data.ID] = new RuntimeAchievement(data);
+            }
         }
 
         public void OnAchievementEvent(string achievementEventName, int value)
         {
-            // Get all achievements with the same event name
-            List<RuntimeAchievement> achievements = _achievements.FindAll(a => a.Data.EventName == achievementEventName);
-
-            foreach (RuntimeAchievement achievement in achievements)
+            foreach (var data in Items.Where(a => a.EventName == achievementEventName))
             {
-                achievement.UpdateState(value);
+                if (_runtimeAchievements.TryGetValue(data.ID, out var runtime))
+                {
+                    runtime.UpdateState(value);
+                }
             }
         }
 
@@ -61,3 +48,4 @@ namespace GameUtils
         }
     }
 }
+
