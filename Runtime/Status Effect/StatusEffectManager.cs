@@ -9,9 +9,9 @@ namespace GameUtils
     public class StatusEffectManager : MonoBehaviour
     {
         [Tab("Events")]
-        [SerializeField] private StatusEffectEventAsset _onApplyEffect;
-        [SerializeField] private StatusEffectEventAsset _onUpdateEffect;
-        [SerializeField] private StatusEffectEventAsset _onEndEffect;
+        [SerializeField, Expandable] private StatusEffectEventAsset _onApplyEffect;
+        [SerializeField, Expandable] private StatusEffectEventAsset _onUpdateEffect;
+        [SerializeField, Expandable] private StatusEffectEventAsset _onEndEffect;
 
         [Tab("Debug")]
         [SerializeField, ReadOnly, TableList] private List<RuntimeStatusEffect> _statusEffects = new();

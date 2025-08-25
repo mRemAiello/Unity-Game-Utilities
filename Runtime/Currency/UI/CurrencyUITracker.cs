@@ -13,7 +13,7 @@ namespace GameUtils
     public class CurrencyUITracker : MonoBehaviour, ILoggable
     {
         [SerializeField] private bool _logEnabled = true;
-        [SerializeField, Required, Group("currency")] private CurrencyData _currencyData;
+        [SerializeField, Required, Group("currency"), Expandable] private CurrencyData _currencyData;
         [SerializeField, Required, Group("currency")] private TextMeshProUGUI _currencyText;
         [SerializeField, Required, Group("currency")] private Image _currencyIcon;
         [SerializeField, Group("currency")] private Sprite _fallbackIcon;
