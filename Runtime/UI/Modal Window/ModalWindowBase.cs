@@ -13,8 +13,8 @@ namespace GameUtils
         [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
         [SerializeField, Group("references")] private Transform _buttonsRoot;
         [SerializeField, Group("debug")] private bool _logEnabled = false;
-        [SerializeField, ReadOnly, Group("debug")] protected List<ModalWindowButton> _buttons = new();
-        [SerializeField, ReadOnly, Group("debug")] private bool _ignorable;
+        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] protected List<ModalWindowButton> _buttons = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private bool _ignorable;
 
         //
         public virtual bool Ignorable
