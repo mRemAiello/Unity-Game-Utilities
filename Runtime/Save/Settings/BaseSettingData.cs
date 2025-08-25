@@ -5,12 +5,13 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("Settings")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public abstract class BaseSettingData<T> : ScriptableObject, ISaveable, ILoggable
     {
         [Group("Setting"), SerializeField] protected string _settingName;
         [Group("Setting"), SerializeField] protected T _defaultValue;
-        [Group("Debug"), PropertyOrder(99), SerializeField, ReadOnly] protected T _currentValue;
-        [Group("Debug"), PropertyOrder(100), SerializeField, ReadOnly] protected bool _logEnabled = true;
+        [Group("debug"), PropertyOrder(99), SerializeField, ReadOnly] protected T _currentValue;
+        [Group("debug"), PropertyOrder(100), SerializeField, ReadOnly] protected bool _logEnabled = true;
 
         /// <summary>
         /// Invoked whenever the setting value changes. UI binders can subscribe to

@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public abstract class StateMB<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
-        [SerializeField, Group("Debug")] private bool _logEnabled = true;
+        [SerializeField, Group("debug")] private bool _logEnabled = true;
 
         //
         public T Fsm { get; private set; }

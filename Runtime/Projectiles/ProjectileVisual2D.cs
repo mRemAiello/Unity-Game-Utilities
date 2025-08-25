@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("Visual")]
-    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class ProjectileVisual2D : MonoBehaviour
     {
         [SerializeField, Group("Visual")] private Transform _projectileVisual;
@@ -13,8 +13,8 @@ namespace GameUtils
         [SerializeField, Group("Visual")] private float _shadowPositionDivider = 6f;
 
         //
-        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _target;
-        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _trajectoryStartPosition;
+        [SerializeField, Group("debug"), ReadOnly] private Vector3 _target;
+        [SerializeField, Group("debug"), ReadOnly] private Vector3 _trajectoryStartPosition;
 
         //
         public void SetTarget(Vector3 target)
