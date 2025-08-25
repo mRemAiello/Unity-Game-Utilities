@@ -9,7 +9,7 @@ namespace GameUtils
     public class RuntimeClass : MonoBehaviour, ILoggable
     {
         [SerializeField, Group("class")] private bool _startWithClass = true;
-        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true)] private ClassData _classData;
+        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true), Expandable] private ClassData _classData;
         [SerializeField, Group("class")] private bool _refreshClassOnUpdate = false;
 
         //
