@@ -14,7 +14,7 @@ namespace GameUtils
 
         //
         [SerializeField, Group("debug")] private bool _logEnabled = true;
-        [SerializeField, ReadOnly, TableList, Group("Debug")] private List<RuntimeAttribute> _attributes;
+        [SerializeField, ReadOnly, TableList, Group("debug")] private List<RuntimeAttribute> _attributes;
 
         //
         public ClassData ClassData => _classData;
