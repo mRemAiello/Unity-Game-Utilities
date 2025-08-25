@@ -16,20 +16,20 @@ namespace GameUtils
         private IPoolable _pool;
 
         //
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _target;
-        [SerializeField, Group("debug"), ReadOnly] private float _moveSpeed;
-        [SerializeField, Group("debug"), ReadOnly] private float _maxMoveSpeed;
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _trajectoryStartPoint;
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _trajectoryRange;
-        [SerializeField, Group("debug"), ReadOnly] private float _trajectoryMaxRelativeHeight;
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _projectileMoveDir;
-        [SerializeField, Group("debug"), ReadOnly] private float _nextYTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly] private float _nextXTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly] private float _nextPositionYCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly] private float _nextPositionXCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _trajectoryCurve;
-        [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _axisCorrectCurve;
-        [SerializeField, Group("debug"), ReadOnly] private AnimationCurve _projSpeedCurve;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _target;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _moveSpeed;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _maxMoveSpeed;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _trajectoryStartPoint;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _trajectoryRange;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _trajectoryMaxRelativeHeight;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _projectileMoveDir;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextYTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextXTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextPositionYCorrectionAbsolute;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextPositionXCorrectionAbsolute;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _trajectoryCurve;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _axisCorrectCurve;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _projSpeedCurve;
 
         //
         void Start()
