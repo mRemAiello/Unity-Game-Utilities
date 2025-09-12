@@ -6,20 +6,13 @@ using UnityEngine;
 namespace GameUtils
 {
     [Serializable]
-    public struct TagInfo
-    {
-        public string Name;
-        public int Value;
-    }
-
-    [Serializable]
     public class TagManager
     {
-        [SerializeField, ReadOnly] private SerializedDictionary<string, TagInfo> _values;
+        [SerializeField, ReadOnly] private SerializedDictionary<string, RuntimeTag> _values;
 
         public TagManager()
         {
-            _values = new SerializedDictionary<string, TagInfo>();
+            _values = new SerializedDictionary<string, RuntimeTag>();
         }
 
         public void SetTagValue(GameTag tag, bool value)
@@ -28,25 +21,11 @@ namespace GameUtils
             SetTagValue(tag, intValue);
         }
 
-        private int GetTagValue(string tag)
-        {
-            if (!_values.TryGetValue(tag, out TagInfo info))
-            {
-                return 0;
-            }
-            return info.Value;
-        }
-
-        private bool HasTag(string tag)
-        {
-            return _values.TryGetValue(tag, out TagInfo info) && info.Value > 0;
-        }
-
-        public bool HasTag<T>() where T : GameTag
+        public bool HasAny<T>() where T : GameTag
         {
             foreach (var kvp in _values)
             {
-                if (kvp.Value.Name == typeof(T).Name && kvp.Value.Value > 0)
+                if (kvp.Value.Tag.GetType() == typeof(T) && kvp.Value.Value > 0)
                 {
                     return true;
                 }
@@ -55,11 +34,11 @@ namespace GameUtils
         }
 
         //
-        public Dictionary<string, TagInfo> GetMap() => _values;
-        public bool TryGetValue(string tag, out TagInfo info) => _values.TryGetValue(tag, out info);
-        public int GetTagValue(GameTag tag) => GetTagValue(tag.ID);
-        public void SetTagValue(GameTag tag, int value) => _values[tag.ID] = new TagInfo { Name = tag.InternalName, Value = value };
-        public bool HasTag(GameTag tag) => HasTag(tag.ID);
+        public Dictionary<string, RuntimeTag> GetMap() => _values;
+        public bool TryGetValue(string tag, out RuntimeTag runtimeTag) => _values.TryGetValue(tag, out runtimeTag);
+        public void SetTagValue(GameTag tag, int value) => _values[tag.ID] = new RuntimeTag { Tag = tag, Value = value };
+        private bool HasAny(string tag) => _values.TryGetValue(tag, out RuntimeTag info) && info.Value > 0;
+        public bool HasAny(GameTag tag) => HasAny(tag.ID);
         public void Clear() => _values.Clear();
     }
 }
