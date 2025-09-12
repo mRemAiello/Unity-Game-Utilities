@@ -15,6 +15,12 @@ Questa cartella contiene un semplice sistema di gestione dei tag utilizzabile ne
 - `Dictionary<string, TagInfo> GetMap()` – ottiene l'intero dizionario di tag e relative informazioni.
 - `TryGetValue(string tag, out TagInfo info)` – recupera le informazioni del tag tramite la stringa `ID`.
 - `Clear()` – rimuove tutte le associazioni registrate.
+- `HasAny(params GameTag[] tags)` – verifica se almeno uno dei tag specificati è presente.
+- `HasAll(params GameTag[] tags)` – verifica se tutti i tag specificati sono presenti.
+- `List<GameTag> Intersection(params GameTag[] tags)` – restituisce l'intersezione tra i tag presenti e quelli passati.
+- `List<GameTag> Union(params GameTag[] tags)` – restituisce l'unione tra i tag presenti e quelli passati.
+
+Sono inoltre disponibili versioni statiche degli stessi metodi che accettano un'interfaccia `ITaggable` e consentono di effettuare queste operazioni direttamente sulle liste di tag.
 
 ### Esempio di utilizzo
 ```cs
