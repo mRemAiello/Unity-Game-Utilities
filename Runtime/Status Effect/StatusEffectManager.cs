@@ -16,13 +16,22 @@ namespace GameUtils
         [Tab("Debug")]
         [SerializeField, ReadOnly, TableList] private List<RuntimeStatusEffect> _statusEffects = new();
 
+        [Tab("Tags")]
+        [SerializeField, ReadOnly] private TagManager _tags = new();
+        [SerializeField, ReadOnly] private TagManager _immunities = new();
+
         //
         public List<RuntimeStatusEffect> StatusEffects => _statusEffects;
+        public TagManager Tags => _tags;
+        public TagManager Immunities => _immunities;
 
         //
         [Button]
         public void ApplyEffect(GameObject source, GameObject target, StatusEffectData data, int amount)
         {
+            if (_immunities.HasAny(data.Tags.ToArray()))
+                return;
+
             RuntimeStatusEffect effect = FindEffect(data.ID);
             if (effect == null)
             {
@@ -30,7 +39,7 @@ namespace GameUtils
                 _statusEffects.Add(effect);
             }
 
-            // 
+            //
             if (data.StackType == StatusEffectStackType.Duration)
                 effect.Duration = Mathf.Min(effect.Duration + amount, data.MaxDuration);
 
@@ -40,6 +49,7 @@ namespace GameUtils
 
             //
             ReorderEffects();
+            RefreshTags();
         }
 
         [Button]
@@ -70,6 +80,7 @@ namespace GameUtils
 
             //
             _statusEffects.RemoveAll(item => item.Duration == 0);
+            RefreshTags();
         }
 
         [Button]
@@ -84,6 +95,7 @@ namespace GameUtils
 
             //
             ReorderEffects();
+            RefreshTags();
         }
 
         [Button]
@@ -94,6 +106,7 @@ namespace GameUtils
             {
                 RemoveEffect(effect, launchEndEvent);
             }
+            RefreshTags();
         }
 
         public List<RuntimeStatusEffect> FindEffects(string ID)
@@ -118,6 +131,23 @@ namespace GameUtils
         public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
         public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
         public bool HasEffect<T>() where T : StatusEffectData => _statusEffects.Any(x => x.Data is T);
+        private void RefreshTags()
+        {
+            _tags.Clear();
+            foreach (var effect in _statusEffects)
+            {
+                foreach (var tag in effect.Data.Tags)
+                {
+                    int current = 0;
+                    if (_tags.TryGetValue(tag.ID, out RuntimeTag runtimeTag))
+                    {
+                        current = runtimeTag.Value;
+                    }
+                    _tags.SetTagValue(tag, current + 1);
+                }
+            }
+        }
+
         private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Duration).ToList();
     }
 }
