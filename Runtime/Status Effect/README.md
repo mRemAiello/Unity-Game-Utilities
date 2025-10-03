@@ -11,6 +11,7 @@ Ogni effetto viene descritto da uno `StatusEffectData` e gestito a runtime trami
 - **Order**: priorità di visualizzazione.
 - **StackType**: modalità di accumulo (`None`, `Duration` o `Intensity`).
 - **MaxDuration**: durata massima se lo stack avviene sulla durata.
+- **Tags**: lista di `GameTag` che identifica la tipologia dell'effetto.
 
 È necessario implementare tre metodi:
 - `ApplyEffect(RuntimeStatusEffect effect)` – logica all'applicazione.
@@ -28,6 +29,8 @@ Struttura serializzabile che mantiene le informazioni di un effetto applicato:
 - `RemoveEffect(RuntimeStatusEffect effect, bool launchEndEvent = false)` – rimuove un singolo effetto.
 - `RemoveAllEffects(string id, bool launchEndEvent = false)` – rimuove tutti gli effetti con un determinato ID.
 - Metodi di utilità come `FindEffect`, `FindEffects` e `HasEffect`.
+- Gestione dei `GameTag` attivi attraverso la proprietà `Tags`.
+- Sistema di immunità basato su `GameTag`: quelli registrati in `Immunities` impediscono l'applicazione degli effetti con tag corrispondenti.
 
 Il manager espone anche tre `StatusEffectEventAsset` opzionali per ricevere notifiche all'applicazione, aggiornamento ed esaurimento di un effetto.
 
