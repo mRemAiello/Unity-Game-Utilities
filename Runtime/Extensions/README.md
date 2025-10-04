@@ -8,6 +8,7 @@ Metodi disponibili:
 - `Pop(index)`: estrae l'elemento in posizione `index` e lo rimuove.
 - `Get(index)`: recupera l'elemento in posizione `index` se presente.
 - `TryGet(index, out item)`: prova a recuperare l'elemento in `index`.
+- `ContainsAll(items)`: verifica che tutti gli elementi passati siano presenti.
 - `Append(newItem)`: aggiunge un nuovo elemento e lo restituisce.
 - `FromEnd(index)`: estrae l'elemento a partire dalla fine.
 - `InsertBefore(item, newItem)`: inserisce `newItem` prima di `item`.

@@ -63,6 +63,41 @@ namespace GameUtils
             return false;
         }
 
+        public static bool ContainsAll<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list), "List cannot be null.");
+            }
+
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+            }
+
+            var comparer = EqualityComparer<T>.Default;
+
+            foreach (var item in items)
+            {
+                var contains = false;
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (comparer.Equals(list[i], item))
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+
+                if (!contains)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static T Append<T>(this IList<T> self, T newItem)
         {
             self.Add(newItem);
