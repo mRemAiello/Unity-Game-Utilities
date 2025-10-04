@@ -33,6 +33,18 @@ namespace GameUtils
             return false;
         }
 
+        public bool HasAny(GameTag[] tags)
+        {
+            foreach (var tag in tags)
+            {
+                if (HasAny(tag))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasAll(params GameTag[] tags)
         {
             foreach (var tag in tags)
