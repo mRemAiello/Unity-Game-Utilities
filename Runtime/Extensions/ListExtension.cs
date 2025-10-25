@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,6 +8,21 @@ namespace GameUtils
 {
     public static class ListExtension
     {
+        public static List<T> GetRandomElements<T>(this List<T> list, int elementsCount)
+        {
+            return list.OrderBy(arg => Guid.NewGuid()).Take(list.Count < elementsCount ? list.Count : elementsCount).ToList();
+        }
+
+        public static T First<T>(this IList<T> list)
+        {
+            return list[0];
+        }
+
+        public static T Last<T>(this IList<T> list)
+        {
+            return list[list.Count - 1];
+        }
+
         public static T RandomItem<T>(this IList<T> list)
         {
             if (list.Count == 0)
