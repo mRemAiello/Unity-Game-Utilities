@@ -33,7 +33,7 @@ namespace GameUtils
         {
             if (_refreshClassOnUpdate)
             {
-                //RefreshAttributes();
+                RefreshAttributes();
             }
         }
 
@@ -59,6 +59,20 @@ namespace GameUtils
             return new RuntimeAttribute(data, value);
         }
 
+        public void RefreshAttributes()
+        {
+            if (_attributes == null || _attributes.Count == 0)
+            {
+                this.LogWarning("No attributes to refresh on this class instance.");
+                return;
+            }
+
+            foreach (var attribute in _attributes)
+            {
+                attribute.Refresh();
+            }
+        }
+
         //
         public bool TryGetAttribute<T>(out RuntimeAttribute attribute) where T : AttributeData
         {
@@ -80,6 +94,62 @@ namespace GameUtils
                     return attribute;
                 }
             }
+            return null;
+        }
+
+        public bool TryGetAttribute(string attributeId, out RuntimeAttribute attribute)
+        {
+            attribute = GetAttribute(attributeId);
+            if (attribute == null)
+            {
+                this.LogError($"Attribute with id {attributeId} not found in class data.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool TryGetAttribute(AttributeData attributeData, out RuntimeAttribute attribute)
+        {
+            attribute = GetAttribute(attributeData);
+            if (attribute == null)
+            {
+                this.LogError($"Attribute {attributeData?.name ?? "<null>"} not found in class data.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public RuntimeAttribute GetAttribute(string attributeId)
+        {
+            if (string.IsNullOrEmpty(attributeId))
+                return null;
+
+            foreach (var attribute in _attributes)
+            {
+                if (attribute.Data.ID == attributeId)
+                {
+                    return attribute;
+                }
+            }
+
+            return null;
+        }
+
+        public RuntimeAttribute GetAttribute(AttributeData attributeData)
+        {
+            if (attributeData == null)
+                return null;
+
+            foreach (var attribute in _attributes)
+            {
+                if (attribute.Data == attributeData || attribute.Data.ID == attributeData.ID)
+                {
+                    return attribute;
+                }
+            }
+
             return null;
         }
     }
