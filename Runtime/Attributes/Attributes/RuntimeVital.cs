@@ -11,16 +11,18 @@ namespace GameUtils
         [SerializeField, ReadOnly] private float _currentMaxValue;
 
         //
-        public new float CurrentValue
+        public override float CurrentValue
         {
             get => _currentVitalValue;
             set
             {
-                float clamped = Mathf.Clamp(value, MinValue, _currentMaxValue);
+                float clamped = Mathf.Clamp(ClampAttributeValue(value, Data.ClampType), MinValue, _currentMaxValue);
                 if (!Mathf.Approximately(_currentVitalValue, clamped))
                 {
                     _currentVitalValue = clamped;
+                    base.CurrentValue = _currentVitalValue;
                     OnCurrentValueChange();
+                    HandleEvents();
                 }
             }
         }
@@ -38,7 +40,8 @@ namespace GameUtils
         {
             base.RefreshCurrentValue();
             _currentMaxValue = base.CurrentValue;
-            _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
+            _currentVitalValue = Mathf.Clamp(ClampAttributeValue(_currentVitalValue, Data.ClampType), MinValue, _currentMaxValue);
+            base.CurrentValue = _currentVitalValue;
         }
 
         //
