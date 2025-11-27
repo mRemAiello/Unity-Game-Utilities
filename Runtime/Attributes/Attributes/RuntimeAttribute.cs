@@ -67,6 +67,8 @@ namespace GameUtils
         public virtual void Refresh()
         {
             var mods = _modifiers.OrderBy(m => m.Order);
+            List<Modifier> expiredModifiers = null;
+
             foreach (var modifier in mods)
             {
                 if (modifier.Duration > 0.0f)
@@ -74,9 +76,21 @@ namespace GameUtils
                     modifier.Duration -= Time.deltaTime;
                     if (modifier.Duration < 0.0f)
                     {
-                        RemoveModifier(modifier);
+                        expiredModifiers ??= new List<Modifier>();
+                        expiredModifiers.Add(modifier);
                     }
                 }
+            }
+
+            if (expiredModifiers != null)
+            {
+                foreach (var modifier in expiredModifiers)
+                {
+                    _modifiers.Remove(modifier);
+                }
+
+                RefreshCurrentValue();
+                HandleEvents();
             }
         }
 
