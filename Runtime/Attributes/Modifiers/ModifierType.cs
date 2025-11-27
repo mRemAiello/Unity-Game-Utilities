@@ -7,6 +7,6 @@ namespace GameUtils
     {
         Positive = 0,
         Negative = 1,
-        Neutral = 2,
+        Neutral = 2
     }
 }

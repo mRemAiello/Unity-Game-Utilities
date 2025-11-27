@@ -64,7 +64,7 @@ namespace GameUtils
                 OnMaxValue();
         }
 
-        public void Refresh()
+        public virtual void Refresh()
         {
             var mods = _modifiers.OrderBy(m => m.Order);
             foreach (var modifier in mods)
@@ -98,16 +98,16 @@ namespace GameUtils
             return modValue;
         }
 
-        protected float ClampAttributeValue(float baseValue, AttributeClampType clampType)
+        protected float ClampAttributeValue(float value, AttributeClampType clampType)
         {
             return clampType switch
             {
-                AttributeClampType.RawFloat => baseValue,
-                AttributeClampType.Floor => Mathf.Floor(baseValue),
-                AttributeClampType.Round => Mathf.Round(baseValue),
-                AttributeClampType.Ceiling => Mathf.Ceil(baseValue),
-                AttributeClampType.Integer => Mathf.RoundToInt(baseValue),
-                _ => baseValue,
+                AttributeClampType.RawFloat => value,
+                AttributeClampType.Floor => Mathf.Floor(value),
+                AttributeClampType.Round => Mathf.Round(value),
+                AttributeClampType.Ceiling => Mathf.Ceil(value),
+                AttributeClampType.Integer => Mathf.RoundToInt(value),
+                _ => value,
             };
         }
 
