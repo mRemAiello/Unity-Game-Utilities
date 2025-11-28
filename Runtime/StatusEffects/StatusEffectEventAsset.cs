@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.STATUS_NAME + "StatusEffect")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.STATUS_NAME + "StatusEffect")]
     public class StatusEffectEventAsset : GameEventAsset<RuntimeStatusEffect>
     {
     }

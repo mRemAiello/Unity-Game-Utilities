@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.ATTRIBUTES_NAME + "Attribute")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute")]
     [DeclareBoxGroup("attribute", Title = "Attribute")]
     public class AttributeData : ItemAssetBase
     {

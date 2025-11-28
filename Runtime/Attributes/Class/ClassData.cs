@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.ATTRIBUTES_NAME + "Class")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
     [DeclareBoxGroup("class", Title = "Class")]
     public class ClassData : ItemAssetBase
     {
