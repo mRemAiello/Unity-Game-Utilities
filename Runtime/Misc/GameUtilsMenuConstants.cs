@@ -1,6 +1,6 @@
 namespace GameUtils
 {
-    public class Constant
+    public class GameUtilsMenuConstants
     {
         public const string PACKAGE_NAME = "Game Utils";
         public const string MENU_NAME = "Tools/Game Utils/";

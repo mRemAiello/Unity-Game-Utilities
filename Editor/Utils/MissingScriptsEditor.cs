@@ -15,7 +15,7 @@ namespace SimblendTools
         private bool _removedMissingScripts = false;
 
         //
-        [MenuItem(Constant.MENU_NAME + "Missing Scripts")]
+        [MenuItem(GameUtilsMenuConstants.MENU_NAME + "Missing Scripts")]
         public static void ShowWindow()
         {
             GetWindow<MissingScriptsEditor>("Remove Missing Scripts");
