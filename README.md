@@ -33,7 +33,7 @@ Principali sottocartelle:
 - [Commands](./Runtime/Commands): coda di comandi eseguibili.
 - [Constant](./Runtime/Constant): valori e costanti globali.
 - [Currency](./Runtime/Currency): logica delle valute di gioco.
-- [Data Structures](./Runtime/Data%20Structures): Scriptable Object comuni.
+- [DataStructures](./Runtime/DataStructures): Scriptable Object comuni.
 - [Debug](./Runtime/Debug): utility di debug e logging.
 - [Dictionary](./Runtime/Dictionary): dizionari serializzabili.
 - [Events](./Runtime/Events): implementazione di game events.
@@ -49,8 +49,8 @@ Principali sottocartelle:
 - [Save](./Runtime/Save): gestione salvataggi e caricamenti.
 - [Singleton](./Runtime/Singleton): classi base per singleton e manager.
 - [States](./Runtime/States): semplici macchine a stati.
-- [Status Effect](./Runtime/Status%20Effect): sistema di effetti di stato.
-- [Tag Manager](./Runtime/Tag%20Manager): tag personalizzate.
+- [StatusEffects](./Runtime/StatusEffects): sistema di effetti di stato.
+- [TagManager](./Runtime/TagManager): tag personalizzate.
 - [Task](./Runtime/Task): gestione di task asincroni.
 - [Tracker](./Runtime/Tracker): tracciamento di variabili.
 - [UI](./Runtime/UI): componenti per l'interfaccia utente.
@@ -58,7 +58,7 @@ Principali sottocartelle:
 
 ### [Editor](./Editor)
 Strumenti e finestre per l'editor di Unity.
-- [Auto Bundles](./Editor/Auto%20Bundles): generazione automatica di bundle.
+- [AutoBundles](./Editor/AutoBundles): generazione automatica di bundle.
 - [Dictionary](./Editor/Dictionary): drawer per SerializableDictionary.
 - [Utils](./Editor/Utils): piccoli tool di supporto.
 - [Windows](./Editor/Windows): finestre personalizzate dell'editor.

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("status-effect", Title = "Status Effect")]
+    [DeclareBoxGroup("status-effect", Title = "StatusEffect")]
     public abstract class StatusEffectData : ItemAssetBase
     {
         [SerializeField, Group("status-effect")] private bool _isVisible = true;

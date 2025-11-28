@@ -1,4 +1,4 @@
-# Tag Manager
+# TagManager
 
 Questa cartella contiene un semplice sistema di gestione dei tag utilizzabile nei progetti Unity.
 
