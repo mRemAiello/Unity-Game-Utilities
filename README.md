@@ -68,7 +68,7 @@ Funzionalità sperimentali in sviluppo.
 - [Health](./WIP/Health): sistema salute e danno.
 - [Lights](./WIP/Lights): gestione delle luci e ciclo giorno/notte.
 - [Pool](./WIP/Pool): object pooling.
-- [Reedem](./WIP/Reedem): codici premio.
+- [Redeem](./WIP/Redeem): codici premio.
 
 Altre risorse utili:
 - [CHANGELOG.md](./CHANGELOG.md)
