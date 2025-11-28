@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace GameUtils
 {
-    public static class Common
+    public static class CommonExtensions
     {
         public static bool IsInteger(this float value)
         {
