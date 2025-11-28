@@ -8,9 +8,9 @@ namespace GameUtils
     [DeclareBoxGroup("class", Title = "Class")]
     public class ClassData : ItemAssetBase
     {
-        [SerializeField, Group("class"), TableList] private List<AttributeIntTuple> _attributes;
+        [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 
         //
-        public List<AttributeIntTuple> Attributes => _attributes;
+        public List<AttributeValuePair> Attributes => _attributes;
     }
 }

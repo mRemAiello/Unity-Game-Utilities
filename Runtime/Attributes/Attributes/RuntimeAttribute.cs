@@ -18,11 +18,7 @@ namespace GameUtils
         public string ID => _data.ID;
         public AttributeData Data => _data;
         public float BaseValue => _baseValue;
-        public virtual float CurrentValue
-        {
-            get => _currentValue;
-            protected set => _currentValue = value;
-        }
+        public virtual float CurrentValue => _currentValue;
         public float MinValue => _data.MinValue;
         public float MaxValue => _data.MaxValue;
 
