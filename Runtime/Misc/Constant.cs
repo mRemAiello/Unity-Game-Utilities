@@ -15,7 +15,7 @@ namespace GameUtils
         public const string CURRENCY_NAME = PACKAGE_NAME + "/Currency/";
         public const string TAG_NAME = PACKAGE_NAME + "/Tags/";
         public const string EVENT_NAME = PACKAGE_NAME + "/Events/";
-        public const string STATUS_NAME = PACKAGE_NAME + "/Status Effects/";
+        public const string STATUS_NAME = PACKAGE_NAME + "/StatusEffects/";
         public const string SAVE_NAME = PACKAGE_NAME + "/Save System/";
     }
 }

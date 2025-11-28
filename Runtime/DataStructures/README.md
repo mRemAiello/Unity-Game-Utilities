@@ -1,4 +1,4 @@
-# Data Structures
+# DataStructures
 
 Questa cartella contiene alcune **Scriptable Object** utilizzate per gestire dati comuni all'interno dei progetti Unity.
 

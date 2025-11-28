@@ -1,4 +1,4 @@
-# Sistema di Status Effect
+# Sistema di StatusEffects
 
 Questa cartella raccoglie gli script utili per applicare e gestire effetti di stato sugli oggetti di gioco.
 Ogni effetto viene descritto da uno `StatusEffectData` e gestito a runtime tramite `StatusEffectManager`.
