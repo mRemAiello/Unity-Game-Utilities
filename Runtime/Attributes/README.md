@@ -1,73 +1,51 @@
 # Sistema di Attributi
 
-Questa cartella contiene tutti gli script e gli Scriptable Object utili per gestire un sistema di attributi e classi per i personaggi di gioco.
+Questa cartella raccoglie Scriptable Object e componenti runtime per definire attributi (es. `Forza`, `Agilità`, `Salute`) e applicarli a personaggi o entità di gioco.
 
 ## Scriptable Object
 
 ### `AttributeData`
-Rappresenta un singolo attributo (es. `Forza`, `Agilità` ecc.). È possibile crearne uno dal menu `Game Utils/Attributes/Attribute`.
+Asset che descrive un singolo attributo e le sue regole di validità (`MinValue`, `MaxValue`, `ClampType`). Se `IsVital` è attivo l'attributo userà la variante runtime vitale.
 
-Campi principali:
-- `MinValue` e `MaxValue` – valori minimo e massimo consentiti.
-- `IsVital` – se l'attributo rappresenta un valore vitale (ad esempio punti vita).
-- `ClampType` – modalità con cui viene arrotondato il valore (`RawFloat`, `Floor`, `Round`, `Ceiling`, `Integer`).
+> Creazione: **Game Utils/Attributes/Attribute**.
 
 ### `ClassData`
-È un asset che raccoglie una lista di coppie `AttributeData`/valore iniziale (`AttributeIntTuple`).
-Si crea dal menu `Game Utils/Attributes/Class` e viene utilizzato per definire le statistiche di partenza di una classe di personaggi.
+Contiene una lista ordinata di `AttributeValuePair` (attributo + valore iniziale) che rappresentano la “classe” o configurazione di base di un personaggio.
 
-## Classi Runtime
+> Creazione: **Game Utils/Attributes/Class**.
 
 ### `AttributeDataManager`
-Gestore generico degli `AttributeData`. Carica automaticamente tutti gli asset presenti nel progetto e ne fornisce l'accesso centralizzato.
+Eredita da `GenericDataManager` e centralizza il caricamento di tutti gli `AttributeData` presenti nel progetto, così da poterli recuperare in modo coerente da codice o altri sistemi.
+
+## Classi runtime
 
 ### `RuntimeAttribute`
-Oggetto serializzabile che rappresenta un attributo in gioco. Mantiene il valore base e quello corrente (modificato dai vari `Modifier`).
-Metodi principali:
-- `AddModifier`/`RemoveModifier` – aggiunge o rimuove un modificatore.
-- `Refresh` – aggiorna la durata dei modificatori nel tempo.
+Oggetto serializzabile che mantiene valore base e corrente di un attributo. Gestisce una lista di `Modifier`, applicati in base a `Order`, e li fa scadere quando `Duration` si azzera tramite `Refresh()`. Il valore finale viene clamped secondo `MinValue`/`MaxValue` e la strategia `ClampType`.
+
+Metodi utili:
+- `AddModifier` / `RemoveModifier` / `ClearModifiers` per gestire i modificatori.
+- `Refresh()` per aggiornare la durata dei modificatori e ricalcolare il valore.
 
 ### `RuntimeVital`
-Estende `RuntimeAttribute` per gli attributi vitali (es. punti vita), tenendo traccia anche del valore attuale e del massimo temporaneo.
+Estende `RuntimeAttribute` per gli attributi vitali (es. punti vita). Tiene traccia del valore vitale corrente e di un massimo temporaneo derivato dal valore base; `SetCurrentValue` permette di modificarlo in sicurezza mantenendolo entro i limiti calcolati.
 
 ### `RuntimeClass`
-`MonoBehaviour` che applica una `ClassData` ad un oggetto di scena. All'avvio inizializza la lista di `RuntimeAttribute` in base ai dati forniti e permette di recuperare i valori con `GetAttribute<T>()`.
+`MonoBehaviour` che istanzia gli attributi definiti in una `ClassData` su un GameObject. Può creare automaticamente la classe in `Start` (`_startWithClass`) e opzionalmente richiamare `Refresh()` ogni frame (`_refreshClassOnUpdate`). Fornisce metodi `GetAttribute`/`TryGetAttribute` per recuperare gli attributi per tipo, ID o riferimento al `AttributeData` originale.
 
 ## Modificatori
 
 ### `Modifier`
-Classe base astratta. Contiene:
-- `Source` – origine del modificatore.
-- `Amount` – valore della modifica.
-- `Duration` – tempo di vita; se maggiore di zero viene ridotto ad ogni `Refresh()`.
-- `ModifierType` – positivo, negativo o neutro.
+Classe base astratta per variazioni temporanee o permanenti di un attributo. Espone `Source`, `Amount`, `Duration`, `ModifierType` (positivo/negativo/neutro) e richiede di definire `Order` e `ApplyModifier` per stabilire priorità ed effetto.
 
-Ogni modificatore implementa `Order` e `ApplyModifier` per definire la priorità e l'effetto sul valore.
+### Implementazioni incluse
+- `ModifierFixed` – aggiunge o sottrae un valore fisso (`Order = 1`).
+- `ModifierPercentage` – applica una variazione percentuale (`Order = 2`).
 
-### `ModifierFixed`
-Aggiunge o sottrae un valore fisso.
+## Flusso di utilizzo consigliato
+1. Crea gli asset `AttributeData` necessari (specificando limiti, clamp e se sono vitali).
+2. Definisci una o più `ClassData` popolando l'elenco di `AttributeValuePair` con i valori iniziali.
+3. Inserisci un componente `RuntimeClass` su un GameObject, assegna la `ClassData` e, se serve, abilita `_startWithClass` per inizializzare automaticamente.
+4. Gestisci i modificatori a runtime usando `AddModifier`/`RemoveModifier` e aggiorna la classe con `RefreshAttributes()` (oppure abilita `_refreshClassOnUpdate`).
+5. Per gli attributi vitali usa `SetCurrentValue` per variare il valore corrente mantenendo i limiti calcolati.
 
-### `ModifierPercentage`
-Modifica l'attributo di una percentuale rispetto al valore corrente.
-
-## Esempio di Utilizzo
-
-```cs
-// Creazione di una classe
-ClassData guerriero = CreateInstance<ClassData>();
-// Aggiungi attributi nello stesso ordine in cui sono definiti nell'asset
-// guerriero.Attributes.Add(new AttributeIntTuple(forzaData, 10));
-
-// Assegnazione ad un GameObject
-public class Player : MonoBehaviour
-{
-    public RuntimeClass runtimeClass;
-
-    void Start()
-    {
-        runtimeClass.SetClass(guerriero);
-    }
-}
-```
-
-Questo README fornisce una panoramica sul funzionamento del sistema di attributi e delle classi. Gli script possono essere estesi a seconda delle necessità del progetto.
+Seguendo questi passaggi puoi modellare classi di gioco flessibili, applicare bonus/malus temporanei e monitorare in modo centralizzato gli attributi dei tuoi personaggi.
