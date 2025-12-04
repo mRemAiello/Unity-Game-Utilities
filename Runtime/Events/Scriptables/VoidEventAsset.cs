@@ -18,7 +18,7 @@ namespace GameUtils
             }
 
             // 
-            Listeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
+            MutableListeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
 
             //
             _onInvoked.AddListener(call);
@@ -30,7 +30,7 @@ namespace GameUtils
             {
                 if (listener.Item1.Equals(call.Target.ToString()) && listener.Item2.Equals(call.Method.Name))
                 {
-                    Listeners.Remove(listener);
+                    MutableListeners.Remove(listener);
                     break;
                 }
             }
@@ -41,7 +41,7 @@ namespace GameUtils
 
         public void RemoveAllListeners()
         {
-            Listeners.Clear();
+            MutableListeners.Clear();
             _onInvoked.RemoveAllListeners();
         }
 

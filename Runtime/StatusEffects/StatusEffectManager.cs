@@ -21,7 +21,7 @@ namespace GameUtils
         [SerializeField, ReadOnly] private TagManager _immunities = new();
 
         //
-        public List<RuntimeStatusEffect> StatusEffects => _statusEffects;
+        public IReadOnlyList<RuntimeStatusEffect> StatusEffects => _statusEffects;
         public TagManager Tags => _tags;
         public TagManager Immunities => _immunities;
 
@@ -109,7 +109,7 @@ namespace GameUtils
             RefreshTags();
         }
 
-        public List<RuntimeStatusEffect> FindEffects(string ID)
+        public IReadOnlyList<RuntimeStatusEffect> FindEffects(string ID)
         {
             List<RuntimeStatusEffect> effects = new();
             foreach (RuntimeStatusEffect effect in _statusEffects)
@@ -127,7 +127,7 @@ namespace GameUtils
         //
         public RuntimeStatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
         public RuntimeStatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
-        public List<RuntimeStatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
+        public IReadOnlyList<RuntimeStatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
         public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
         public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
         public bool HasEffect<T>() where T : StatusEffectData => _statusEffects.Any(x => x.Data is T);

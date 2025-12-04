@@ -17,10 +17,11 @@ namespace UnityEditor.GameUtils
         public string GroupName => _groupName;
 
         //
-        public List<string> Labels
+        public IReadOnlyList<string> Labels
         {
             get
             {
+                _labels ??= new List<string>();
                 var list = new List<string>();
                 foreach (var item in _labels)
                 {

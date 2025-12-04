@@ -11,7 +11,7 @@ namespace GameUtils
         [SerializeField] private bool _logEnabled = false;
 
         // Get
-        public List<ITask> Tasks => _tasks;
+        public IReadOnlyList<ITask> Tasks => _tasks;
         public bool LogEnabled => _logEnabled;
 
         public void Execute(int index, object context, object data)

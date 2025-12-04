@@ -177,8 +177,10 @@ namespace UnityEditor.GameUtils
             entry.labels.Clear();
 
             //
-            var labels = bundleData.Labels;
-            labels.Add(assetType.Name);
+            var labels = new List<string>(bundleData.Labels)
+            {
+                assetType.Name
+            };
 
             // 
             foreach (var label in labels)

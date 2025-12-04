@@ -4,6 +4,6 @@ namespace GameUtils
 {
     public interface ITaggable
     {
-        public List<GameTag> Tags { get; }
+        public IReadOnlyList<GameTag> Tags { get; }
     }
 }
