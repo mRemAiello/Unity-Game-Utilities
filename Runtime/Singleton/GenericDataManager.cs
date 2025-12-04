@@ -20,7 +20,7 @@ namespace GameUtils
         //
         public static T1 Instance { get; protected set; }
         public static bool InstanceExists => Instance != null;
-        public List<T2> Items => _dataList;
+        public IReadOnlyList<T2> Items => _dataList;
 
         //
         protected void Awake()

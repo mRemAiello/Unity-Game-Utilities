@@ -17,7 +17,7 @@ namespace GameUtils
         public CurrencyType CurrencyType => _currencyType;
         public int MaxAmount => _maxAmount;
         public bool IsConvertible => _isConvertible;
-        public List<CurrencyConversionRate > CurrencyConversions => _currencyConversions;
+        public IReadOnlyList<CurrencyConversionRate > CurrencyConversions => _currencyConversions;
 
         //
         public override bool Equals(object other)

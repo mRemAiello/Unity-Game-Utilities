@@ -11,6 +11,6 @@ namespace GameUtils
         [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 
         //
-        public List<AttributeValuePair> Attributes => _attributes;
+        public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
     }
 }
