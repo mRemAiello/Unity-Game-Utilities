@@ -8,13 +8,13 @@ namespace GameUtils
     [DeclareBoxGroup("debug", Title = "Debug")]
     public class RuntimeClass : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("class")] private bool _startWithClass = true;
-        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true), ShowProperties] private ClassData _classData;
-        [SerializeField, Group("class")] private bool _refreshClassOnUpdate = false;
+        [SerializeField, Group("class")] protected bool _startWithClass = true;
+        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true), ShowProperties] protected ClassData _classData;
+        [SerializeField, Group("class")] protected bool _refreshClassOnUpdate = false;
 
         //
         [SerializeField, Group("debug")] private bool _logEnabled = true;
-        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("debug")] private List<RuntimeAttribute> _attributes;
+        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("debug")] protected List<RuntimeAttribute> _attributes;
 
         //
         public ClassData ClassData => _classData;
@@ -38,7 +38,7 @@ namespace GameUtils
         }
 
         [Button]
-        public void SetClass(ClassData classData)
+        public virtual void SetClass(ClassData classData)
         {
             _classData = classData;
             _attributes = new List<RuntimeAttribute>();
@@ -50,7 +50,7 @@ namespace GameUtils
             }
         }
 
-        private RuntimeAttribute CreateRuntimeAttribute(AttributeData data, float value)
+        protected virtual RuntimeAttribute CreateRuntimeAttribute(AttributeData data, float value)
         {
             if (data.IsVital)
                 return new RuntimeVital(data, value);
