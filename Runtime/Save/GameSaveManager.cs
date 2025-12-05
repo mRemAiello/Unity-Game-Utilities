@@ -209,19 +209,7 @@ namespace GameUtils
         }
 
         //
-        public bool TryLoad<T>(ISaveable suffix, string key, out T result, T defaultValue = default)
-        {
-            return TryLoad(suffix.SaveContext, key, out result, defaultValue);
-        }
-
-        //
-        private string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
-        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
-        public void Save<T>(ISaveable suffix, string key, T amount) => Save(suffix.SaveContext, key, amount);
-        public T Load<T>(ISaveable suffix, string key, T defaultValue = default) => Load(suffix.SaveContext, key, defaultValue);
-        public void RemoveKey<T>(ISaveable suffix, string key) => RemoveKey<T>(suffix.SaveContext, key);
-
-        // 
+        protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
         public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
     }
