@@ -22,6 +22,28 @@ Questa cartella contiene un semplice sistema di gestione dei tag utilizzabile ne
 
 Sono inoltre disponibili versioni statiche degli stessi metodi che accettano un'interfaccia `ITaggable` e consentono di effettuare queste operazioni direttamente sulle liste di tag.
 
+## `GameTagManager`
+`GameTagManager` eredita da `GenericDataManager` e carica automaticamente tutti gli asset `GameTag` presenti nel percorso configurato. In `OnPostAwake` costruisce due dizionari per ricerche rapide:
+- per **ID** (`TryGetTag(string id, out GameTag tag)` e `GetAll()`),
+- per tipo concreto del tag (`TryGetTag<T>()` / `GetTag<T>()`).
+
+Questo permette di ottenere rapidamente un tag senza doverlo referenziare manualmente nel codice o nelle scene.
+
+Esempio d'uso:
+```cs
+void Awake()
+{
+    // Recupero per ID
+    if (GameTagManager.Instance.TryGetTag("poison", out var poisonTag))
+    {
+        Debug.Log(poisonTag.InternalName);
+    }
+
+    // Recupero per tipo concreto
+    var fireTag = GameTagManager.Instance.GetTag<FireTag>();
+}
+```
+
 ### Esempio di utilizzo
 ```cs
 public class Example : MonoBehaviour

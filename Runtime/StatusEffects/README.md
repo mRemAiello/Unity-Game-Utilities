@@ -34,6 +34,14 @@ Struttura serializzabile che mantiene le informazioni di un effetto applicato:
 
 Il manager espone anche tre `StatusEffectEventAsset` opzionali per ricevere notifiche all'applicazione, aggiornamento ed esaurimento di un effetto.
 
+### `StatusEffectDataManager`
+`MonoBehaviour` che eredita da `GenericDataManager` e carica automaticamente tutti gli asset `StatusEffectData` da una cartella. Costruisce:
+- un dizionario per ricerca per **ID** (`TryGetEffect(string id, out StatusEffectData data)` / `GetEffect(string id)`),
+- una lista filtrata di effetti **visibili** (`GetVisibleEffects()`),
+- una mappa tag → lista di effetti (`GetEffectsWithTag(GameTag tag)`), utile per interrogazioni rapide basate su categorie o immunità.
+
+Può essere inserito in scena o prefab come gli altri manager e inizializza le strutture in `OnPostAwake`.
+
 ### `StatusEffectEventAsset`
 Evento basato su `GameEventAsset<RuntimeStatusEffect>` utilizzabile per collegare logiche esterne (ad esempio UI o feedback sonori).
 
