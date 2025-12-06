@@ -27,22 +27,15 @@ namespace GameUtils
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
-        }
 
-        private void OnEnable()
-        {
-            OnPostEnable();
-        }
-
-        protected virtual void OnPostEnable()
-        {
+            //
             if (_loadOnEnable)
             {
                 LoadAll();
             }
         }
 
-        [Button(ButtonSizes.Medium)] 
+        [Button(ButtonSizes.Medium)]
         public void SetActiveSaveSlot(int slot)
         {
             if (slot < _minSaveSlot || slot > _maxSaveSlot)
@@ -67,10 +60,8 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var id = GetID<T>(context, key);
-
-            //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var id = GetID<T>(context, key);
             if (saveReader.Exists(id))
             {
                 return true;
@@ -80,17 +71,13 @@ namespace GameUtils
             return false;
         }
 
-        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
-
         public bool TryLoad<T>(string context, string key, out T result, T defaultValue = default)
         {
             CheckFileSave();
 
             //
-            var id = GetID<T>(context, key);
-
-            //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var id = GetID<T>(context, key);
             if (saveReader.Exists(id))
             {
                 result = saveReader.Read<T>(id);
@@ -102,8 +89,10 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryLoad<T>(ISaveable saveable, string key, out T result, T defaultValue = default) =>
-            TryLoad(saveable.SaveContext, key, out result, defaultValue);
+        public bool TryLoad<T>(ISaveable saveable, string key, out T result, T defaultValue = default)
+        {
+            return TryLoad(saveable.SaveContext, key, out result, defaultValue);
+        }
 
         public void Save<T>(string context, string key, T amount)
         {
@@ -121,8 +110,6 @@ namespace GameUtils
             _dict[id] = amount.ToString();
         }
 
-        public void Save<T>(ISaveable saveable, string key, T amount) => Save(saveable.SaveContext, key, amount);
-
         public T Load<T>(string context, string key, T defaultValue = default)
         {
             CheckFileSave();
@@ -139,9 +126,6 @@ namespace GameUtils
 
             return defaultValue;
         }
-
-        public T Load<T>(ISaveable saveable, string key, T defaultValue = default) =>
-            Load(saveable.SaveContext, key, defaultValue);
 
         public void RemoveKey<T>(string context, string key)
         {
@@ -161,8 +145,6 @@ namespace GameUtils
                 _dict.Remove(id);
             }
         }
-
-        public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
 
         [Button(ButtonSizes.Medium)]
         private void DebugCurrentFileSave()
@@ -213,10 +195,6 @@ namespace GameUtils
             _dict.Clear();
         }
 
-        /// <summary>
-        /// Executes <see cref="ISaveable.Save"/> on every <see cref="ISaveable"/> in the scene.
-        /// </summary>
-        /// <param name="includeInactive">Whether to include inactive objects when searching.</param>
         [Button(ButtonSizes.Medium)]
         public void SaveAll(bool includeInactive = true)
         {
@@ -226,10 +204,6 @@ namespace GameUtils
             }
         }
 
-        /// <summary>
-        /// Executes <see cref="ISaveable.Load"/> on every <see cref="ISaveable"/> in the scene.
-        /// </summary>
-        /// <param name="includeInactive">Whether to include inactive objects when searching.</param>
         [Button(ButtonSizes.Medium)]
         public void LoadAll(bool includeInactive = true)
         {
@@ -251,9 +225,8 @@ namespace GameUtils
 
         private IEnumerable<ISaveable> FindSceneSaveables(bool includeInactive)
         {
-            return FindObjectsOfType<MonoBehaviour>(includeInactive)
-                .OfType<ISaveable>()
-                .Distinct();
+            FindObjectsInactive findInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
+            return FindObjectsByType<MonoBehaviour>(findInactive, FindObjectsSortMode.InstanceID).OfType<ISaveable>().Distinct();
         }
 
         private string CleanJObjectString(string original)
@@ -263,11 +236,15 @@ namespace GameUtils
             cleaned = cleaned.Replace(":", ": ");
             cleaned = cleaned.Replace(",", ", ");
             cleaned = cleaned.Replace("\"", "");
-            
+
             return cleaned;
         }
 
         //
+        public void Save<T>(ISaveable saveable, string key, T amount) => Save(saveable.SaveContext, key, amount);
+        public T Load<T>(ISaveable saveable, string key, T defaultValue = default) => Load(saveable.SaveContext, key, defaultValue);
+        public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
+        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
         protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
         public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;

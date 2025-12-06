@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TriInspector;
 using UnityEngine;
 
@@ -91,12 +92,6 @@ namespace GameUtils
             return result;
         }
 
-        //
-        public Dictionary<string, RuntimeTag> GetMap() => _values;
-        public bool TryGetValue(string tag, out RuntimeTag runtimeTag) => _values.TryGetValue(tag, out runtimeTag);
-        public void SetTagValue(GameTag tag, int value) => _values[tag.ID] = new RuntimeTag { Tag = tag, Value = value };
-        private bool HasAny(string tag) => _values.TryGetValue(tag, out RuntimeTag info) && info.Value > 0;
-        public bool HasAny(GameTag tag) => HasAny(tag.ID);
         public static bool HasAny(ITaggable taggable, params GameTag[] tags)
         {
             foreach (var tag in tags)
@@ -146,6 +141,13 @@ namespace GameUtils
             }
             return result;
         }
+
+        //
+        public Dictionary<string, RuntimeTag> GetMap() => _values;
+        public bool TryGetValue(string tag, out RuntimeTag runtimeTag) => _values.TryGetValue(tag, out runtimeTag);
+        public void SetTagValue(GameTag tag, int value) => _values[tag.ID] = new RuntimeTag { Tag = tag, Value = value };
+        private bool HasAny(string tag) => _values.TryGetValue(tag, out RuntimeTag info) && info.Value > 0;
+        public bool HasAny(GameTag tag) => HasAny(tag.ID);
         public void Clear() => _values.Clear();
     }
 }
