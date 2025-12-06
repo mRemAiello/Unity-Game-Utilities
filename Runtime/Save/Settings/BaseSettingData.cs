@@ -57,7 +57,24 @@ namespace GameUtils
         [Button]
         public virtual void Load()
         {
-            SetValue(GetValue());
+            if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad(this, _settingName, out T value))
+            {
+                SetValue(value);
+                return;
+            }
+
+            SetValue(_defaultValue);
+        }
+
+        public void Save()
+        {
+            if (!GameSaveManager.InstanceExists)
+            {
+                this.Log("GameSaveManager instance does not exist. Cannot save setting.");
+                return;
+            }
+
+            GameSaveManager.Instance.Save(this, _settingName, _currentValue);
         }
     }
 }

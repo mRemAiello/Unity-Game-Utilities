@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TriInspector;
 using UnityEngine;
 
@@ -135,5 +136,18 @@ namespace GameUtils
         public Dictionary<string, int> GetAllCurrencies() => new(_savedCurrencies);
         public int GetCurrencyAmount(CurrencyData currency) => _savedCurrencies.TryGetValue(currency.ID, out int amount) ? amount : 0;
         public bool HasEnoughCurrency(CurrencyData currency, int amount) => GetCurrencyAmount(currency) >= amount;
+
+        public void Save()
+        {
+            foreach (var currencyID in _savedCurrencies.Keys.ToList())
+            {
+                SaveCurrency(currencyID);
+            }
+        }
+
+        public void Load()
+        {
+            LoadAllCurrencies();
+        }
     }
 }

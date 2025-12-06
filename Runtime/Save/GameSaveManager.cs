@@ -15,6 +15,7 @@ namespace GameUtils
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
         [SerializeField, Group("save")] private bool _logEnabled = true;
+        [SerializeField, Group("save")] private bool _loadOnEnable = false;
         [SerializeField, Group("save")] private int _minSaveSlot = 0;
         [SerializeField, Group("save")] private int _maxSaveSlot = 5;
         [SerializeField, ReadOnly, Group("debug")] private int _currentSaveSlot;
@@ -26,6 +27,19 @@ namespace GameUtils
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
+        }
+
+        private void OnEnable()
+        {
+            OnPostEnable();
+        }
+
+        protected virtual void OnPostEnable()
+        {
+            if (_loadOnEnable)
+            {
+                LoadAll();
+            }
         }
 
         [Button(ButtonSizes.Medium)] 
@@ -66,6 +80,8 @@ namespace GameUtils
             return false;
         }
 
+        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
+
         public bool TryLoad<T>(string context, string key, out T result, T defaultValue = default)
         {
             CheckFileSave();
@@ -86,6 +102,9 @@ namespace GameUtils
             return false;
         }
 
+        public bool TryLoad<T>(ISaveable saveable, string key, out T result, T defaultValue = default) =>
+            TryLoad(saveable.SaveContext, key, out result, defaultValue);
+
         public void Save<T>(string context, string key, T amount)
         {
             CheckFileSave();
@@ -101,6 +120,8 @@ namespace GameUtils
             //
             _dict[id] = amount.ToString();
         }
+
+        public void Save<T>(ISaveable saveable, string key, T amount) => Save(saveable.SaveContext, key, amount);
 
         public T Load<T>(string context, string key, T defaultValue = default)
         {
@@ -118,6 +139,9 @@ namespace GameUtils
 
             return defaultValue;
         }
+
+        public T Load<T>(ISaveable saveable, string key, T defaultValue = default) =>
+            Load(saveable.SaveContext, key, defaultValue);
 
         public void RemoveKey<T>(string context, string key)
         {
@@ -137,6 +161,8 @@ namespace GameUtils
                 _dict.Remove(id);
             }
         }
+
+        public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
 
         [Button(ButtonSizes.Medium)]
         private void DebugCurrentFileSave()
@@ -187,6 +213,32 @@ namespace GameUtils
             _dict.Clear();
         }
 
+        /// <summary>
+        /// Executes <see cref="ISaveable.Save"/> on every <see cref="ISaveable"/> in the scene.
+        /// </summary>
+        /// <param name="includeInactive">Whether to include inactive objects when searching.</param>
+        [Button(ButtonSizes.Medium)]
+        public void SaveAll(bool includeInactive = true)
+        {
+            foreach (var saveable in FindSceneSaveables(includeInactive))
+            {
+                saveable.Save();
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="ISaveable.Load"/> on every <see cref="ISaveable"/> in the scene.
+        /// </summary>
+        /// <param name="includeInactive">Whether to include inactive objects when searching.</param>
+        [Button(ButtonSizes.Medium)]
+        public void LoadAll(bool includeInactive = true)
+        {
+            foreach (var saveable in FindSceneSaveables(includeInactive))
+            {
+                saveable.Load();
+            }
+        }
+
         private void CheckFileSave()
         {
             //
@@ -195,6 +247,13 @@ namespace GameUtils
                 var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
                 saveWriter.Commit();
             }
+        }
+
+        private IEnumerable<ISaveable> FindSceneSaveables(bool includeInactive)
+        {
+            return FindObjectsOfType<MonoBehaviour>(includeInactive)
+                .OfType<ISaveable>()
+                .Distinct();
         }
 
         private string CleanJObjectString(string original)
