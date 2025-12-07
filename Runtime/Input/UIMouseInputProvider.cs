@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 namespace GameUtils
 {
     [RequireComponent(typeof(Collider))]
-    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class UIMouseInputProvider : MonoBehaviour, IMouseInput
     {
-        [SerializeField, ReadOnly, Group("Debug")] private Vector3 _oldDragPosition;
+        [SerializeField, ReadOnly, Group("debug")] private Vector3 _oldDragPosition;
 
         //
         public DragDirection DragDirection => GetDragDirection();

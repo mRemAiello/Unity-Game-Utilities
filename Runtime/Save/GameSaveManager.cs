@@ -15,6 +15,7 @@ namespace GameUtils
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
         [SerializeField, Group("save")] private bool _logEnabled = true;
+        [SerializeField, Group("save")] private bool _loadOnEnable = false;
         [SerializeField, Group("save")] private int _minSaveSlot = 0;
         [SerializeField, Group("save")] private int _maxSaveSlot = 5;
         [SerializeField, ReadOnly, Group("debug")] private int _currentSaveSlot;
@@ -26,9 +27,15 @@ namespace GameUtils
         protected override void OnPostAwake()
         {
             DebugCurrentFileSave();
+
+            //
+            if (_loadOnEnable)
+            {
+                LoadAll();
+            }
         }
 
-        [Button(ButtonSizes.Medium)] 
+        [Button(ButtonSizes.Medium)]
         public void SetActiveSaveSlot(int slot)
         {
             if (slot < _minSaveSlot || slot > _maxSaveSlot)
@@ -53,10 +60,8 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var id = GetID<T>(context, key);
-
-            //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var id = GetID<T>(context, key);
             if (saveReader.Exists(id))
             {
                 return true;
@@ -71,10 +76,8 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var id = GetID<T>(context, key);
-
-            //
             var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var id = GetID<T>(context, key);
             if (saveReader.Exists(id))
             {
                 result = saveReader.Read<T>(id);
@@ -84,6 +87,11 @@ namespace GameUtils
             //
             result = defaultValue;
             return false;
+        }
+
+        public bool TryLoad<T>(ISaveable saveable, string key, out T result, T defaultValue = default)
+        {
+            return TryLoad(saveable.SaveContext, key, out result, defaultValue);
         }
 
         public void Save<T>(string context, string key, T amount)
@@ -187,6 +195,24 @@ namespace GameUtils
             _dict.Clear();
         }
 
+        [Button(ButtonSizes.Medium)]
+        public void SaveAll(bool includeInactive = true)
+        {
+            foreach (var saveable in FindSceneSaveables(includeInactive))
+            {
+                saveable.Save();
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void LoadAll(bool includeInactive = true)
+        {
+            foreach (var saveable in FindSceneSaveables(includeInactive))
+            {
+                saveable.Load();
+            }
+        }
+
         private void CheckFileSave()
         {
             //
@@ -197,6 +223,12 @@ namespace GameUtils
             }
         }
 
+        private IEnumerable<ISaveable> FindSceneSaveables(bool includeInactive)
+        {
+            FindObjectsInactive findInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
+            return FindObjectsByType<MonoBehaviour>(findInactive, FindObjectsSortMode.InstanceID).OfType<ISaveable>().Distinct();
+        }
+
         private string CleanJObjectString(string original)
         {
             var cleaned = original.Replace("{", "");
@@ -204,24 +236,16 @@ namespace GameUtils
             cleaned = cleaned.Replace(":", ": ");
             cleaned = cleaned.Replace(",", ", ");
             cleaned = cleaned.Replace("\"", "");
-            
+
             return cleaned;
         }
 
         //
-        public bool TryLoad<T>(ISaveable suffix, string key, out T result, T defaultValue = default)
-        {
-            return TryLoad(suffix.SaveContext, key, out result, defaultValue);
-        }
-
-        //
-        private string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
+        public void Save<T>(ISaveable saveable, string key, T amount) => Save(saveable.SaveContext, key, amount);
+        public T Load<T>(ISaveable saveable, string key, T defaultValue = default) => Load(saveable.SaveContext, key, defaultValue);
+        public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
         public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
-        public void Save<T>(ISaveable suffix, string key, T amount) => Save(suffix.SaveContext, key, amount);
-        public T Load<T>(ISaveable suffix, string key, T defaultValue = default) => Load(suffix.SaveContext, key, defaultValue);
-        public void RemoveKey<T>(ISaveable suffix, string key) => RemoveKey<T>(suffix.SaveContext, key);
-
-        // 
+        protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
         public List<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
     }

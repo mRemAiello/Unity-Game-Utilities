@@ -6,21 +6,25 @@ sono `GameSaveManager` e l'interfaccia `ISaveable`.
 
 ## GameSaveManager
 `GameSaveManager` è un `Singleton` persistente che gestisce i file di salvataggio.
-Le funzioni più utili sono:
+ Le funzioni più utili sono:
 
 - `SetActiveSaveSlot(int slot)` per cambiare lo slot corrente.
 - `Save<T>(string context, string key, T value)` e `Load<T>(string context, string key, T defaultValue)` per scrivere e leggere valori generici.
 - `TryLoad<T>(string context, string key, out T result, T defaultValue)` che restituisce `true` solo se il dato è presente.
 - `Exists<T>(string context, string key)` e `RemoveKey<T>(string context, string key)` per verificare ed eliminare singole voci.
 - `Clear()` che rimuove tutte le chiavi dallo slot attivo.
+- `SaveAll()` e `LoadAll()` che invocano automaticamente `Save` e `Load` su tutti i componenti `ISaveable` presenti in scena.
 
 Il manager crea automaticamente il file di salvataggio se assente e mantiene un
 dizionario di debug con tutte le chiavi registrate.
 
 ## ISaveable
-L'interfaccia `ISaveable` espone la proprietà `SaveContext`. Implementandola sui
-propri componenti è possibile chiamare i metodi di `GameSaveManager` passando
-direttamente l'istanza e mantenere ordinati i dati sotto un contesto univoco.
+L'interfaccia `ISaveable` espone la proprietà `SaveContext` e i metodi `Save()`
+e `Load()`. Implementandola sui propri componenti è possibile chiamare i metodi
+di `GameSaveManager` sfruttando direttamente la sua istanza Singleton e
+mantenere ordinati i dati sotto un contesto univoco. I metodi di salvataggio
+automatico di `GameSaveManager` richiamano queste funzioni su tutti gli oggetti
+di scena.
 
 ```cs
 public class PlayerInventory : MonoBehaviour, ISaveable

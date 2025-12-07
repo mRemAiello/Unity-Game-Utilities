@@ -2,6 +2,6 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Doneref/Settings/New String")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.SAVE_NAME + "String")]
     public class StringSettingData : BaseSettingData<string> { }
 }

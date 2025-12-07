@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = Constant.ATTRIBUTES_NAME + "Class")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
     [DeclareBoxGroup("class", Title = "Class")]
     public class ClassData : ItemAssetBase
     {
-        [SerializeField, Group("class"), TableList] private List<AttributeIntTuple> _attributes;
+        [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 
         //
-        public List<AttributeIntTuple> Attributes => _attributes;
+        public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
     }
 }

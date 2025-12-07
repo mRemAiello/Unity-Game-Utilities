@@ -2,6 +2,6 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Doneref/Settings/New Bool")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.SAVE_NAME + "Bool")]
     public class BoolSettingData : BaseSettingData<bool> { }
 }

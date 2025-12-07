@@ -14,7 +14,7 @@ namespace GameUtils
         //
         [SerializeField, ReadOnly, Group("debug")] private bool _playingQueue = false;
         [SerializeField, ReadOnly, Group("debug")] private Command _currentCommand = null;
-        [SerializeField, ReadOnly, Group("debug")] private List<CommandTuple> _commandQueue = new();
+        [SerializeField, ReadOnly, Group("debug")] private List<CommandInputPair> _commandQueue = new();
         [SerializeField, ReadOnly, Group("debug")] private List<string> _commandList = new();
 
         //
@@ -41,7 +41,7 @@ namespace GameUtils
                 Igniter = igniter,
                 AdditionalSettings = additionalSettings
             };
-            CommandTuple commandTuple = new(command, commandInput);
+            CommandInputPair commandTuple = new(command, commandInput);
             _commandQueue.Add(commandTuple);
 
             //

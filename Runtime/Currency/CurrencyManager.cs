@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TriInspector;
 using UnityEngine;
 
@@ -10,8 +11,8 @@ namespace GameUtils
     public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>, ISaveable
     {
         [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
-        [SerializeField, ReadOnly, Group("debug"), ShowProperties] private List<CurrencyData> _currencies = new();
-        [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("debug"), ShowProperties] private List<CurrencyData> _currencies = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
 
         //
         public string SaveContext => "Currency";
@@ -135,5 +136,18 @@ namespace GameUtils
         public Dictionary<string, int> GetAllCurrencies() => new(_savedCurrencies);
         public int GetCurrencyAmount(CurrencyData currency) => _savedCurrencies.TryGetValue(currency.ID, out int amount) ? amount : 0;
         public bool HasEnoughCurrency(CurrencyData currency, int amount) => GetCurrencyAmount(currency) >= amount;
+
+        public void Save()
+        {
+            foreach (var currencyID in _savedCurrencies.Keys.ToList())
+            {
+                SaveCurrency(currencyID);
+            }
+        }
+
+        public void Load()
+        {
+            LoadAllCurrencies();
+        }
     }
 }

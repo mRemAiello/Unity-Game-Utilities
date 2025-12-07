@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = "Doneref/Settings/New Float")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.SAVE_NAME + "Float")]
     public class FloatSettingData : BaseSettingData<float>
     {
         [Group("Setting"), SerializeField] protected Vector2 _valueMinMax = new(0f, 1f);

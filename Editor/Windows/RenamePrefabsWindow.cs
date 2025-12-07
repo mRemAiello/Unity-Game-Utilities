@@ -14,7 +14,7 @@ namespace UnityEditor.GameUtils
         [SerializeField] private List<Object> _prefabs = new();
 
         //
-        [MenuItem(Constant.MENU_NAME + "Prefab Renamer")]
+        [MenuItem(GameUtilsMenuConstants.MENU_NAME + "Prefab Renamer")]
         public static void ShowWindow()
         {
             GetWindow<RenamePrefabsWindow>("Rename Prefabs");
