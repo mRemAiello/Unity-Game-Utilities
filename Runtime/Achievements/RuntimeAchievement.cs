@@ -92,6 +92,21 @@ namespace GameUtils
             CheckCompletition();
         }
 
+        public void RestoreState(int currentValue, bool isCompleted)
+        {
+            _currentValue = currentValue;
+            _isCompleted = false;
+
+            if (isCompleted)
+            {
+                Complete();
+            }
+            else
+            {
+                CheckCompletition();
+            }
+        }
+
         public bool CheckCompletition()
         {
             bool isCompleted = _currentValue >= _data.TargetValue;
