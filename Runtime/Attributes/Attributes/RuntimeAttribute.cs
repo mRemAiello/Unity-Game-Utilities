@@ -21,6 +21,7 @@ namespace GameUtils
         public virtual float CurrentValue => _currentValue;
         public float MinValue => _data.MinValue;
         public float MaxValue => _data.MaxValue;
+        public IReadOnlyList<Modifier> Modifiers => _modifiers.AsReadOnly();
 
         //
         public RuntimeAttribute(AttributeData attributeData, float baseValue)
@@ -40,8 +41,30 @@ namespace GameUtils
             HandleEvents();
         }
 
+        public Modifier GetModifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral)
+        {
+            return _modifiers.FirstOrDefault(m => m.Source == source && Math.Abs(m.Amount - amount) < Mathf.Epsilon && Math.Abs(m.Duration - duration) < Mathf.Epsilon && m.ModifierType == modifierType);
+        }
+
+        public List<Modifier> GetModifiersBySource(object source)
+        {
+            return _modifiers.Where(m => m.Source == source).ToList();
+        }
+
+        public bool HasModifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral)
+        {
+            return GetModifier(source, amount, duration, modifierType) != null;
+        }
+
         public void RemoveModifier(Modifier modifier)
         {
+            if (!_modifiers.Contains(modifier))
+            {
+                Debug.LogWarning($"[RuntimeAttribute] Attempted to remove a modifier that does not exist on attribute {ID}.");
+                return;
+            }
+
+            //
             _modifiers.Remove(modifier);
             RefreshCurrentValue();
             HandleEvents();
