@@ -13,16 +13,14 @@ namespace GameUtils
     {
         private readonly Dictionary<string, RuntimeAchievement> _runtimeAchievements = new();
 
-        public string SaveContext => "Achievements";
-
         // TODO: When sdk of different platform (steam, xbox, etc) are implemented listen to those events
+        public string SaveContext => "Achievements";
         public event Action<RuntimeAchievement> OnAchievementCompleted;
         public event Action<RuntimeAchievement> OnAchievementUncompleted;
 
         protected override void OnPostAwake()
         {
             base.OnPostAwake();
-
             InitializeRuntimeAchievements();
         }
 
@@ -51,13 +49,14 @@ namespace GameUtils
         {
             if (!GameSaveManager.InstanceExists)
             {
+                this.LogWarning("GameSaveManager instance does not exist. Cannot save achievements.");
                 return;
             }
 
-            var runtimeSaveData = _runtimeAchievements.Values
-                .Select(RuntimeAchievementSaveData.FromRuntimeAchievement)
-                .ToList();
+            //
+            var runtimeSaveData = _runtimeAchievements.Values.Select(RuntimeAchievementSaveData.FromRuntimeAchievement).ToList();
 
+            //
             GameSaveManager.Instance.Save(SaveContext, nameof(_runtimeAchievements), runtimeSaveData);
         }
 
@@ -65,11 +64,14 @@ namespace GameUtils
         {
             InitializeRuntimeAchievements();
 
+            //
             if (!GameSaveManager.InstanceExists)
             {
+                this.LogWarning("GameSaveManager instance does not exist. Cannot save achievements.");
                 return;
             }
 
+            //
             if (GameSaveManager.Instance.TryLoad(SaveContext, nameof(_runtimeAchievements), out List<RuntimeAchievementSaveData> runtimeSaveData, new()))
             {
                 foreach (var savedAchievement in runtimeSaveData)
@@ -92,23 +94,4 @@ namespace GameUtils
             }
         }
     }
-
-    [Serializable]
-    public struct RuntimeAchievementSaveData
-    {
-        public string ID;
-        public int CurrentValue;
-        public bool IsCompleted;
-
-        public static RuntimeAchievementSaveData FromRuntimeAchievement(RuntimeAchievement runtimeAchievement)
-        {
-            return new RuntimeAchievementSaveData
-            {
-                ID = runtimeAchievement.Data.ID,
-                CurrentValue = runtimeAchievement.CurrentValue,
-                IsCompleted = runtimeAchievement.IsCompleted
-            };
-        }
-    }
 }
-
