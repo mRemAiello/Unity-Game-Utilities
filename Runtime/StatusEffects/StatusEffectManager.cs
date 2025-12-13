@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TriInspector;
@@ -10,6 +9,7 @@ namespace GameUtils
     public class StatusEffectManager : MonoBehaviour, ISaveable
     {
         [Tab("Events")]
+        [SerializeField] private string _saveContext = "StatusEffects";
         [SerializeField] private StatusEffectEventAsset _onApplyEffect;
         [SerializeField] private StatusEffectEventAsset _onUpdateEffect;
         [SerializeField] private StatusEffectEventAsset _onEndEffect;
@@ -22,10 +22,10 @@ namespace GameUtils
         [SerializeField, ReadOnly] private TagManager _immunities = new();
 
         //
+        public string SaveContext => _saveContext;
         public IReadOnlyList<RuntimeStatusEffect> StatusEffects => _statusEffects;
         public TagManager Tags => _tags;
         public TagManager Immunities => _immunities;
-        public string SaveContext => "StatusEffects";
 
         //
         [Button]
@@ -126,32 +126,6 @@ namespace GameUtils
             return effects;
         }
 
-        //
-        public RuntimeStatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
-        public RuntimeStatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
-        public IReadOnlyList<RuntimeStatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
-        public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
-        public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
-        public bool HasEffect<T>() where T : StatusEffectData => _statusEffects.Any(x => x.Data is T);
-        private void RefreshTags()
-        {
-            _tags.Clear();
-            foreach (var effect in _statusEffects)
-            {
-                foreach (var tag in effect.Data.Tags)
-                {
-                    int current = 0;
-                    if (_tags.TryGetValue(tag.ID, out RuntimeTag runtimeTag))
-                    {
-                        current = runtimeTag.Value;
-                    }
-                    _tags.SetTagValue(tag, current + 1);
-                }
-            }
-        }
-
-        private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Duration).ToList();
-
         public void Save()
         {
             var saveData = new StatusEffectManagerSaveData
@@ -195,10 +169,7 @@ namespace GameUtils
                     continue;
                 }
 
-                var runtimeEffect = new RuntimeStatusEffect(effectSave.ID,
-                    ResolveObject(effectSave.SourcePath),
-                    ResolveObject(effectSave.TargetPath),
-                    data)
+                var runtimeEffect = new RuntimeStatusEffect(effectSave.ID, ResolveObject(effectSave.SourcePath), ResolveObject(effectSave.TargetPath), data)
                 {
                     Duration = effectSave.Duration,
                     Intensity = effectSave.Intensity
@@ -210,6 +181,23 @@ namespace GameUtils
 
             ReorderEffects();
             RefreshTags();
+        }
+
+        private void RefreshTags()
+        {
+            _tags.Clear();
+            foreach (var effect in _statusEffects)
+            {
+                foreach (var tag in effect.Data.Tags)
+                {
+                    int current = 0;
+                    if (_tags.TryGetValue(tag.ID, out RuntimeTag runtimeTag))
+                    {
+                        current = runtimeTag.Value;
+                    }
+                    _tags.SetTagValue(tag, current + 1);
+                }
+            }
         }
 
         private IEnumerable<TagSaveData> SerializeTagManager(TagManager manager)
@@ -283,29 +271,13 @@ namespace GameUtils
             return path;
         }
 
-        [Serializable]
-        private class StatusEffectSaveData
-        {
-            public string ID;
-            public int Duration;
-            public int Intensity;
-            public string SourcePath;
-            public string TargetPath;
-        }
-
-        [Serializable]
-        private class TagSaveData
-        {
-            public string TagID;
-            public int Value;
-        }
-
-        [Serializable]
-        private class StatusEffectManagerSaveData
-        {
-            public List<StatusEffectSaveData> Effects = new();
-            public List<TagSaveData> Tags = new();
-            public List<TagSaveData> Immunities = new();
-        }
+        //
+        public RuntimeStatusEffect FindEffect(string ID) => _statusEffects.FirstOrDefault(x => x.ID.Equals(ID));
+        public RuntimeStatusEffect FindEffect(StatusEffectData data) => FindEffect(data.ID);
+        public IReadOnlyList<RuntimeStatusEffect> FindEffects(StatusEffectData data) => FindEffects(data.ID);
+        public bool HasEffect(string ID) => FindEffects(ID).Count > 0;
+        public bool HasEffect(StatusEffectData data) => FindEffects(data.ID).Count > 0;
+        public bool HasEffect<T>() where T : StatusEffectData => _statusEffects.Any(x => x.Data is T);
+        private void ReorderEffects() => _statusEffects = _statusEffects.OrderBy(item => item.Duration).ToList();
     }
 }
