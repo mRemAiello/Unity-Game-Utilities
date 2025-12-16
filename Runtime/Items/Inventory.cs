@@ -4,16 +4,19 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public class Inventory : MonoBehaviour
+    public class RuntimeInventory : MonoBehaviour, ILoggable
     {
         [SerializeField, Min(0)] private int _capacity = 20;
         [SerializeField] private List<InventorySlot> _slots = new();
         [SerializeField] private bool _allowAutoStacking = true;
         [SerializeField] private bool _allowOverflow;
+        [SerializeField] private bool _logEnabled = true;
 
         public event Action<InventoryItem> OnItemAdded;
         public event Action<InventoryItem> OnItemRemoved;
         public event Action<int, int> OnSlotsSwapped;
+
+        public bool LogEnabled => _logEnabled;
 
         private void Awake()
         {
@@ -60,7 +63,13 @@ namespace GameUtils
                 break;
             }
 
-            return remaining == 0 || _allowOverflow;
+            bool success = remaining == 0;
+            if (!success && !_allowOverflow)
+            {
+                this.LogWarning($"Not enough space to add {remaining} of {definition.InternalName}", this);
+            }
+
+            return success || _allowOverflow;
         }
 
         public bool RemoveItem(ItemDefinition definition, int quantity = 1)
@@ -97,7 +106,13 @@ namespace GameUtils
                 }
             }
 
-            return remaining == 0;
+            bool success = remaining == 0;
+            if (!success)
+            {
+                this.LogWarning($"Not enough quantity to remove {quantity} of {definition.InternalName}", this);
+            }
+
+            return success;
         }
 
         public bool ContainsItem(ItemDefinition definition, int quantity = 1)
@@ -129,7 +144,7 @@ namespace GameUtils
         public InventorySlot GetSlot(int index)
         {
             EnsureSlots();
-            return index >= 0 && index < _slots.Count ? _slots[index] : null;
+                return index >= 0 && index < _slots.Count ? _slots[index] : null;
         }
 
         public bool TryGetFirstEmptySlot(out InventorySlot slot)
