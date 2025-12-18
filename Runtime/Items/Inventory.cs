@@ -6,6 +6,7 @@ namespace GameUtils
 {
     public class RuntimeInventory : MonoBehaviour, ILoggable
     {
+        [SerializeField] private string _inventoryId;
         [SerializeField, Min(0)] private int _capacity = 20;
         [SerializeField] private List<InventorySlot> _slots = new();
         [SerializeField] private bool _allowAutoStacking = true;
@@ -17,10 +18,19 @@ namespace GameUtils
         public event Action<int, int> OnSlotsSwapped;
 
         public bool LogEnabled => _logEnabled;
+        public string InventoryId => _inventoryId;
 
         private void Awake()
         {
             EnsureSlots();
+        }
+
+        private void OnValidate()
+        {
+            if (string.IsNullOrWhiteSpace(_inventoryId))
+            {
+                _inventoryId = Guid.NewGuid().ToString();
+            }
         }
 
         public bool AddItem(ItemDefinition definition, int quantity = 1)
