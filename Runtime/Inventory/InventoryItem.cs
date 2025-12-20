@@ -6,18 +6,18 @@ namespace GameUtils
     [Serializable]
     public class InventoryItem : IItem, IStackable, IUsable, IEquippable
     {
-        [SerializeField] private ItemDefinition _definition;
+        [SerializeField] private ItemData _definition;
         [SerializeField] private int _quantity;
         [SerializeField] private string _uniqueInstanceId;
 
-        public InventoryItem(ItemDefinition definition, int quantity, string uniqueInstanceId = null)
+        public InventoryItem(ItemData definition, int quantity, string uniqueInstanceId = null)
         {
             _definition = definition;
             _uniqueInstanceId = string.IsNullOrEmpty(uniqueInstanceId) ? Guid.NewGuid().ToString() : uniqueInstanceId;
             SetQuantity(quantity);
         }
 
-        public ItemDefinition Definition => _definition;
+        public ItemData Definition => _definition;
         public int Quantity => _quantity;
         public string UniqueInstanceId => _uniqueInstanceId;
         public int MaxStackSize => _definition != null ? _definition.MaxStackSize : 0;

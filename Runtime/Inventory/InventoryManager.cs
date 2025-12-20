@@ -93,7 +93,7 @@ namespace GameUtils
             return inventory.RemoveItem(definition, quantity);
         }
 
-        public bool TransferItem(RuntimeInventory from, RuntimeInventory to, ItemDefinition definition, int quantity = 1)
+        public bool TransferItem(RuntimeInventory from, RuntimeInventory to, ItemData definition, int quantity = 1)
         {
             if (from == null || to == null || definition == null || quantity <= 0)
             {
@@ -113,12 +113,12 @@ namespace GameUtils
             return from.RemoveItem(definition, quantity);
         }
 
-        public void DropItemInWorld(ItemDefinition definition, int quantity, Vector3 position)
+        public void DropItemInWorld(ItemData definition, int quantity, Vector3 position)
         {
             this.LogWarning($"DropItemInWorld not implemented. Attempted to drop {quantity} of {definition?.InternalName} at {position}", this);
         }
 
-        public ItemDefinition GetItemDefinition(string itemId)
+        public ItemData GetItemDefinition(string itemId)
         {
             if (string.IsNullOrWhiteSpace(itemId))
             {

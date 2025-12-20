@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.COLLECTABLES_NAME + "Equipment Slot")]
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.INVENTORY_NAME + "Equipment Slot")]
     public class EquipmentSlot : ItemAssetBase
     {
     }

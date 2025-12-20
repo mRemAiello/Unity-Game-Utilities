@@ -33,7 +33,7 @@ namespace GameUtils
             }
         }
 
-        public bool AddItem(ItemDefinition definition, int quantity = 1)
+        public bool AddItem(ItemData definition, int quantity = 1)
         {
             if (definition == null || quantity <= 0)
             {
@@ -82,7 +82,7 @@ namespace GameUtils
             return success || _allowOverflow;
         }
 
-        public bool RemoveItem(ItemDefinition definition, int quantity = 1)
+        public bool RemoveItem(ItemData definition, int quantity = 1)
         {
             if (definition == null || quantity <= 0)
             {
@@ -125,12 +125,12 @@ namespace GameUtils
             return success;
         }
 
-        public bool ContainsItem(ItemDefinition definition, int quantity = 1)
+        public bool ContainsItem(ItemData definition, int quantity = 1)
         {
             return GetItemCount(definition) >= quantity;
         }
 
-        public int GetItemCount(ItemDefinition definition)
+        public int GetItemCount(ItemData definition)
         {
             if (definition == null)
             {
@@ -173,7 +173,7 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryGetFirstStackableSlot(ItemDefinition definition, out InventorySlot slot)
+        public bool TryGetFirstStackableSlot(ItemData definition, out InventorySlot slot)
         {
             EnsureSlots();
             foreach (var inventorySlot in _slots)

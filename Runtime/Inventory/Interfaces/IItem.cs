@@ -2,7 +2,7 @@ namespace GameUtils
 {
     public interface IItem
     {
-        ItemDefinition Definition { get; }
+        ItemData Definition { get; }
         int Quantity { get; }
         string UniqueInstanceId { get; }
 

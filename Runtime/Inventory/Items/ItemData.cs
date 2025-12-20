@@ -5,8 +5,8 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("item", Title = "Item")]
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.COLLECTABLES_NAME + "Item Definition")]
-    public class ItemDefinition : ItemAsset
+    [CreateAssetMenu(menuName = GameUtilsMenuConstants.INVENTORY_NAME + "Item Data")]
+    public class ItemData : ItemAssetBase
     {
         [SerializeField, Group("item")] private ItemType _itemType;
         [SerializeField, Group("item")] private Rarity _rarity;
