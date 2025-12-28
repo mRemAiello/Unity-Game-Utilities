@@ -38,8 +38,8 @@ Estende `RuntimeAttribute` per gli attributi vitali (es. punti vita). Tiene trac
 Classe base astratta per variazioni temporanee o permanenti di un attributo. Espone `Source`, `Amount`, `Duration`, `ModifierType` (positivo/negativo/neutro) e richiede di definire `Order` e `ApplyModifier` per stabilire priorità ed effetto.
 
 ### Implementazioni incluse
-- `ModifierFixed` – aggiunge o sottrae un valore fisso (`Order = 1`).
-- `ModifierPercentage` – applica una variazione percentuale (`Order = 2`).
+- `ModifierFixed` – aggiunge o sottrae un valore fisso (`Order = 1`), con supporto al flag `IsPermanent`.
+- `ModifierPercentage` – applica una variazione percentuale (`Order = 2`), con supporto al flag `IsPermanent`.
 
 ## Flusso di utilizzo consigliato
 1. Crea gli asset `AttributeData` necessari (specificando limiti, clamp e se sono vitali).
