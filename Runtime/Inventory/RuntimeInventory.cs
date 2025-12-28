@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("events", Title = "Events")]
     public class RuntimeInventory : MonoBehaviour, ILoggable
     {
         [SerializeField] private string _inventoryId;
@@ -11,6 +13,9 @@ namespace GameUtils
         [SerializeField] private List<InventorySlot> _slots = new();
         [SerializeField] private bool _allowAutoStacking = true;
         [SerializeField] private bool _allowOverflow;
+        [SerializeField, Group("events")] private InventoryItemEvent _onItemAddedEvent;
+        [SerializeField, Group("events")] private InventoryItemEvent _onItemRemovedEvent;
+        [SerializeField, Group("events")] private InventorySlotSwapEvent _onSlotsSwappedEvent;
         [SerializeField] private bool _logEnabled = true;
 
         public event Action<InventoryItem> OnItemAdded;
@@ -53,6 +58,7 @@ namespace GameUtils
                     stackableItem.AddQuantity(toAdd);
                     remaining -= toAdd;
                     OnItemAdded?.Invoke(stackableItem);
+                    _onItemAddedEvent?.Invoke(new InventoryItemEventArgs(this, stackableItem, toAdd));
                     continue;
                 }
 
@@ -67,6 +73,7 @@ namespace GameUtils
                     remaining -= toAdd;
 
                     OnItemAdded?.Invoke(newItem);
+                    _onItemAddedEvent?.Invoke(new InventoryItemEventArgs(this, newItem, toAdd));
                     continue;
                 }
 
@@ -104,6 +111,7 @@ namespace GameUtils
                 item.RemoveQuantity(toRemove);
                 remaining -= toRemove;
                 OnItemRemoved?.Invoke(item);
+                _onItemRemovedEvent?.Invoke(new InventoryItemEventArgs(this, item, toRemove));
 
                 if (item.Quantity <= 0)
                 {
@@ -205,6 +213,7 @@ namespace GameUtils
             _slots[indexB].SetItem(temp);
 
             OnSlotsSwapped?.Invoke(indexA, indexB);
+            _onSlotsSwappedEvent?.Invoke(new InventorySlotSwapEventArgs(this, indexA, indexB));
         }
 
         public void MoveItem(int fromIndex, int toIndex)
@@ -228,6 +237,7 @@ namespace GameUtils
                 toSlot.SetItem(fromSlot.Item);
                 fromSlot.Clear();
                 OnSlotsSwapped?.Invoke(fromIndex, toIndex);
+                _onSlotsSwappedEvent?.Invoke(new InventorySlotSwapEventArgs(this, fromIndex, toIndex));
                 return;
             }
 
