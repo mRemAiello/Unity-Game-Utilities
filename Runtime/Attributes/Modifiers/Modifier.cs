@@ -9,18 +9,28 @@ namespace GameUtils
         public float Amount;
         public float Duration;
         public ModifierType ModifierType;
+        public bool IsPermanent;
 
-        //
-        public Modifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral)
+        /// <summary>
+        /// Creates a modifier with the specified source, amount, duration, type, and permanence.
+        /// </summary>
+        public Modifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral, bool isPermanent = false)
         {
             Source = source;
             Amount = amount;
             Duration = duration;
             ModifierType = modifierType;
+            IsPermanent = isPermanent;
         }
 
-        //
+        /// <summary>
+        /// Determines the application order among modifiers (lower is applied first).
+        /// </summary>
         public virtual int Order => 0;
+
+        /// <summary>
+        /// Applies the modifier effect to the incoming value.
+        /// </summary>
         public virtual float ApplyModifier(float value) => 0;
     }
 }
