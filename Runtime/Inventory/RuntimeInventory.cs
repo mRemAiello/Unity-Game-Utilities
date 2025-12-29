@@ -38,9 +38,9 @@ namespace GameUtils
             }
         }
 
-        public bool AddItem(ItemData definition, int quantity = 1)
+        public bool AddItem(ItemData itemData, int quantity = 1)
         {
-            if (definition == null || quantity <= 0)
+            if (itemData == null || quantity <= 0)
             {
                 return false;
             }
@@ -50,7 +50,7 @@ namespace GameUtils
             int remaining = quantity;
             while (remaining > 0)
             {
-                if (_allowAutoStacking && TryGetFirstStackableSlot(definition, out var stackableSlot))
+                if (_allowAutoStacking && TryGetFirstStackableSlot(itemData, out var stackableSlot))
                 {
                     var stackableItem = stackableSlot.Item;
                     int canAdd = stackableItem.MaxStackSize - stackableItem.Quantity;
@@ -63,7 +63,7 @@ namespace GameUtils
 
                 if (TryGetFirstEmptySlot(out var emptySlot))
                 {
-                    var newItem = new InventoryItem(definition, 0);
+                    var newItem = new InventoryItem(itemData, 0);
                     emptySlot.SetItem(newItem);
 
                     int maxForNewItem = newItem.MaxStackSize > 0 ? newItem.MaxStackSize : remaining;
@@ -81,15 +81,15 @@ namespace GameUtils
             bool success = remaining == 0;
             if (!success && !_allowOverflow)
             {
-                this.LogWarning($"Not enough space to add {remaining} of {definition.InternalName}", this);
+                this.LogWarning($"Not enough space to add {remaining} of {itemData.InternalName}", this);
             }
 
             return success || _allowOverflow;
         }
 
-        public bool RemoveItem(ItemData definition, int quantity = 1)
+        public bool RemoveItem(ItemData itemData, int quantity = 1)
         {
-            if (definition == null || quantity <= 0)
+            if (itemData == null || quantity <= 0)
             {
                 return false;
             }
@@ -99,7 +99,7 @@ namespace GameUtils
             int remaining = quantity;
             foreach (var slot in _slots)
             {
-                if (slot.IsEmpty || slot.Item.Definition != definition)
+                if (slot.IsEmpty || slot.Item.Definition != itemData)
                 {
                     continue;
                 }
@@ -124,20 +124,20 @@ namespace GameUtils
             bool success = remaining == 0;
             if (!success)
             {
-                this.LogWarning($"Not enough quantity to remove {quantity} of {definition.InternalName}", this);
+                this.LogWarning($"Not enough quantity to remove {quantity} of {itemData.InternalName}", this);
             }
 
             return success;
         }
 
-        public bool ContainsItem(ItemData definition, int quantity = 1)
+        public bool ContainsItem(ItemData itemData, int quantity = 1)
         {
-            return GetItemCount(definition) >= quantity;
+            return GetItemCount(itemData) >= quantity;
         }
 
-        public int GetItemCount(ItemData definition)
+        public int GetItemCount(ItemData itemData)
         {
-            if (definition == null)
+            if (itemData == null)
             {
                 return 0;
             }
@@ -147,7 +147,7 @@ namespace GameUtils
             int count = 0;
             foreach (var slot in _slots)
             {
-                if (!slot.IsEmpty && slot.Item.Definition == definition)
+                if (!slot.IsEmpty && slot.Item.Definition == itemData)
                 {
                     count += slot.Item.Quantity;
                 }
@@ -178,12 +178,12 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryGetFirstStackableSlot(ItemData definition, out InventorySlot slot)
+        public bool TryGetFirstStackableSlot(ItemData itemData, out InventorySlot slot)
         {
             EnsureSlots();
             foreach (var inventorySlot in _slots)
             {
-                if (!inventorySlot.IsEmpty && inventorySlot.Item.Definition == definition)
+                if (!inventorySlot.IsEmpty && inventorySlot.Item.Definition == itemData)
                 {
                     if (inventorySlot.Item.Quantity < inventorySlot.Item.MaxStackSize)
                     {

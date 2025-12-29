@@ -3,36 +3,19 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public class InventoryManager : MonoBehaviour, ILoggable
+    public class InventoryManager : Singleton<InventoryManager>, ILoggable
     {
         [SerializeField] private RuntimeInventory _playerInventory;
         [SerializeField] private List<RuntimeInventory> _registeredInventories = new();
         [SerializeField] private ItemDefinitionManager _itemDatabase;
         [SerializeField] private bool _logEnabled = true;
 
-        public static InventoryManager Instance { get; private set; }
-
         public bool LogEnabled => _logEnabled;
         public RuntimeInventory PlayerInventory => _playerInventory;
 
-        private void Awake()
+        protected override void OnPostAwake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
             RegisterRuntimeInventory(_playerInventory);
-        }
-
-        private void OnDestroy()
-        {
-            if (Instance == this)
-            {
-                Instance = null;
-            }
         }
 
         public void RegisterInventory(RuntimeInventory inventory)
@@ -50,77 +33,77 @@ namespace GameUtils
             _registeredInventories.Remove(inventory);
         }
 
-        public RuntimeInventory GetInventoryById(string inventoryId)
+        public RuntimeInventory GetInventoryByID(string inventoryID)
         {
-            if (string.IsNullOrWhiteSpace(inventoryId))
+            if (string.IsNullOrWhiteSpace(inventoryID))
             {
                 return null;
             }
 
             foreach (var inventory in _registeredInventories)
             {
-                if (inventory != null && inventory.InventoryID == inventoryId)
+                if (inventory != null && inventory.InventoryID == inventoryID)
                 {
                     return inventory;
                 }
             }
 
-            this.LogWarning($"Inventory with id {inventoryId} not found", this);
+            this.LogWarning($"Inventory with ID {inventoryID} not found", this);
             return null;
         }
 
-        public bool GiveItemToInventory(string inventoryId, string itemId, int quantity = 1)
+        public bool GiveItemToInventory(string inventoryID, string itemID, int quantity = 1)
         {
-            var inventory = GetInventoryById(inventoryId);
-            var definition = GetItemDefinition(itemId);
-            if (inventory == null || definition == null)
+            var inventory = GetInventoryByID(inventoryID);
+            var itemData = GetItemData(itemID);
+            if (inventory == null || itemData == null)
             {
                 return false;
             }
 
-            return inventory.AddItem(definition, quantity);
+            return inventory.AddItem(itemData, quantity);
         }
 
-        public bool TakeItemFromInventory(string inventoryId, string itemId, int quantity = 1)
+        public bool TakeItemFromInventory(string inventoryID, string itemID, int quantity = 1)
         {
-            var inventory = GetInventoryById(inventoryId);
-            var definition = GetItemDefinition(itemId);
-            if (inventory == null || definition == null)
+            var inventory = GetInventoryByID(inventoryID);
+            var itemData = GetItemData(itemID);
+            if (inventory == null || itemData == null)
             {
                 return false;
             }
 
-            return inventory.RemoveItem(definition, quantity);
+            return inventory.RemoveItem(itemData, quantity);
         }
 
-        public bool TransferItem(RuntimeInventory from, RuntimeInventory to, ItemData definition, int quantity = 1)
+        public bool TransferItem(RuntimeInventory from, RuntimeInventory to, ItemData itemData, int quantity = 1)
         {
-            if (from == null || to == null || definition == null || quantity <= 0)
+            if (from == null || to == null || itemData == null || quantity <= 0)
             {
                 return false;
             }
 
-            if (!from.ContainsItem(definition, quantity))
+            if (!from.ContainsItem(itemData, quantity))
             {
                 return false;
             }
 
-            if (!to.AddItem(definition, quantity))
+            if (!to.AddItem(itemData, quantity))
             {
                 return false;
             }
 
-            return from.RemoveItem(definition, quantity);
+            return from.RemoveItem(itemData, quantity);
         }
 
-        public void DropItemInWorld(ItemData definition, int quantity, Vector3 position)
+        public void DropItemInWorld(ItemData itemData, int quantity, Vector3 position)
         {
-            this.LogWarning($"DropItemInWorld not implemented. Attempted to drop {quantity} of {definition?.InternalName} at {position}", this);
+            this.LogWarning($"DropItemInWorld not implemented. Attempted to drop {quantity} of {itemData?.InternalName} at {position}", this);
         }
 
-        public ItemData GetItemDefinition(string itemId)
+        public ItemData GetItemData(string itemID)
         {
-            if (string.IsNullOrWhiteSpace(itemId))
+            if (string.IsNullOrWhiteSpace(itemID))
             {
                 return null;
             }
@@ -132,12 +115,12 @@ namespace GameUtils
                 return null;
             }
 
-            if (db.TrySearchByInternalName(itemId, out var definition))
+            if (db.TrySearchByInternalName(itemID, out var itemData))
             {
-                return definition;
+                return itemData;
             }
 
-            return db.SearchAssetByID(itemId);
+            return db.SearchAssetByID(itemID);
         }
 
         private void RegisterRuntimeInventory(RuntimeInventory inventory)
