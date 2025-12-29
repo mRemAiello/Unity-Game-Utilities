@@ -20,11 +20,9 @@ namespace GameUtils
         public void PopulateAttributes()
         {
 #if UNITY_EDITOR
-            if (_attributes == null)
-            {
-                _attributes = new List<AttributeValuePair>();
-            }
+            _attributes ??= new List<AttributeValuePair>();
 
+            // Collect existing attributes to avoid duplicates
             var existingAttributes = new HashSet<AttributeData>();
             foreach (var pair in _attributes)
             {
@@ -34,6 +32,7 @@ namespace GameUtils
                 }
             }
 
+            // Find all AttributeData assets in the project
             string[] assetGuids = AssetDatabase.FindAssets($"t:{typeof(AttributeData).Name}");
             foreach (var guid in assetGuids)
             {
