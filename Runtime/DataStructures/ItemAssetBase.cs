@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using TriInspector;
 using UnityEngine;
@@ -17,5 +18,24 @@ namespace GameUtils
         public AssetReferenceSprite AssetReferenceIcon => _itemIcon;
         public Task<Sprite> Icon => AssetLoader.LoadAssetAsync<Sprite>(_itemIcon);
         public Color ItemColor => _itemColor;
+        public ItemFeature Feature => _itemFeature;
+        public Type FeatureType => _itemFeature == null ? null : _itemFeature.FeatureType;
+
+        public TFeature GetFeature<TFeature>() where TFeature : ItemFeature
+        {
+            return _itemFeature as TFeature;
+        }
+
+        public bool TryGetFeature<TFeature>(out TFeature feature) where TFeature : ItemFeature
+        {
+            if (_itemFeature is TFeature typedFeature)
+            {
+                feature = typedFeature;
+                return true;
+            }
+
+            feature = null;
+            return false;
+        }
     }
 }
