@@ -5,26 +5,26 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("events", Title = "Events")]
+    [DeclareBoxGroup("settings", Title = "Settings")]
     public class RuntimeInventory : MonoBehaviour, ILoggable
     {
-        [SerializeField] private string _inventoryId;
-        [SerializeField, Min(0)] private int _capacity = 20;
-        [SerializeField] private List<InventorySlot> _slots = new();
-        [SerializeField] private bool _allowAutoStacking = true;
-        [SerializeField] private bool _allowOverflow;
+        [SerializeField, Group("settings")] private string _inventoryID;
+        [SerializeField, Min(0), Group("settings")] private int _capacity = 20;
+        [SerializeField, Group("settings")] private bool _allowAutoStacking = true;
+        [SerializeField, Group("settings")] private bool _allowOverflow;
         [SerializeField, Group("events")] private InventoryItemEvent _onItemAddedEvent;
         [SerializeField, Group("events")] private InventoryItemEvent _onItemRemovedEvent;
         [SerializeField, Group("events")] private InventorySlotSwapEvent _onSlotsSwappedEvent;
-        [SerializeField] private bool _logEnabled = true;
+        [SerializeField, Group("debug")] private bool _logEnabled = true;
+        [SerializeField, Group("debug"), ReadOnly] private List<InventorySlot> _slots = new();
 
-        public event Action<InventoryItem> OnItemAdded;
-        public event Action<InventoryItem> OnItemRemoved;
-        public event Action<int, int> OnSlotsSwapped;
-
+        //
         public bool LogEnabled => _logEnabled;
-        public string InventoryId => _inventoryId;
+        public string InventoryID => _inventoryID;
 
+        //
         private void Awake()
         {
             EnsureSlots();
@@ -32,9 +32,9 @@ namespace GameUtils
 
         private void OnValidate()
         {
-            if (string.IsNullOrWhiteSpace(_inventoryId))
+            if (string.IsNullOrWhiteSpace(_inventoryID))
             {
-                _inventoryId = Guid.NewGuid().ToString();
+                _inventoryID = Guid.NewGuid().ToString();
             }
         }
 
@@ -57,7 +57,6 @@ namespace GameUtils
                     int toAdd = Mathf.Min(remaining, canAdd);
                     stackableItem.AddQuantity(toAdd);
                     remaining -= toAdd;
-                    OnItemAdded?.Invoke(stackableItem);
                     _onItemAddedEvent?.Invoke(new InventoryItemEventArgs(this, stackableItem, toAdd));
                     continue;
                 }
@@ -72,7 +71,6 @@ namespace GameUtils
                     newItem.SetQuantity(toAdd);
                     remaining -= toAdd;
 
-                    OnItemAdded?.Invoke(newItem);
                     _onItemAddedEvent?.Invoke(new InventoryItemEventArgs(this, newItem, toAdd));
                     continue;
                 }
@@ -110,7 +108,6 @@ namespace GameUtils
                 int toRemove = Mathf.Min(remaining, item.Quantity);
                 item.RemoveQuantity(toRemove);
                 remaining -= toRemove;
-                OnItemRemoved?.Invoke(item);
                 _onItemRemovedEvent?.Invoke(new InventoryItemEventArgs(this, item, toRemove));
 
                 if (item.Quantity <= 0)
@@ -162,7 +159,7 @@ namespace GameUtils
         public InventorySlot GetSlot(int index)
         {
             EnsureSlots();
-                return index >= 0 && index < _slots.Count ? _slots[index] : null;
+            return index >= 0 && index < _slots.Count ? _slots[index] : null;
         }
 
         public bool TryGetFirstEmptySlot(out InventorySlot slot)
@@ -212,7 +209,6 @@ namespace GameUtils
             _slots[indexA].SetItem(_slots[indexB].Item);
             _slots[indexB].SetItem(temp);
 
-            OnSlotsSwapped?.Invoke(indexA, indexB);
             _onSlotsSwappedEvent?.Invoke(new InventorySlotSwapEventArgs(this, indexA, indexB));
         }
 
@@ -236,7 +232,6 @@ namespace GameUtils
             {
                 toSlot.SetItem(fromSlot.Item);
                 fromSlot.Clear();
-                OnSlotsSwapped?.Invoke(fromIndex, toIndex);
                 _onSlotsSwappedEvent?.Invoke(new InventorySlotSwapEventArgs(this, fromIndex, toIndex));
                 return;
             }

@@ -59,7 +59,7 @@ namespace GameUtils
 
             foreach (var inventory in _registeredInventories)
             {
-                if (inventory != null && inventory.InventoryId == inventoryId)
+                if (inventory != null && inventory.InventoryID == inventoryId)
                 {
                     return inventory;
                 }
