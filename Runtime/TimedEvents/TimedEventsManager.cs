@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameUtils
 {
@@ -9,13 +10,16 @@ namespace GameUtils
     public class TimedEventsManager : Singleton<TimedEventsManager>
     {
         [SerializeField] private List<TimedEventData> _initialEvents = new();
-
-        [Tab("Debug")]
         [SerializeField, ReadOnly] private int _scheduledEventsCount;
 
+        //
         private readonly List<ScheduledEvent> _scheduledEvents = new();
         private int _nextEventId = 1;
 
+        //
+        public int ScheduledEventsCount => _scheduledEventsCount;
+
+        //
         protected override void OnPostAwake()
         {
             base.OnPostAwake();
@@ -28,12 +32,9 @@ namespace GameUtils
 
         public TimedEventHandle AddEvent(float delayInSeconds, Action callback, bool useUnscaledTime = true)
         {
-            if (callback == null)
-            {
-                throw new ArgumentNullException(nameof(callback));
-            }
-
-            return AddScheduledEvent(delayInSeconds, useUnscaledTime, callback, null);
+            return callback == null
+                ? throw new ArgumentNullException(nameof(callback))
+                : AddScheduledEvent(delayInSeconds, useUnscaledTime, callback, null);
         }
 
         public bool RemoveEvent(TimedEventHandle handle)
