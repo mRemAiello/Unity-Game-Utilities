@@ -10,16 +10,16 @@ namespace GameUtils
         [SerializeField] private int _quantity;
         [SerializeField] private string _uniqueInstanceID;
 
-        public InventoryItem(ItemData definition, int quantity, string uniqueInstanceId = null)
+        public InventoryItem(ItemData itemData, int quantity, string uniqueInstanceID = null)
         {
-            _itemData = definition;
-            _uniqueInstanceID = string.IsNullOrEmpty(uniqueInstanceId) ? Guid.NewGuid().ToString() : uniqueInstanceId;
+            _itemData = itemData;
+            _uniqueInstanceID = string.IsNullOrEmpty(uniqueInstanceID) ? Guid.NewGuid().ToString() : uniqueInstanceID;
             SetQuantity(quantity);
         }
 
         public ItemData Definition => _itemData;
         public int Quantity => _quantity;
-        public string UniqueInstanceId => _uniqueInstanceID;
+        public string UniqueInstanceID => _uniqueInstanceID;
         public int MaxStackSize => _itemData != null ? _itemData.MaxStackSize : 0;
         public EquipmentSlot Slot => _itemData != null ? _itemData.EquipmentSlot : null;
 

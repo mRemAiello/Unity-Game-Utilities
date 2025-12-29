@@ -4,7 +4,7 @@ namespace GameUtils
     {
         ItemData Definition { get; }
         int Quantity { get; }
-        string UniqueInstanceId { get; }
+        string UniqueInstanceID { get; }
 
         void SetQuantity(int quantity);
         void AddQuantity(int amount);
