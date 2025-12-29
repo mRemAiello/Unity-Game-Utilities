@@ -52,6 +52,7 @@ Principali sottocartelle:
 - [StatusEffects](./Runtime/StatusEffects): sistema di effetti di stato.
 - [TagManager](./Runtime/TagManager): tag personalizzate.
 - [Task](./Runtime/Task): gestione di task asincroni.
+- [TimedEvents](./Runtime/TimedEvents): gestione di eventi schedulati.
 - [Tracker](./Runtime/Tracker): tracciamento di variabili.
 - [UI](./Runtime/UI): componenti per l'interfaccia utente.
 - [Utils](./Runtime/Utils): altre utilità.
