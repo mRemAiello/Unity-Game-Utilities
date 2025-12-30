@@ -7,6 +7,7 @@ namespace GameUtils
     {
         public Type FeatureType => GetType();
 
+        //
         public TFeature Get<TFeature>() where TFeature : ItemFeature
         {
             return this as TFeature;
