@@ -15,6 +15,13 @@ Classe astratta che eredita da `ItemLocalizationData`. Gestisce gli aspetti graf
 - **AssetReferenceIcon**: riferimento `Addressables` a una sprite.
 - **Icon**: `Task<Sprite>` ottenuto tramite `AssetLoader.LoadAssetAsync`.
 - **ItemColor**: colore associato all'item.
+- **ItemFeatureData**: dati extra serializzati tramite `SerializeReference`, recuperabili con metodi di cast sicuri.
+
+## ItemFeatureData
+Classe astratta serializzabile per descrivere dati aggiuntivi di un item. Espone:
+- **FeatureType**: tipo runtime della feature.
+- **Get<TFeature>()**: cast diretto alla feature richiesta.
+- **TryGet<TFeature>(out TFeature)**: cast sicuro con valore di ritorno booleano.
 
 ## ItemAssetManager
 `ItemAssetManager<TManager, TAsset>` è una classe astratta che estende `GenericDataManager` e fornisce una ricerca veloce per **Internal Name** sugli asset che derivano da `ItemAssetBase`.
