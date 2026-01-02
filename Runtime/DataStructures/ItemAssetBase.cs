@@ -12,7 +12,7 @@ namespace GameUtils
     {
         [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
         [SerializeField, Group("graphics")] private Color _itemColor = Color.white;
-        [SerializeReference, Group("features")] private ItemFeature _itemFeature = null;
+        [SerializeReference, Group("features")] private ItemFeatureData _itemFeature = null;
 
         //
         public AssetReferenceSprite AssetReferenceIcon => _itemIcon;
@@ -20,7 +20,7 @@ namespace GameUtils
         public Color ItemColor => _itemColor;
 
         //
-        public bool TryGetFeature<TFeature>(out TFeature feature) where TFeature : ItemFeature
+        public bool TryGetFeature<TFeature>(out TFeature feature) where TFeature : ItemFeatureData
         {
             if (_itemFeature is TFeature typedFeature)
             {
@@ -32,6 +32,6 @@ namespace GameUtils
             return false;
         }
 
-        public TFeature GetFeature<TFeature>() where TFeature : ItemFeature => _itemFeature as TFeature;
+        public TFeature GetFeature<TFeature>() where TFeature : ItemFeatureData => _itemFeature as TFeature;
     }
 }
