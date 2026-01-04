@@ -17,8 +17,8 @@ namespace GameUtils
         //
         public RuntimeVital(AttributeData attributeData, float baseValue) : base(attributeData, baseValue)
         {
-            _currentMaxValue = base.CurrentValue;
-            _currentVitalValue = base.CurrentValue;
+            _currentMaxValue = Data.ComputeCurrentMaxValue(BaseValue, Modifiers);
+            _currentVitalValue = Mathf.Clamp(base.CurrentValue, MinValue, _currentMaxValue);
         }
 
         public void SetCurrentValue(float value)
@@ -31,10 +31,13 @@ namespace GameUtils
             }
         }
 
+        /// <summary>
+        /// Refreshes the derived max value via <see cref="AttributeData"/> and clamps the current vital value.
+        /// </summary>
         protected override void RefreshCurrentValue()
         {
             base.RefreshCurrentValue();
-            _currentMaxValue = base.CurrentValue;
+            _currentMaxValue = Data.ComputeCurrentMaxValue(BaseValue, Modifiers);
             _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
         }
 

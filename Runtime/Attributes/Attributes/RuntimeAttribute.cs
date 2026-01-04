@@ -30,7 +30,7 @@ namespace GameUtils
         public float BaseValue => _baseValue;
 
         /// <summary>
-        /// Gets the current value after modifiers and clamping.
+        /// Gets the current value computed by <see cref="AttributeData"/>.
         /// </summary>
         public virtual float CurrentValue => _currentValue;
 
@@ -184,43 +184,11 @@ namespace GameUtils
         }
 
         /// <summary>
-        /// Recalculates the current value from base and modifiers, then clamps it.
+        /// Recalculates the current value by delegating to <see cref="AttributeData"/>.
         /// </summary>
         protected virtual void RefreshCurrentValue()
         {
-            _currentValue = _baseValue;
-            _currentValue = ApplyModifiers(_currentValue);
-            _currentValue = Mathf.Clamp(_currentValue, MinValue, MaxValue);
-            _currentValue = ClampAttributeValue(_currentValue, _data.ClampType);
-        }
-
-        /// <summary>
-        /// Applies all modifiers in order to the supplied value.
-        /// </summary>
-        protected virtual float ApplyModifiers(float modValue)
-        {
-            var mods = _modifiers.OrderBy(m => m.Order);
-            foreach (var modifier in mods)
-            {
-                modValue = modifier.ApplyModifier(modValue);
-            }
-            return modValue;
-        }
-
-        /// <summary>
-        /// Applies the configured clamp strategy to the supplied value.
-        /// </summary>
-        protected float ClampAttributeValue(float value, AttributeClampType clampType)
-        {
-            return clampType switch
-            {
-                AttributeClampType.RawFloat => value,
-                AttributeClampType.Floor => Mathf.Floor(value),
-                AttributeClampType.Round => Mathf.Round(value),
-                AttributeClampType.Ceiling => Mathf.Ceil(value),
-                AttributeClampType.Integer => Mathf.RoundToInt(value),
-                _ => value,
-            };
+            _currentValue = _data.ComputeCurrentValue(_baseValue, _modifiers);
         }
 
         /// <summary>
