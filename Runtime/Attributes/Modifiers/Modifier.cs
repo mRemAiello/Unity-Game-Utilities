@@ -2,9 +2,13 @@
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Base class for attribute modifiers applied at runtime.
+    /// </summary>
     [Serializable]
     public abstract class Modifier
     {
+        // Public fields to simplify serialization and inspector usage.
         public object Source;
         public float Amount;
         public float Duration;

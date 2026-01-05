@@ -2,6 +2,9 @@
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Modifier that applies a percentage multiplier to the base value.
+    /// </summary>
     [Serializable]
     public class ModifierPercentage : Modifier
     {

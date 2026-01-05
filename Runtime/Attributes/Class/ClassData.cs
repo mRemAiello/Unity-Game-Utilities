@@ -7,13 +7,16 @@ using UnityEditor;
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Defines a class loadout by pairing attribute data with starting values.
+    /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
     [DeclareBoxGroup("class", Title = "Class")]
     public class ClassData : ItemAssetBase
     {
         [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 
-        //
+        // Attribute list used by runtime class instances.
         public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
 
         [Button]
@@ -32,7 +35,7 @@ namespace GameUtils
                 }
             }
 
-            // Find all AttributeData assets in the project
+            // Find all AttributeData assets in the project.
             string[] assetGuids = AssetDatabase.FindAssets($"t:{typeof(AttributeData).Name}");
             foreach (var guid in assetGuids)
             {

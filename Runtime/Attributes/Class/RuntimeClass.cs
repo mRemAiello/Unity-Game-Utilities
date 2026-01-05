@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    /// <summary>
+    /// MonoBehaviour that instantiates and manages runtime attributes for a class.
+    /// </summary>
     [DeclareBoxGroup("class", Title = "Class")]
     [DeclareBoxGroup("debug", Title = "Debug")]
     public class RuntimeClass : MonoBehaviour, ILoggable
@@ -12,15 +15,15 @@ namespace GameUtils
         [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true), ShowProperties] protected ClassData _classData;
         [SerializeField, Group("class")] protected bool _refreshClassOnUpdate = false;
 
-        //
+        // Debugging/diagnostic settings.
         [SerializeField, Group("debug")] private bool _logEnabled = true;
         [SerializeField, ReadOnly, HideInEditMode, TableList, Group("debug")] protected List<RuntimeAttribute> _attributes;
 
-        //
+        // Public accessors.
         public ClassData ClassData => _classData;
         public bool LogEnabled => _logEnabled;
 
-        //
+        // Initialize the class data on startup when configured.
         void Start()
         {
             if (_startWithClass && _classData != null)
@@ -33,6 +36,7 @@ namespace GameUtils
         {
             if (_refreshClassOnUpdate)
             {
+                // Keep attribute timers and values fresh every frame if needed.
                 RefreshAttributes();
             }
         }
@@ -44,6 +48,7 @@ namespace GameUtils
             _attributes = new List<RuntimeAttribute>();
             foreach (var data in classData.Attributes)
             {
+                // Create a runtime instance for each attribute definition.
                 var runtimeAttribute = CreateRuntimeAttribute(data.Data, data.Value);
                 if (runtimeAttribute != null)
                     _attributes.Add(runtimeAttribute);
@@ -55,7 +60,7 @@ namespace GameUtils
             if (data.IsVital)
                 return new RuntimeVital(data, value);
 
-            //
+            // Default to a standard runtime attribute for non-vitals.
             return new RuntimeAttribute(data, value);
         }
 
@@ -73,7 +78,7 @@ namespace GameUtils
             }
         }
 
-        //
+            // Helper methods to locate attributes in the runtime list.
         public bool TryGetAttribute<T>(out RuntimeAttribute attribute) where T : AttributeData
         {
             attribute = GetAttribute<T>();
