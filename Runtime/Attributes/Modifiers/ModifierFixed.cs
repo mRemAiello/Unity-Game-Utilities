@@ -2,6 +2,9 @@
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Modifier that adds a fixed amount to the base value.
+    /// </summary>
     [Serializable]
     public class ModifierFixed : Modifier
     {

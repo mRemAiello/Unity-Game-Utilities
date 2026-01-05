@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Runtime representation of an attribute instance with modifiers and events.
+    /// </summary>
     [Serializable]
     public class RuntimeAttribute
     {
@@ -58,7 +61,7 @@ namespace GameUtils
             _baseValue = baseValue;
             _modifiers = new List<Modifier>();
 
-            //
+            // Compute the initial value based on base stats and modifiers.
             RefreshCurrentValue();
         }
 
@@ -142,7 +145,7 @@ namespace GameUtils
         /// </summary>
         protected virtual void HandleEvents()
         {
-            //
+            // Notify listeners about value changes and threshold hits.
             OnChangeValue();
             if (CurrentValue == _data.MinValue)
                 OnMinValue();
@@ -155,6 +158,7 @@ namespace GameUtils
         /// </summary>
         public virtual void Refresh()
         {
+            // Walk modifiers in order to update their durations.
             var mods = _modifiers.OrderBy(m => m.Order);
             List<Modifier> expiredModifiers = null;
 
@@ -178,6 +182,7 @@ namespace GameUtils
                     _modifiers.Remove(modifier);
                 }
 
+                // Recompute only when something actually expired.
                 RefreshCurrentValue();
                 HandleEvents();
             }

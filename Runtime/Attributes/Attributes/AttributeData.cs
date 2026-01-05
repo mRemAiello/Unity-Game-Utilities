@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    /// <summary>
+    /// Scriptable definition for an attribute, including value limits and clamping rules.
+    /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute")]
     [DeclareBoxGroup("attribute", Title = "Attribute")]
     public class AttributeData : ItemAssetBase
@@ -14,7 +17,7 @@ namespace GameUtils
         [SerializeField, Group("attribute")] private bool _isVital;
         [SerializeField, Group("attribute")] private AttributeClampType _clampType;
 
-        //
+        // Inspector-facing configuration values.
         public float MinValue => _minValue;
         public float MaxValue => _maxValue;
         public bool IsVital => _isVital;
@@ -47,6 +50,7 @@ namespace GameUtils
                 return value;
             }
 
+            // Apply modifiers in deterministic order.
             var orderedModifiers = modifiers.OrderBy(modifier => modifier.Order);
             foreach (var modifier in orderedModifiers)
             {
@@ -58,6 +62,7 @@ namespace GameUtils
 
         protected virtual float ClampAttributeValue(float value, AttributeClampType clampType)
         {
+            // Convert to the desired numeric representation.
             return clampType switch
             {
                 AttributeClampType.RawFloat => value,
