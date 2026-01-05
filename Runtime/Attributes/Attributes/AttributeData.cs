@@ -23,7 +23,7 @@ namespace GameUtils
         /// <summary>
         /// Computes the current value for a runtime attribute, applying modifiers and clamping.
         /// </summary>
-        public float ComputeCurrentValue(float baseValue, IReadOnlyList<Modifier> modifiers)
+        public virtual float ComputeCurrentValue(float baseValue, IReadOnlyList<Modifier> modifiers)
         {
             var value = ApplyModifiers(baseValue, modifiers);
             value = Mathf.Clamp(value, _minValue, _maxValue);
@@ -33,14 +33,14 @@ namespace GameUtils
         /// <summary>
         /// Computes the current maximum value for a runtime vital attribute.
         /// </summary>
-        public float ComputeCurrentMaxValue(float baseValue, IReadOnlyList<Modifier> modifiers)
+        public virtual float ComputeCurrentMaxValue(float baseValue, IReadOnlyList<Modifier> modifiers)
         {
             var value = ApplyModifiers(baseValue, modifiers);
             value = Mathf.Clamp(value, _minValue, _maxValue);
             return ClampAttributeValue(value, _clampType);
         }
 
-        private static float ApplyModifiers(float value, IReadOnlyList<Modifier> modifiers)
+        protected virtual float ApplyModifiers(float value, IReadOnlyList<Modifier> modifiers)
         {
             if (modifiers == null || modifiers.Count == 0)
             {
@@ -56,7 +56,7 @@ namespace GameUtils
             return value;
         }
 
-        private static float ClampAttributeValue(float value, AttributeClampType clampType)
+        protected virtual float ClampAttributeValue(float value, AttributeClampType clampType)
         {
             return clampType switch
             {
