@@ -23,6 +23,6 @@ namespace GameUtils
         public int BaseValue => _baseValue;
         public bool IsUnique => _isUnique;
         public EquipmentSlot EquipmentSlot => _equipmentSlot;
-        public IReadOnlyList<GameTag> Tags => _tags;
+        public override IReadOnlyList<GameTag> Tags => _tags;
     }
 }

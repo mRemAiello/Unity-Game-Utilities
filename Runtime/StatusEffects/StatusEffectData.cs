@@ -20,7 +20,7 @@ namespace GameUtils
         public bool IsVisible => _isVisible;
         public StatusEffectStackType StackType => _stackType;
         public int MaxDuration => _maxDuration;
-        public IReadOnlyList<GameTag> Tags => _tags;
+        public override IReadOnlyList<GameTag> Tags => _tags;
 
         //
         public abstract void ApplyEffect(RuntimeStatusEffect effect);
