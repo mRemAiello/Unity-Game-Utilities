@@ -13,6 +13,8 @@ namespace GameUtils
 
         public bool HasAnyTag(GameTag tag) => HasAnyTag(new[] { tag });
 
+        public bool HasAnyTag(List<GameTag> tags) => HasAnyTag(tags?.ToArray());
+
         public bool HasAnyTag(params GameTag[] tags)
         {
             if (tags == null || tags.Length == 0)
@@ -53,6 +55,8 @@ namespace GameUtils
         public bool HasAllTag(string tag) => HasAllTag(new[] { tag });
 
         public bool HasAllTag(GameTag tag) => HasAllTag(new[] { tag });
+
+        public bool HasAllTag(List<GameTag> tags) => HasAllTag(tags?.ToArray());
 
         public bool HasAllTag(params GameTag[] tags)
         {

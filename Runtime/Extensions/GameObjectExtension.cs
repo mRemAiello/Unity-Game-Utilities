@@ -22,6 +22,12 @@ namespace GameUtils
 
         public static bool HasAnyTag(this GameObject gameObject, GameTag tag) => HasAnyTag(gameObject, new[] { tag });
 
+        public static bool HasAnyTag(this GameObject gameObject, List<GameTag> tags)
+        {
+            var taggable = GetTaggable(gameObject);
+            return taggable != null && taggable.HasAnyTag(tags);
+        }
+
         public static bool HasAnyTag(this GameObject gameObject, params GameTag[] tags)
         {
             var taggable = GetTaggable(gameObject);
@@ -37,6 +43,12 @@ namespace GameUtils
         public static bool HasAllTag(this GameObject gameObject, string tag) => HasAllTag(gameObject, new[] { tag });
 
         public static bool HasAllTag(this GameObject gameObject, GameTag tag) => HasAllTag(gameObject, new[] { tag });
+
+        public static bool HasAllTag(this GameObject gameObject, List<GameTag> tags)
+        {
+            var taggable = GetTaggable(gameObject);
+            return taggable != null && taggable.HasAllTag(tags);
+        }
 
         public static bool HasAllTag(this GameObject gameObject, params GameTag[] tags)
         {

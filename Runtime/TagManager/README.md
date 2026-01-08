@@ -22,6 +22,11 @@ Questa cartella contiene un semplice sistema di gestione dei tag utilizzabile ne
 
 Sono inoltre disponibili versioni statiche degli stessi metodi che accettano un'interfaccia `ITaggable` e consentono di effettuare queste operazioni direttamente sulle liste di tag.
 
+`ITaggable` espone inoltre dei metodi di utilità per interrogare i tag direttamente sugli oggetti che implementano l'interfaccia:
+- `GetTags()` – restituisce la lista dei tag (mai `null`).
+- `HasAnyTag(...)` – verifica se almeno un tag è presente (overload per `GameTag`, `List<GameTag>` e stringhe `ID`).
+- `HasAllTag(...)` – verifica se tutti i tag sono presenti (overload per `GameTag`, `List<GameTag>` e stringhe `ID`).
+
 ## `GameTagManager`
 `GameTagManager` eredita da `GenericDataManager` e carica automaticamente tutti gli asset `GameTag` presenti nel percorso configurato. In `OnPostAwake` costruisce due dizionari per ricerche rapide:
 - per **ID** (`TryGetTag(string id, out GameTag tag)` e `GetAll()`),
@@ -61,4 +66,3 @@ public class Example : MonoBehaviour
     }
 }
 ```
-
