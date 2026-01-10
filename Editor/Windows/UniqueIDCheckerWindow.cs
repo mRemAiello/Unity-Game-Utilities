@@ -6,8 +6,8 @@ namespace UnityEditor.GameUtils
 {
     public class UniqueIDCheckerWindow : EditorWindow
     {
-        private List<UniqueID> _uniqueIDObjects = new();
-        private Dictionary<string, List<UniqueID>> _duplicateIDs = new();
+        private List<ItemIdentifierData> _uniqueIDObjects = new();
+        private Dictionary<string, List<ItemIdentifierData>> _duplicateIDs = new();
 
         //
         [MenuItem(GameUtilsMenuConstants.MENU_NAME + "Unique ID Checker")]
@@ -54,7 +54,7 @@ namespace UnityEditor.GameUtils
             foreach (string guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
-                UniqueID uniqueID = AssetDatabase.LoadAssetAtPath<UniqueID>(path);
+                ItemIdentifierData uniqueID = AssetDatabase.LoadAssetAtPath<ItemIdentifierData>(path);
                 if (uniqueID != null)
                 {
                     _uniqueIDObjects.Add(uniqueID);
@@ -62,12 +62,12 @@ namespace UnityEditor.GameUtils
             }
 
             // Check for duplicates
-            Dictionary<string, List<UniqueID>> idDictionary = new();
-            foreach (UniqueID obj in _uniqueIDObjects)
+            Dictionary<string, List<ItemIdentifierData>> idDictionary = new();
+            foreach (ItemIdentifierData obj in _uniqueIDObjects)
             {
                 if (!idDictionary.ContainsKey(obj.ID))
                 {
-                    idDictionary[obj.ID] = new List<UniqueID>();
+                    idDictionary[obj.ID] = new List<ItemIdentifierData>();
                 }
                 idDictionary[obj.ID].Add(obj);
             }

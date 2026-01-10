@@ -6,7 +6,7 @@ namespace GameUtils
     [DeclareBoxGroup("graphics", Title = "Graphics")]
     [DeclareBoxGroup("progress", Title = "Progress")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ACHIEVEMENT_NAME + "Achievement")]
-    public class AchievementData : ItemAssetBase
+    public class AchievementData : ItemVisualData
     {
         [SerializeField, Group("internal")] private string _eventName;
         [SerializeField, Group("internal")] private string _steamId;

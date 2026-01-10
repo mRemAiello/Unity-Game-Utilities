@@ -3,7 +3,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.CURRENCY_NAME + "Rarity")]
-    public class Rarity : ItemAssetBase
+    public class Rarity : ItemVisualData
     {
     }
 }

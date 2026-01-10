@@ -10,7 +10,7 @@ namespace GameUtils
     /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute")]
     [DeclareBoxGroup("attribute", Title = "Attribute")]
-    public class AttributeData : ItemAssetBase
+    public class AttributeData : ItemVisualData
     {
         [SerializeField, Group("attribute")] private float _minValue = 0;
         [SerializeField, Group("attribute")] private float _maxValue = 99;
