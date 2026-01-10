@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
 
@@ -14,7 +13,6 @@ namespace GameUtils
         [SerializeField, Group("item"), Min(0)] private int _baseValue;
         [SerializeField, Group("item")] private bool _isUnique;
         [SerializeField, Group("item")] private EquipmentSlot _equipmentSlot;
-        [SerializeField, Group("item")] private List<GameTag> _tags = new();
 
         //
         public ItemType ItemType => _itemType;
@@ -23,6 +21,5 @@ namespace GameUtils
         public int BaseValue => _baseValue;
         public bool IsUnique => _isUnique;
         public EquipmentSlot EquipmentSlot => _equipmentSlot;
-        public override IReadOnlyList<GameTag> Tags => _tags;
     }
 }

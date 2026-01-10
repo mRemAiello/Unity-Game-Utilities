@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
 
@@ -11,7 +10,6 @@ namespace GameUtils
         [SerializeField, Group("status-effect")] private int _order = 0;
         [SerializeField, Group("status-effect")] private StatusEffectStackType _stackType;
         [ShowIf(nameof(_stackType), StatusEffectStackType.Duration), SerializeField, Group("status-effect")] private int _maxDuration;
-        [SerializeField, Group("status-effect")] private List<GameTag> _tags = new();
 
         //
         public int Order => _order;
@@ -20,7 +18,6 @@ namespace GameUtils
         public bool IsVisible => _isVisible;
         public StatusEffectStackType StackType => _stackType;
         public int MaxDuration => _maxDuration;
-        public override IReadOnlyList<GameTag> Tags => _tags;
 
         //
         public abstract void ApplyEffect(RuntimeStatusEffect effect);

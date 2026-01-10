@@ -27,29 +27,7 @@ namespace GameUtils
 
         public bool HasAnyTag(params string[] tags)
         {
-            var currentTags = Tags;
-            if (currentTags == null || tags == null || tags.Length == 0)
-            {
-                return false;
-            }
-
-            foreach (var currentTag in currentTags)
-            {
-                if (currentTag == null)
-                {
-                    continue;
-                }
-
-                foreach (var tagId in tags)
-                {
-                    if (!string.IsNullOrEmpty(tagId) && currentTag.ID == tagId)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return TagListHasAny(Tags, tags);
         }
 
         public bool HasAllTag(string tag) => HasAllTag(new[] { tag });
@@ -70,18 +48,48 @@ namespace GameUtils
 
         public bool HasAllTag(params string[] tags)
         {
-            if (tags == null || tags.Length == 0)
-            {
-                return true;
-            }
+            return TagListHasAll(Tags, tags);
+        }
 
-            var currentTags = Tags;
-            if (currentTags == null || currentTags.Count == 0)
+        public static bool TagListHasAny(IReadOnlyList<GameTag> tags, IReadOnlyList<string> tagIds)
+        {
+            if (tags == null || tagIds == null || tagIds.Count == 0)
             {
                 return false;
             }
 
-            foreach (var tagId in tags)
+            foreach (var tag in tags)
+            {
+                if (tag == null)
+                {
+                    continue;
+                }
+
+                foreach (var tagId in tagIds)
+                {
+                    if (!string.IsNullOrEmpty(tagId) && tag.ID == tagId)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static bool TagListHasAll(IReadOnlyList<GameTag> tags, IReadOnlyList<string> tagIds)
+        {
+            if (tagIds == null || tagIds.Count == 0)
+            {
+                return true;
+            }
+
+            if (tags == null || tags.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var tagId in tagIds)
             {
                 if (string.IsNullOrEmpty(tagId))
                 {
@@ -89,9 +97,9 @@ namespace GameUtils
                 }
 
                 var found = false;
-                foreach (var currentTag in currentTags)
+                foreach (var tag in tags)
                 {
-                    if (currentTag != null && currentTag.ID == tagId)
+                    if (tag != null && tag.ID == tagId)
                     {
                         found = true;
                         break;
