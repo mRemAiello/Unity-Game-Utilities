@@ -78,7 +78,7 @@ namespace GameUtils
             }
         }
 
-            // Helper methods to locate attributes in the runtime list.
+        // Helper methods to locate attributes in the runtime list.
         public bool TryGetAttribute<T>(out RuntimeAttribute attribute) where T : AttributeData
         {
             attribute = GetAttribute<T>();
@@ -87,6 +87,27 @@ namespace GameUtils
                 this.LogError($"Attribute of type {typeof(T).Name} not found in class data.");
                 return false;
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Try to get an attribute by data type and runtime instance type.
+        /// </summary>
+        /// <typeparam name="TData">The attribute data type to match.</typeparam>
+        /// <typeparam name="TRuntime">The runtime attribute type to return.</typeparam>
+        /// <param name="attribute">The matching runtime attribute, if found.</param>
+        /// <returns>True when a matching runtime attribute is found.</returns>
+        public bool TryGetAttribute<TData, TRuntime>(out TRuntime attribute)
+            where TData : AttributeData
+            where TRuntime : RuntimeAttribute
+        {
+            attribute = GetAttribute<TData, TRuntime>();
+            if (attribute == null)
+            {
+                this.LogError($"Attribute of type {typeof(TData).Name} with runtime {typeof(TRuntime).Name} not found in class data.");
+                return false;
+            }
+
             return true;
         }
 
@@ -100,6 +121,51 @@ namespace GameUtils
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get an attribute by data type and runtime instance type.
+        /// </summary>
+        /// <typeparam name="TData">The attribute data type to match.</typeparam>
+        /// <typeparam name="TRuntime">The runtime attribute type to return.</typeparam>
+        /// <returns>The matching runtime attribute or null if not found or mismatched.</returns>
+        public TRuntime GetAttribute<TData, TRuntime>()
+            where TData : AttributeData
+            where TRuntime : RuntimeAttribute
+        {
+            foreach (var attribute in _attributes)
+            {
+                if (attribute.Data is TData)
+                {
+                    if (attribute is TRuntime runtimeAttribute)
+                        return runtimeAttribute;
+
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a vital runtime attribute for the requested data type.
+        /// </summary>
+        /// <typeparam name="TData">The attribute data type to match.</typeparam>
+        /// <returns>The matching RuntimeVital or null if not found.</returns>
+        public RuntimeVital GetVital<TData>() where TData : AttributeData
+        {
+            return GetAttribute<TData, RuntimeVital>();
+        }
+
+        /// <summary>
+        /// Try to get a vital runtime attribute for the requested data type.
+        /// </summary>
+        /// <typeparam name="TData">The attribute data type to match.</typeparam>
+        /// <param name="attribute">The matching RuntimeVital, if found.</param>
+        /// <returns>True when a matching RuntimeVital is found.</returns>
+        public bool TryGetVital<TData>(out RuntimeVital attribute) where TData : AttributeData
+        {
+            return TryGetAttribute<TData, RuntimeVital>(out attribute);
         }
 
         public bool TryGetAttribute(string attributeId, out RuntimeAttribute attribute)
