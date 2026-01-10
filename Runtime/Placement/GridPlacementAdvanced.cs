@@ -15,7 +15,7 @@ namespace GameUtils
         public float yMin = 1f; // Minima distanza sull'asse Y
         public float yMax = 3f; // Massima distanza sull'asse Y
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         private void PositionChildrenInRandomGrid()
         {
             int currentRow = 0;

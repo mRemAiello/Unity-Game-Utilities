@@ -14,7 +14,7 @@ namespace GameUtils
         public bool LogEnabled => _logEnabled;
 
         //
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Collect()
         {
             this.Log($"Collectable collected! Increment value: {_incrementValue}");

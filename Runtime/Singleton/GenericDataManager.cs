@@ -86,7 +86,7 @@ namespace GameUtils
             return null;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         protected void LoadAssets()
         {
 #if UNITY_EDITOR

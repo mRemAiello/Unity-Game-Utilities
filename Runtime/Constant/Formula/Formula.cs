@@ -30,7 +30,7 @@ namespace GameUtils
         public override string StringValue => FloatValue.ToString();
 
         //
-        [Button]
+        [Button(ButtonSizes.Medium)]
         private void ShowDebugValue()
         {
             //

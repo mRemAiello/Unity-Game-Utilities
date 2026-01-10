@@ -24,7 +24,7 @@ namespace GameUtils
             LoadAllCurrencies();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void AddCurrency(CurrencyData currency, int amount)
         {
             if (!_savedCurrencies.ContainsKey(currency.ID))
@@ -39,7 +39,7 @@ namespace GameUtils
             SaveCurrency(currency.ID);
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public bool TryRemoveCurrency(CurrencyData currency, int amount)
         {
             if (!_savedCurrencies.ContainsKey(currency.ID) || _savedCurrencies[currency.ID] < amount)
@@ -57,7 +57,7 @@ namespace GameUtils
             return true;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void SetCurrencyAmount(CurrencyData currency, int amount)
         {
             int currentAmount = Mathf.Clamp(amount, 0, currency.MaxAmount);
@@ -68,7 +68,7 @@ namespace GameUtils
             SaveCurrency(currency.ID);
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public bool TryExchangeCurrency(CurrencyData fromCurrency, CurrencyData toCurrency, int amount)
         {
             if (fromCurrency.TryGetCurrencyConversionRate(toCurrency, out var conversionRate))
@@ -86,7 +86,7 @@ namespace GameUtils
             return false;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public bool TryExchangeCurrency(CurrencyData fromCurrency, CurrencyData toCurrency, int amount, float conversionRate)
         {
             int toAmount = Mathf.FloorToInt(amount * conversionRate);
@@ -101,7 +101,7 @@ namespace GameUtils
             return false;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void ResetCurrencies()
         {
             foreach (var currency in _currencies)

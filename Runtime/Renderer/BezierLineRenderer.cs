@@ -22,7 +22,7 @@ namespace GameUtils
             DrawQuadraticBezierCurve();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         private void DrawQuadraticBezierCurve()
         {
             float t = 0f;

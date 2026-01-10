@@ -35,19 +35,19 @@ namespace GameUtils
             _ignorable = false;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void SetHeaderText(string headerText)
         {
             _headerText.text = headerText;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void SetBodyText(string text)
         {
             _questionText.text = text;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type)
         {
             if (!_buttonsRoot)
@@ -64,7 +64,7 @@ namespace GameUtils
             }
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Show()
         {
             OnBeforeShow();
@@ -74,7 +74,7 @@ namespace GameUtils
             transform.SetAsLastSibling();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Close()
         {
             Visible = false;

@@ -45,7 +45,7 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Invoke()
         {
             this.Log($"{name} event invoked", this);

@@ -9,7 +9,7 @@ namespace GameUtils
         [SerializeField] private int _columns = 2;
         [SerializeField] private float _spacing = 2f;
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void PositionChildrenInGrid()
         {
             int currentRow = 0;

@@ -28,7 +28,7 @@ namespace GameUtils
         public TagManager Immunities => _immunities;
 
         //
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void ApplyEffect(GameObject source, GameObject target, StatusEffectData data, int amount)
         {
             if (_immunities.HasAny(data.Tags.ToArray()))
@@ -54,7 +54,7 @@ namespace GameUtils
             RefreshTags();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void UpdateEffect()
         {
             //
@@ -85,7 +85,7 @@ namespace GameUtils
             RefreshTags();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void RemoveEffect(RuntimeStatusEffect effect, bool launchEndEvent = false)
         {
             _statusEffects.Remove(effect);
@@ -100,7 +100,7 @@ namespace GameUtils
             RefreshTags();
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void RemoveAllEffects(string ID, bool launchEndEvent = false)
         {
             var effectsToRemove = FindEffects(ID);

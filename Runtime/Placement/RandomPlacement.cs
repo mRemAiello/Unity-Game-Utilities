@@ -9,7 +9,7 @@ namespace GameUtils
         public Vector3 placementArea = new(10, 0, 10);
         public float maxAttempts = 10;
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void PositionChildrenRandomly()
         {
             Collider[] colliders = new Collider[4];
