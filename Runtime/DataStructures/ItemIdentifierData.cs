@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("internal", Title = "Internal")]
-    public abstract class UniqueID : ScriptableObject
+    public abstract class ItemIdentifierData : ScriptableObject
     {
         [SerializeField, Group("internal"), ReadOnly] private string _id = "";
 
@@ -34,11 +34,11 @@ namespace GameUtils
                 return false;
             }
 
-            var obj = other as UniqueID;
+            var obj = other as ItemIdentifierData;
             return ID.Equals(obj.ID);
         }
 
-        public static bool AreEquals(UniqueID firstElement, UniqueID secondElement)
+        public static bool AreEquals(ItemIdentifierData firstElement, ItemIdentifierData secondElement)
         {
             // If both are not null and have matching IDs
             if (firstElement != null && secondElement != null)

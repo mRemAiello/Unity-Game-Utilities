@@ -5,13 +5,13 @@ using UnityEngine;
 namespace GameUtils
 {
     /// <summary>
-    /// Generic manager for <see cref="ItemAssetBase"/> assets, providing lookups by internal name.
+    /// Generic manager for <see cref="ItemVisualData"/> assets, providing lookups by internal name.
     /// Inherits the automatic asset loading behaviour of <see cref="GenericDataManager{T1, T2}"/>.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     public abstract class ItemAssetManager<TManager, TAsset> : GenericDataManager<TManager, TAsset>
         where TManager : ItemAssetManager<TManager, TAsset>
-        where TAsset : ItemAssetBase
+        where TAsset : ItemVisualData
     {
         private Dictionary<string, TAsset> _itemsByInternalName = new();
 

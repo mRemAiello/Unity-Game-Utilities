@@ -18,10 +18,6 @@ namespace GameUtils
             return taggable?.Tags ?? Array.Empty<GameTag>();
         }
 
-        public static bool HasAnyTag(this GameObject gameObject, string tag) => HasAnyTag(gameObject, new[] { tag });
-
-        public static bool HasAnyTag(this GameObject gameObject, GameTag tag) => HasAnyTag(gameObject, new[] { tag });
-
         public static bool HasAnyTag(this GameObject gameObject, List<GameTag> tags)
         {
             var taggable = GetTaggable(gameObject);
@@ -39,10 +35,6 @@ namespace GameUtils
             var taggable = GetTaggable(gameObject);
             return taggable != null && TagListHasAny(taggable.Tags, tags);
         }
-
-        public static bool HasAllTag(this GameObject gameObject, string tag) => HasAllTag(gameObject, new[] { tag });
-
-        public static bool HasAllTag(this GameObject gameObject, GameTag tag) => HasAllTag(gameObject, new[] { tag });
 
         public static bool HasAllTag(this GameObject gameObject, List<GameTag> tags)
         {
@@ -135,5 +127,11 @@ namespace GameUtils
 
             return true;
         }
+
+        //
+        public static bool HasAnyTag(this GameObject gameObject, string tag) => HasAnyTag(gameObject, new[] { tag });
+        public static bool HasAnyTag(this GameObject gameObject, GameTag tag) => HasAnyTag(gameObject, new[] { tag });
+        public static bool HasAllTag(this GameObject gameObject, string tag) => HasAllTag(gameObject, new[] { tag });
+        public static bool HasAllTag(this GameObject gameObject, GameTag tag) => HasAllTag(gameObject, new[] { tag });
     }
 }

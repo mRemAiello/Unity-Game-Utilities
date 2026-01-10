@@ -5,7 +5,7 @@ using UnityEngine.Localization;
 namespace GameUtils
 {
     [DeclareBoxGroup("localization", Title = "Localization")]
-    public abstract class ItemLocalizationData : UniqueID
+    public abstract class ItemLocalizedData : ItemIdentifierData
     {
         [SerializeField, Group("internal")] private string _internalItemName = null;
         [SerializeField, Group("localization")] private LocalizedString _itemName = null;

@@ -12,7 +12,7 @@ namespace GameUtils
     /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
     [DeclareBoxGroup("class", Title = "Class")]
-    public class ClassData : ItemAssetBase
+    public class ClassData : ItemVisualData
     {
         [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 

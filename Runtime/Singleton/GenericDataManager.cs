@@ -8,7 +8,7 @@ namespace GameUtils
 {
     [DeclareBoxGroup("debug", Title = "Debug")]
     [DefaultExecutionOrder(-100)]
-    public abstract class GenericDataManager<T1, T2> : MonoBehaviour, ILoggable where T1 : GenericDataManager<T1, T2> where T2 : UniqueID
+    public abstract class GenericDataManager<T1, T2> : MonoBehaviour, ILoggable where T1 : GenericDataManager<T1, T2> where T2 : ItemIdentifierData
     {
         [SerializeField, Group("debug")] private bool _logEnabled = true;
         [SerializeField, Group("debug")] private string _dataFolderPath = "Assets/";

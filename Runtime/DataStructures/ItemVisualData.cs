@@ -9,11 +9,11 @@ namespace GameUtils
 {
     [DeclareBoxGroup("graphics", Title = "Graphics")]
     [DeclareBoxGroup("features", Title = "Features")]
-    public abstract class ItemAssetBase : ItemLocalizationData, ITaggable
+    public abstract class ItemVisualData : ItemLocalizedData, ITaggable
     {
         [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
         [SerializeField, Group("graphics")] private Color _itemColor = Color.white;
-        [SerializeReference, Group("features")] private ItemFeatureData _itemFeature = null;
+        [SerializeReference, Group("features")] private List<ItemFeatureData> _itemFeature = null;
 
         //
         public AssetReferenceSprite AssetReferenceIcon => _itemIcon;
@@ -24,16 +24,17 @@ namespace GameUtils
         //
         public bool TryGetFeature<TFeature>(out TFeature feature) where TFeature : ItemFeatureData
         {
-            if (_itemFeature is TFeature typedFeature)
+            foreach (var itemFeature in _itemFeature)
             {
-                feature = typedFeature;
-                return true;
+                if (itemFeature is TFeature typedFeature)
+                {
+                    feature = typedFeature;
+                    return true;
+                }
             }
 
             feature = null;
             return false;
         }
-
-        public TFeature GetFeature<TFeature>() where TFeature : ItemFeatureData => _itemFeature as TFeature;
     }
 }

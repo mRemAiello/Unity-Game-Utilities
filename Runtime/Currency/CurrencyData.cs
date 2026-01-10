@@ -6,7 +6,7 @@ namespace GameUtils
 {
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.CURRENCY_NAME + "Currency")]
     [DeclareBoxGroup("currency", Title = "Currency")]
-    public class CurrencyData : ItemAssetBase
+    public class CurrencyData : ItemVisualData
     {
         [SerializeField, Group("currency")] private CurrencyType _currencyType;
         [SerializeField, Group("currency")] private int _maxAmount;

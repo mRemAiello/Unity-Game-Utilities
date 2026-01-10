@@ -6,7 +6,7 @@ namespace GameUtils
 {
     [DeclareBoxGroup("item", Title = "Item")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.INVENTORY_NAME + "Item Data")]
-    public class ItemData : ItemAssetBase
+    public class ItemData : ItemVisualData
     {
         [SerializeField, Group("item")] private ItemType _itemType;
         [SerializeField, Group("item")] private Rarity _rarity;
