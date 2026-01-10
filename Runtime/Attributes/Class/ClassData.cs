@@ -19,7 +19,7 @@ namespace GameUtils
         // Attribute list used by runtime class instances.
         public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void PopulateAttributes()
         {
 #if UNITY_EDITOR

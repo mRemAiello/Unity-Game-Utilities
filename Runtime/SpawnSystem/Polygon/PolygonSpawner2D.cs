@@ -83,7 +83,7 @@ namespace GameUtils
             }
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Generate()
         {
             if (!IsSetupValid(out string reason))
@@ -182,7 +182,7 @@ namespace GameUtils
             Debug.Log($"[PolygonSpawner2D] Istanze generate: {placed.Count}. Tentativi: {attempts}.", this);
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void ClearGenerated()
         {
             Transform container = ResolveContainer(false);

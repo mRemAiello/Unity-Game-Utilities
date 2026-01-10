@@ -11,7 +11,7 @@ namespace GameUtils
         //
         [SerializeField] private GameObject[] _items;
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void Refresh()
         {
             if (_items == null)

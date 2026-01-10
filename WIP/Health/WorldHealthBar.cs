@@ -63,7 +63,7 @@ namespace GameUtils
             _fillHealthSlider.value = targetEffect;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         private void OnDamage(DamageInfo damageInfo)
         {
             _currentHP = damageInfo.Amount;

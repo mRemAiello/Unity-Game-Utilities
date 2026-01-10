@@ -27,7 +27,7 @@ namespace GameUtils
         public bool LogEnabled => _logEnabled;
 
         //
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void SetValue(T newValue)
         {
             if (!GameSaveManager.InstanceExists)
@@ -54,7 +54,7 @@ namespace GameUtils
             return _defaultValue;
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void Load()
         {
             if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad(this, _settingName, out T value))

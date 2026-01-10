@@ -41,7 +41,7 @@ namespace GameUtils
             }
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public virtual void SetClass(ClassData classData)
         {
             _classData = classData;

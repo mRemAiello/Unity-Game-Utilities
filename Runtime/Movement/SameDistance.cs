@@ -34,7 +34,7 @@ namespace GameUtils
             }
         }
 
-        [Button]
+        [Button(ButtonSizes.Medium)]
         public void UpdateObjectPositions()
         {
             int i = 0;
