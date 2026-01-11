@@ -6,11 +6,11 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("internal", Title = "Internal")]
-    [DeclareBoxGroup("tags", Title = "Tags")]
+    [DeclareBoxGroup("features", Title = "Features")]
     public abstract class ItemIdentifierData : ScriptableObject, ITaggable
     {
         [SerializeField, Group("internal"), ReadOnly] private string _id = "";
-        [SerializeField, Group("tags")] private List<GameTag> _tags = new();
+        [SerializeField, Group("features")] private List<GameTag> _tags = new();
 
         private void OnValidate()
         {

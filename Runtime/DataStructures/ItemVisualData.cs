@@ -8,7 +8,6 @@ using UnityEngine.AddressableAssets;
 namespace GameUtils
 {
     [DeclareBoxGroup("graphics", Title = "Graphics")]
-    [DeclareBoxGroup("features", Title = "Features")]
     public abstract class ItemVisualData : ItemLocalizedData
     {
         [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
