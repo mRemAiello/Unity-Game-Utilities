@@ -16,9 +16,14 @@ namespace GameUtils
     {
         [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
 
-        // Attribute list used by runtime class instances.
+        /// <summary>
+        /// Gets the attribute list used by runtime class instances.
+        /// </summary>
         public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
 
+        /// <summary>
+        /// Populates the class with any AttributeData assets not already present.
+        /// </summary>
         [Button(ButtonSizes.Medium)]
         public void PopulateAttributes()
         {
