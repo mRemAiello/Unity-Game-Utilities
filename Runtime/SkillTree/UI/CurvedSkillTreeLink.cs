@@ -7,16 +7,10 @@ namespace GameUtils
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(LineRenderer))]
-    public class CurveLineRenderer : MonoBehaviour
+    public class CurvedSkillTreeLink : MonoBehaviour
     {
-        // Control points used to build the curve in order.
         [SerializeField] private Transform[] _controlPoints;
-        // Number of segments between each pair of points.
         [SerializeField] private int _segmentsPerCurve = 12;
-        // When true, the curve will loop back to the start.
-        [SerializeField] private bool _loop;
-        // When true, positions are set in world space.
-        [SerializeField] private bool _useWorldSpace = true;
 
         // Cached reference to the LineRenderer.
         private LineRenderer _lineRenderer;
@@ -31,6 +25,7 @@ namespace GameUtils
         {
             // Clamp segments to avoid invalid values in the inspector.
             _segmentsPerCurve = Mathf.Max(1, _segmentsPerCurve);
+            
             // Refresh line immediately when inspector values change.
             RefreshLine();
         }
@@ -44,10 +39,7 @@ namespace GameUtils
         private void RefreshLine()
         {
             // Lazily fetch the LineRenderer component.
-            if (_lineRenderer == null)
-            {
-                _lineRenderer = GetComponent<LineRenderer>();
-            }
+            _lineRenderer ??= GetComponent<LineRenderer>();
 
             // Early-out if there are not enough control points.
             if (_controlPoints == null || _controlPoints.Length < 2)
@@ -57,11 +49,11 @@ namespace GameUtils
             }
 
             // Configure the LineRenderer settings.
-            _lineRenderer.useWorldSpace = _useWorldSpace;
-            _lineRenderer.loop = _loop;
+            _lineRenderer.useWorldSpace = true;
+            _lineRenderer.loop = false;
 
             // Compute the total number of positions needed.
-            int curveCount = _loop ? _controlPoints.Length : _controlPoints.Length - 1;
+            int curveCount = _controlPoints.Length - 1;
             int totalPositions = (_segmentsPerCurve * curveCount) + 1;
             Vector3[] positions = new Vector3[totalPositions];
 
@@ -77,7 +69,7 @@ namespace GameUtils
             }
 
             // Ensure the last position lands exactly on the final control point.
-            positions[positionIndex] = GetPointPosition(_loop ? 0 : _controlPoints.Length - 1);
+            positions[positionIndex] = GetPointPosition(_controlPoints.Length - 1);
 
             _lineRenderer.positionCount = positions.Length;
             _lineRenderer.SetPositions(positions);
@@ -92,27 +84,16 @@ namespace GameUtils
             Vector3 p3 = GetPointPosition(index + 2);
 
             // Apply the Catmull-Rom spline formula.
-            return 0.5f * ((2f * p1) +
-                (-p0 + p2) * t +
-                (2f * p0 - 5f * p1 + 4f * p2 - p3) * t * t +
-                (-p0 + 3f * p1 - 3f * p2 + p3) * t * t * t);
+            return 0.5f * ((2f * p1) + (-p0 + p2) * t + t * t * (2f * p0 - 5f * p1 + 4f * p2 - p3) + t * t * t * (-p0 + 3f * p1 - 3f * p2 + p3));
         }
 
         private Vector3 GetPointPosition(int index)
         {
             // Handle looping or clamp to valid range when not looping.
-            int safeIndex = _loop
-                ? Mod(index, _controlPoints.Length)
-                : Mathf.Clamp(index, 0, _controlPoints.Length - 1);
+            int safeIndex = Mathf.Clamp(index, 0, _controlPoints.Length - 1);
 
             // Return world or local space position based on configuration.
-            return _useWorldSpace ? _controlPoints[safeIndex].position : _controlPoints[safeIndex].localPosition;
-        }
-
-        private static int Mod(int value, int modulus)
-        {
-            // Custom modulus to keep indices positive.
-            return (value % modulus + modulus) % modulus;
+            return _controlPoints[safeIndex].position;
         }
     }
 }

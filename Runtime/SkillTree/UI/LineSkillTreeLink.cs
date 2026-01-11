@@ -7,14 +7,10 @@ namespace GameUtils
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(LineRenderer))]
-    public class StraightLineRenderer : MonoBehaviour
+    public class LineSkillTreeLink : MonoBehaviour
     {
-        // Transform used as the line start.
         [SerializeField] private Transform _start;
-        // Transform used as the line end.
         [SerializeField] private Transform _end;
-        // When true, positions are set in world space.
-        [SerializeField] private bool _useWorldSpace = true;
 
         // Cached reference to the LineRenderer.
         private LineRenderer _lineRenderer;
@@ -46,7 +42,7 @@ namespace GameUtils
             }
 
             // Ensure the LineRenderer uses the requested space.
-            _lineRenderer.useWorldSpace = _useWorldSpace;
+            _lineRenderer.useWorldSpace = true;
 
             // Hide the line if start or end is missing.
             if (_start == null || _end == null)
@@ -57,8 +53,8 @@ namespace GameUtils
 
             // Set the two positions for a straight line.
             _lineRenderer.positionCount = 2;
-            _lineRenderer.SetPosition(0, _useWorldSpace ? _start.position : _start.localPosition);
-            _lineRenderer.SetPosition(1, _useWorldSpace ? _end.position : _end.localPosition);
+            _lineRenderer.SetPosition(0, _start.position);
+            _lineRenderer.SetPosition(1, _end.position);
         }
     }
 }
