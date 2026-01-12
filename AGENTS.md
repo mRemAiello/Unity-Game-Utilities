@@ -22,6 +22,8 @@ Utility package per Unity 2022.3 (`com.gedemy.gameutils`). Gli script di runtime
 ## Requisiti per l'agente
 - Includi sempre i `<summary>` nelle risposte finali.
 - Commenta sempre il codice che scrivi.
+- Le variabili di classe non vanno commentate.
+- A ogni modifica andrebbe aggiornato il CHANGELOG.
 
 ## Asset e meta
 - Non rimuovere o rinominare file `.meta` manualmente; Unity li gestisce.
