@@ -49,19 +49,20 @@ namespace GameUtils
             foreach (var data in classData.Attributes)
             {
                 // Create a runtime instance for each attribute definition.
-                var runtimeAttribute = CreateRuntimeAttribute(data.Data, data.Value);
+                var runtimeAttribute = CreateRuntimeAttribute(classData, data.Data, data.Value);
                 if (runtimeAttribute != null)
                     _attributes.Add(runtimeAttribute);
             }
         }
 
-        protected virtual RuntimeAttribute CreateRuntimeAttribute(AttributeData data, float value)
+        protected virtual RuntimeAttribute CreateRuntimeAttribute(ClassData classData, AttributeData data, float value)
         {
+            // Pass class data so attribute calculations can consider class context.
             if (data.IsVital)
-                return new RuntimeVital(data, value);
+                return new RuntimeVital(classData, data, value);
 
             // Default to a standard runtime attribute for non-vitals.
-            return new RuntimeAttribute(data, value);
+            return new RuntimeAttribute(classData, data, value);
         }
 
         public void RefreshAttributes()
