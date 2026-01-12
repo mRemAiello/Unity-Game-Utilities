@@ -13,6 +13,7 @@ namespace GameUtils
     public class RuntimeAttribute
     {
         [SerializeField, ReadOnly] private AttributeData _data;
+        [SerializeField, ReadOnly] private ClassData _classData;
         [SerializeField, ReadOnly] private float _baseValue;
         [SerializeField, ReadOnly] private float _currentValue;
         [SerializeField, ReadOnly] private List<Modifier> _modifiers;
@@ -21,6 +22,11 @@ namespace GameUtils
         /// Gets the attribute identifier.
         /// </summary>
         public string ID => _data.ID;
+
+        /// <summary>
+        /// Gets the class data that owns this runtime attribute, when available.
+        /// </summary>
+        public ClassData ClassData => _classData;
 
         /// <summary>
         /// Gets the underlying attribute data.
@@ -55,8 +61,10 @@ namespace GameUtils
         /// <summary>
         /// Creates a runtime attribute with the given data and base value.
         /// </summary>
-        public RuntimeAttribute(AttributeData attributeData, float baseValue)
+        public RuntimeAttribute(ClassData classData, AttributeData attributeData, float baseValue)
         {
+            // Cache class context so data calculations can use it when needed.
+            _classData = classData;
             _data = attributeData;
             _baseValue = baseValue;
             _modifiers = new List<Modifier>();
@@ -193,7 +201,8 @@ namespace GameUtils
         /// </summary>
         protected virtual void RefreshCurrentValue()
         {
-            _currentValue = _data.ComputeCurrentValue(_baseValue, _modifiers);
+            // Forward class data to allow computed values to consider class context.
+            _currentValue = _data.ComputeCurrentValue(_classData, _baseValue, _modifiers);
         }
 
         /// <summary>
