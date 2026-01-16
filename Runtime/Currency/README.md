@@ -1,52 +1,53 @@
-# Gestione della Valuta
+# Currency Management
 
-Questa cartella contiene gli script utili per implementare un semplice sistema di valuta.
+This folder contains the scripts needed to implement a simple currency system.
 
-## Classi principali
+## Core classes
 
 ### `CurrencyData`
-`ScriptableObject` che rappresenta una valuta. Contiene:
-- `CurrencyType` per identificare la categoria (normale, premium, special).
-- `MaxAmount` che indica il quantitativo massimo possedibile.
-- `IsConvertible` abilita la conversione in altre valute.
-- `CurrencyConversions` elenco di `CurrencyConversionRate` con i tassi di cambio.
+`ScriptableObject` that represents a currency. It includes:
+- `CurrencyType` to identify the category (normal, premium, special).
+- `MaxAmount` which defines the maximum amount that can be owned.
+- `IsConvertible` to enable conversions into other currencies.
+- `CurrencyConversions` list of `CurrencyConversionRate` entries with exchange rates.
 
 ### `CurrencyConversionRate`
-Classe serializzabile che definisce i rapporti di cambio:
-- `CurrencyData` destinazione.
-- `ConversionRate` moltiplicatore usato nella conversione.
+Serializable class that defines exchange ratios:
+- Destination `CurrencyData`.
+- `ConversionRate` multiplier used during conversion.
 
 ### `CurrencyType`
-Enum con i tipi di valuta (`Normal`, `Premium`, `Special`).
+Enum with currency types (`Normal`, `Premium`, `Special`).
 
 ### `CurrencyManager`
-Singleton che carica gli asset `CurrencyData` e mantiene i valori tramite `GameSaveManager`.
-Metodi utili:
-- `AddCurrency` aggiunge una quantità.
-- `TryRemoveCurrency` sottrae se l'importo è sufficiente.
-- `TryExchangeCurrency` converte da una valuta a un'altra.
-- `SetCurrencyAmount`, `GetCurrencyAmount` e `HasEnoughCurrency` per gestire e verificare i valori.
+Singleton that loads `CurrencyData` assets and stores values via `GameSaveManager`.
+Useful methods:
+- `AddCurrency` adds an amount.
+- `TryRemoveCurrency` subtracts if there is enough currency.
+- `TryExchangeCurrency` converts from one currency to another.
+- `SetCurrencyAmount`, `GetCurrencyAmount`, and `HasEnoughCurrency` manage and validate values.
 
 ### `Collectable`
-`MonoBehaviour` che, quando raccolto tramite `Collect()`, incrementa la valuta specificata e può eseguire logica aggiuntiva in `OnPostCollect`.
+`MonoBehaviour` that, when collected via `Collect()`, increments the specified currency and can run extra logic in `OnPostCollect`.
+Use the trigger/collision toggles to enable or disable automatic collection via `OnTriggerEnter` or `OnCollisionEnter`.
 
-### `CurrencyChangeEvent` e `CurrencyChangeEventArgs`
-Evento asset che notifica le variazioni di una valuta. Gli argomenti includono la `CurrencyData` interessata e il nuovo importo.
+### `CurrencyChangeEvent` and `CurrencyChangeEventArgs`
+Asset event that notifies currency changes. The arguments include the target `CurrencyData` and the new amount.
 
 ### `CurrencyUITracker`
-Collega gli elementi dell'interfaccia all'evento di cambio valuta mostrando icona e valore corrente. L'icona viene caricata
-in modo asincrono tramite Addressables; al completamento lo sprite viene assegnato e l'`AsyncOperationHandle` rilasciato.
-Se il caricamento fallisce viene utilizzata una sprite di fallback.
+Connects UI elements to the currency change event, showing icon and current value. The icon is loaded asynchronously
+via Addressables; once completed, the sprite is assigned and the `AsyncOperationHandle` released.
+If loading fails, a fallback sprite is used.
 
-## Istruzioni di setup
-1. Crea gli asset `CurrencyData` dal menu **Game Utils/Currency/Currency**.
-2. Inserisci in scena un prefab contenente `CurrencyManager`.
-3. Utilizza oggetti `Collectable` per incrementare le valute.
-4. Collega un `CurrencyUITracker` ai componenti UI per visualizzare i valori correnti.
+## Setup instructions
+1. Create `CurrencyData` assets from **Game Utils/Currency/Currency**.
+2. Add a prefab containing `CurrencyManager` to the scene.
+3. Use `Collectable` objects to increment currencies.
+4. Connect a `CurrencyUITracker` to UI components to display current values.
 
-## Esempi
+## Examples
 
-### Sottoscrizione all'evento
+### Subscribing to the event
 ```cs
 public class CurrencyLogger : MonoBehaviour
 {
@@ -64,14 +65,14 @@ public class CurrencyLogger : MonoBehaviour
 }
 ```
 
-### Modifica della valuta
+### Changing currency values
 ```cs
-// Aggiunge 10 unità
+// Add 10 units
 CurrencyManager.Instance.AddCurrency(goldData, 10);
 
-// Prova a rimuovere 5 unità
+// Try to remove 5 units
 CurrencyManager.Instance.TryRemoveCurrency(goldData, 5);
 
-// Converte 100 unità in gemme
+// Convert 100 units into gems
 CurrencyManager.Instance.TryExchangeCurrency(goldData, gemData, 100);
 ```
