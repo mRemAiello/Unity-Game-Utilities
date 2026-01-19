@@ -1,4 +1,3 @@
-using System;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,9 +9,9 @@ namespace GameUtils
         [SerializeField] private CurrencyData _currencyData;
         [SerializeField] private int _incrementValue;
         [SerializeField] private bool _logEnabled;
-        [SerializeField] private bool _collectOnTriggerEnter = true;
-        [SerializeField] private bool _collectOnCollisionEnter = true;
-        [SerializeField] private bool _collectOnClick = true;
+        [SerializeField] private bool _collectOnTriggerEnter = false;
+        [SerializeField] private bool _collectOnCollisionEnter = false;
+        [SerializeField] private bool _collectOnClick = false;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -32,10 +31,8 @@ namespace GameUtils
 
         private void OnTriggerEnter(Collider other)
         {
-            // 
             if (!_collectOnTriggerEnter)
             {
-                // 
                 return;
             }
 
@@ -45,10 +42,8 @@ namespace GameUtils
 
         private void OnCollisionEnter(Collision collision)
         {
-            // 
             if (!_collectOnCollisionEnter)
             {
-                // 
                 return;
             }
 
@@ -58,10 +53,8 @@ namespace GameUtils
 
         private void OnMouseDown()
         {
-            // 
             if (!_collectOnClick)
             {
-                // 
                 return;
             }
 
@@ -71,10 +64,8 @@ namespace GameUtils
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            // 
             if (!_collectOnClick)
             {
-                // 
                 return;
             }
 
