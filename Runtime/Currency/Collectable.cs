@@ -1,16 +1,18 @@
 using System;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GameUtils
 {
-    public class Collectable : MonoBehaviour, ILoggable
+    public class Collectable : MonoBehaviour, ILoggable, IPointerClickHandler
     {
         [SerializeField] private CurrencyData _currencyData;
         [SerializeField] private int _incrementValue;
         [SerializeField] private bool _logEnabled;
         [SerializeField] private bool _collectOnTriggerEnter = true;
         [SerializeField] private bool _collectOnCollisionEnter = true;
+        [SerializeField] private bool _collectOnClick = true;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -45,6 +47,32 @@ namespace GameUtils
         {
             // 
             if (!_collectOnCollisionEnter)
+            {
+                // 
+                return;
+            }
+
+            // 
+            Collect();
+        }
+
+        private void OnMouseDown()
+        {
+            // 
+            if (!_collectOnClick)
+            {
+                // 
+                return;
+            }
+
+            // 
+            Collect();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // 
+            if (!_collectOnClick)
             {
                 // 
                 return;

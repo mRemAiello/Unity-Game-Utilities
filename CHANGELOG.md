@@ -3,3 +3,4 @@
 - Aggiornati i calcoli degli attributi per includere il contesto della classe nei valori correnti.
 - Aggiunta la gestione opzionale di OnTriggerEnter e OnCollisionEnter per i Collectable.
 - Tradotta in inglese la documentazione della cartella Currency.
+- Aggiunta la gestione opzionale del click (Input System e legacy) per i Collectable.
