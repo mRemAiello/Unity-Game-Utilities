@@ -8,3 +8,4 @@
 - Aggiunta la gestione opzionale del click (Input System e legacy) per i Collectable.
 - Aggiornata la registrazione dei listener degli eventi per mostrare l'oggetto reale e lo script/metodo di origine.
 - Aggiornati i dati dei listener per salvare il riferimento Unity serializzabile del caller e il relativo fallback testuale.
+- Reso esplicito e serializzato il riferimento Unity del caller nelle tuple evento con pulizia dei dati legacy.
