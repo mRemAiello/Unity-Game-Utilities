@@ -102,6 +102,12 @@ namespace GameUtils
         }
 
         [Button(ButtonSizes.Medium)]
+        public void ResetCurrency(CurrencyData currency)
+        {
+            SetCurrencyAmount(currency, 0);
+        }
+
+        [Button(ButtonSizes.Medium)]
         public void ResetCurrencies()
         {
             foreach (var currency in _currencies)
