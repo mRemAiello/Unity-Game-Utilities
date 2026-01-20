@@ -51,8 +51,9 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
-        public void Invoke(T param)
+        public virtual void Invoke(T param)
         {
+            // Gestisce l'invocazione dell'evento con tracciamento opzionale.
             if (LogEnabled)
             {
                 this.Log($"Event invoked: {param}");

@@ -1,4 +1,6 @@
 ## Unreleased
+- Resa virtuale l'invocazione in GameEventAsset e override nei relativi asset parametrizzati.
+- Aggiunta l'invocazione con pulsante agli asset evento scriptable con parametro.
 - Aggiornate le linee guida dell'agente con note su commenti alle variabili di classe e aggiornamento del CHANGELOG.
 - Aggiornati i calcoli degli attributi per includere il contesto della classe nei valori correnti.
 - Aggiunta la gestione opzionale di OnTriggerEnter e OnCollisionEnter per i Collectable.
