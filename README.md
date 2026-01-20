@@ -36,7 +36,7 @@ Principali sottocartelle:
 - [DataStructures](./Runtime/DataStructures): Scriptable Object comuni.
 - [Debug](./Runtime/Debug): utility di debug e logging.
 - [Dictionary](./Runtime/Dictionary): dizionari serializzabili.
-- [Events](./Runtime/Events): implementazione di game events.
+- [Events](./Runtime/Events): implementazione di game events, con asset invocabili via pulsante negli scriptable parametrizzati.
 - [Extensions](./Runtime/Extensions): metodi di estensione vari.
 - [Input](./Runtime/Input): componenti per il sistema input.
 - [Math](./Runtime/Math): funzioni matematiche d'aiuto.
