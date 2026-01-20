@@ -13,6 +13,7 @@ namespace GameUtils
         //
         [SerializeField, PropertyOrder(2), Group("debug"), TableList(AlwaysExpanded = true, HideAddButton = true, HideRemoveButton = true), ReadOnly] 
         private List<EventTuple> _listeners = new();
+        [SerializeField, HideInInspector] private int _listenersDataVersion;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -92,6 +93,13 @@ namespace GameUtils
         private void OnValidate()
         {
             _listeners ??= new List<EventTuple>();
+
+            // Ripulisce una volta i dati legacy dei listener dopo il cambio del campo serializzato.
+            if (_listenersDataVersion == 0)
+            {
+                _listeners.Clear();
+                _listenersDataVersion = 1;
+            }
         }
     }
 }
