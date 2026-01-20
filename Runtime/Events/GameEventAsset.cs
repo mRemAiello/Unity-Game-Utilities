@@ -22,19 +22,20 @@ namespace GameUtils
                 return;
             }
 
-            // 
-            MutableListeners.Add(BuildListenerTuple(call.Target, call.Method.Name));
+            // Registra il listener con riferimento al caller del target.
+            MutableListeners.Add(BuildListenerTuple(call.Target));
             _onInvoked.AddListener(call);
         }
 
         public void RemoveListener(UnityAction<T> call)
         {
-            // Prepara il riferimento Unity per il confronto diretto del caller.
-            var callerReference = call.Target as Object;
+            // Recupera i riferimenti del caller per individuare la tupla corretta.
+            var callerGameObject = GetListenerGameObject(call.Target);
+            var callerScriptable = GetListenerScriptableObject(call.Target);
 
             foreach (var listener in Listeners)
             {
-                if (listener.Caller == callerReference && listener.MethodName.Equals(call.Method.Name))
+                if (listener.CallerGameObject == callerGameObject && listener.CallerScriptable == callerScriptable)
                 {
                     MutableListeners.Remove(listener);
                     break;

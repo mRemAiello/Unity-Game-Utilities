@@ -1,4 +1,5 @@
 ## Unreleased
+- Aggiornate le tuple evento per distinguere GameObject e ScriptableObject con visibilità condizionale in inspector.
 - Resa virtuale l'invocazione in GameEventAsset e override nei relativi asset parametrizzati.
 - Aggiunta l'invocazione con pulsante agli asset evento scriptable con parametro.
 - Aggiornate le linee guida dell'agente con note su commenti alle variabili di classe e aggiornamento del CHANGELOG.

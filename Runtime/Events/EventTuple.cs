@@ -1,4 +1,5 @@
 using System;
+using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
@@ -6,20 +7,27 @@ namespace GameUtils
     [Serializable]
     public class EventTuple
     {
-        [SerializeField] private UnityEngine.Object _caller;
-        public string CallerDisplay;
-        public string MethodName;
+        [SerializeField, ShowIf(nameof(HasCallerGameObject))] private GameObject _callerGameObject;
+        [SerializeField, ShowIf(nameof(HasCallerScriptable))] private ScriptableObject _callerScriptable;
 
-        // Espone il riferimento Unity del caller memorizzato nella tupla.
-        public UnityEngine.Object Caller => _caller;
+        // Indica se il caller associato è un GameObject.
+        private bool HasCallerGameObject => _callerGameObject != null;
 
-        //
-        public EventTuple(UnityEngine.Object caller, string callerDisplay, string methodName)
+        // Indica se il caller associato è una ScriptableObject.
+        private bool HasCallerScriptable => _callerScriptable != null;
+
+        // Espone il GameObject associato alla tupla evento.
+        public GameObject CallerGameObject => _callerGameObject;
+
+        // Espone la ScriptableObject associata alla tupla evento.
+        public ScriptableObject CallerScriptable => _callerScriptable;
+
+        // Crea una tupla evento con riferimento a GameObject o ScriptableObject.
+        public EventTuple(GameObject callerGameObject, ScriptableObject callerScriptable)
         {
-            // Memorizza il riferimento serializzabile al caller con un fallback testuale e il nome metodo.
-            _caller = caller;
-            CallerDisplay = callerDisplay;
-            MethodName = methodName;
+            // Memorizza i riferimenti serializzabili al caller.
+            _callerGameObject = callerGameObject;
+            _callerScriptable = callerScriptable;
         }
     }
 }

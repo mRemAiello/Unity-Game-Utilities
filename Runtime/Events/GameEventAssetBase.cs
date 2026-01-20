@@ -20,73 +20,45 @@ namespace GameUtils
         public IReadOnlyList<EventTuple> Listeners => _listeners;
         protected List<EventTuple> MutableListeners => _listeners;
 
-        // Costruisce i dati del listener con il nome dell'oggetto reale e il dettaglio script/metodo.
-        protected EventTuple BuildListenerTuple(object target, string methodName)
+        // Costruisce i dati del listener con riferimento a GameObject o ScriptableObject.
+        protected EventTuple BuildListenerTuple(object target)
         {
-            // Recupera il riferimento Unity reale (se disponibile) insieme al fallback testuale per il debug.
-            var callerReference = GetListenerObjectReference(target);
-            var callerDisplay = GetListenerObjectName(target);
+            // Recupera eventuali riferimenti al GameObject o alla ScriptableObject del listener.
+            var callerGameObject = GetListenerGameObject(target);
+            var callerScriptable = GetListenerScriptableObject(target);
 
-            // Compone il nome dello script e della funzione in un'unica stringa leggibile.
-            var scriptName = GetListenerScriptName(target);
-            var methodLabel = $"{scriptName} ({methodName})";
-
-            // Ritorna la tupla con le informazioni formattate.
-            return new EventTuple(callerReference, callerDisplay, methodLabel);
+            // Ritorna la tupla con i riferimenti al caller.
+            return new EventTuple(callerGameObject, callerScriptable);
         }
 
-        // Estrae il riferimento Unity serializzabile del caller quando possibile.
-        private static Object GetListenerObjectReference(object target)
+        // Estrae il GameObject associato al target del listener, se presente.
+        protected static GameObject GetListenerGameObject(object target)
         {
-            // Restituisce direttamente il riferimento Unity se il target lo implementa.
-            if (target is Object unityObject)
+            // Ritorna il GameObject del componente, se il listener è un Component.
+            if (target is Component component)
             {
-                return unityObject;
+                return component.gameObject;
+            }
+
+            // Ritorna il GameObject direttamente se il listener è un GameObject.
+            if (target is GameObject gameObject)
+            {
+                return gameObject;
             }
 
             return null;
         }
 
-        // Estrae il nome dell'oggetto reale associato al target del listener.
-        private static string GetListenerObjectName(object target)
+        // Estrae la ScriptableObject associata al target del listener, se presente.
+        protected static ScriptableObject GetListenerScriptableObject(object target)
         {
-            if (target == null)
-            {
-                return "Unknown";
-            }
-
-            if (target is Component component)
-            {
-                return component.gameObject.name;
-            }
-
-            if (target is GameObject gameObject)
-            {
-                return gameObject.name;
-            }
-
+            // Ritorna la ScriptableObject se il listener è un asset ScriptableObject.
             if (target is ScriptableObject scriptableObject)
             {
-                return scriptableObject.name;
+                return scriptableObject;
             }
 
-            if (target is Object unityObject)
-            {
-                return unityObject.name;
-            }
-
-            return target.ToString();
-        }
-
-        // Estrae il nome dello script associato al target del listener.
-        private static string GetListenerScriptName(object target)
-        {
-            if (target == null)
-            {
-                return "Static";
-            }
-
-            return target.GetType().Name;
+            return null;
         }
 
         //

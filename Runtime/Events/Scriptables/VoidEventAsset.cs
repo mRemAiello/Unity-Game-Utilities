@@ -15,19 +15,20 @@ namespace GameUtils
             if (call == null)
                 return;
 
-            // Registra il listener con riferimento Unity e nome metodo formattato.
-            MutableListeners.Add(BuildListenerTuple(call.Target, call.Method.Name));
+            // Registra il listener con riferimento al caller del target.
+            MutableListeners.Add(BuildListenerTuple(call.Target));
             _onInvoked.AddListener(call);
         }
 
         public void RemoveListener(UnityAction call)
         {
-            // Confronta il riferimento Unity del caller per rimuovere il listener corretto.
-            var callerReference = call.Target as Object;
+            // Recupera i riferimenti del caller per individuare la tupla corretta.
+            var callerGameObject = GetListenerGameObject(call.Target);
+            var callerScriptable = GetListenerScriptableObject(call.Target);
 
             foreach (var listener in Listeners)
             {
-                if (listener.Caller == callerReference && listener.MethodName.Equals(call.Method.Name))
+                if (listener.CallerGameObject == callerGameObject && listener.CallerScriptable == callerScriptable)
                 {
                     MutableListeners.Remove(listener);
                     break;
