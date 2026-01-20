@@ -19,6 +19,62 @@ namespace GameUtils
         public IReadOnlyList<EventTuple> Listeners => _listeners;
         protected List<EventTuple> MutableListeners => _listeners;
 
+        // Costruisce i dati del listener con il nome dell'oggetto reale e il dettaglio script/metodo.
+        protected EventTuple BuildListenerTuple(object target, string methodName)
+        {
+            // Recupera il nome dell'oggetto reale che ha registrato il listener.
+            var objectName = GetListenerObjectName(target);
+
+            // Compone il nome dello script e della funzione in un'unica stringa leggibile.
+            var scriptName = GetListenerScriptName(target);
+            var methodLabel = $"{scriptName} ({methodName})";
+
+            // Ritorna la tupla con le informazioni formattate.
+            return new EventTuple(objectName, methodLabel);
+        }
+
+        // Estrae il nome dell'oggetto reale associato al target del listener.
+        private static string GetListenerObjectName(object target)
+        {
+            if (target == null)
+            {
+                return "Unknown";
+            }
+
+            if (target is Component component)
+            {
+                return component.gameObject.name;
+            }
+
+            if (target is GameObject gameObject)
+            {
+                return gameObject.name;
+            }
+
+            if (target is ScriptableObject scriptableObject)
+            {
+                return scriptableObject.name;
+            }
+
+            if (target is Object unityObject)
+            {
+                return unityObject.name;
+            }
+
+            return target.ToString();
+        }
+
+        // Estrae il nome dello script associato al target del listener.
+        private static string GetListenerScriptName(object target)
+        {
+            if (target == null)
+            {
+                return "Static";
+            }
+
+            return target.GetType().Name;
+        }
+
         //
         private void OnValidate()
         {

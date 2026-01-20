@@ -23,15 +23,18 @@ namespace GameUtils
             }
 
             // 
-            MutableListeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
+            MutableListeners.Add(BuildListenerTuple(call.Target, call.Method.Name));
             _onInvoked.AddListener(call);
         }
 
         public void RemoveListener(UnityAction<T> call)
         {
+            // Prepara i dati di confronto con lo stesso formato usato in fase di registrazione.
+            var listenerTuple = BuildListenerTuple(call.Target, call.Method.Name);
+
             foreach (var listener in Listeners)
             {
-                if (listener.EventData.Equals(call.Target.ToString()) && listener.EventName.Equals(call.Method.Name))
+                if (listener.EventData.Equals(listenerTuple.EventData) && listener.EventName.Equals(listenerTuple.EventName))
                 {
                     MutableListeners.Remove(listener);
                     break;
