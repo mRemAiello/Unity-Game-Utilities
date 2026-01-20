@@ -4,12 +4,12 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    public abstract class GameEventAsset<T> : GameEventBaseAsset
+    public abstract class GameEventAsset<T> : GameEventAssetBase
     {
-        [SerializeField, PropertyOrder(1), ReadOnly] private T _currentValue;
+        [SerializeField, Group("debug"), PropertyOrder(1), ReadOnly] private T _currentValue;
 
         // private readonly
-        private UnityEvent<T> _onInvoked;
+        protected UnityEvent<T> _onInvoked;
 
         // public
         public T CurrentValue => _currentValue;
@@ -24,8 +24,6 @@ namespace GameUtils
 
             // 
             MutableListeners.Add(new EventTuple(call.Target.ToString(), call.Method.Name));
-
-            //
             _onInvoked.AddListener(call);
         }
 
@@ -33,7 +31,7 @@ namespace GameUtils
         {
             foreach (var listener in Listeners)
             {
-                if (listener.Item1.Equals(call.Target.ToString()) && listener.Item2.Equals(call.Method.Name))
+                if (listener.EventData.Equals(call.Target.ToString()) && listener.EventName.Equals(call.Method.Name))
                 {
                     MutableListeners.Remove(listener);
                     break;
@@ -50,7 +48,6 @@ namespace GameUtils
             _onInvoked.RemoveAllListeners();
         }
 
-        [Button(ButtonSizes.Medium)]
         public void Invoke(T param)
         {
             if (LogEnabled)

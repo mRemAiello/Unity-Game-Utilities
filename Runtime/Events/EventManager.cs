@@ -1,24 +1,26 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [DefaultExecutionOrder(-50)]
-    public class EventManager : Singleton<EventManager>, ILoggable
+    [DefaultExecutionOrder(-100)]
+    public class GameEventDataManager //: //GenericDataManager<GameEventDataManager, GameEventAssetBase>, ILoggable
     {
         [SerializeField] private bool _logEnabled = true;
-        [SerializeField] private List<EventCollectionData> _eventDatabase;
 
         //
         public bool LogEnabled => _logEnabled;
 
+        /*
+        [SerializeField] private List<EventCollectionData> _eventDatabase;
+
+
+
         //
-        public virtual GameEventBaseAsset GetEventBaseAssetByName(string eventName)
+        public virtual GameEventAssetBase GetEventBaseAssetByName(string eventName)
         {
             foreach (var database in _eventDatabase)
             {
-                if (database.EventAssets.TryGetValue(eventName, out GameEventBaseAsset baseEvent))
+                if (database.EventAssets.TryGetValue(eventName, out GameEventAssetBase baseEvent))
                 {
                     return baseEvent;
                 }
@@ -51,6 +53,6 @@ namespace GameUtils
         public virtual void InvokeEventByName<T>(string eventName, T param)
         {
             GetEventAssetByName<T>(eventName)?.Invoke(param);
-        }
+        }*/
     }
 }
