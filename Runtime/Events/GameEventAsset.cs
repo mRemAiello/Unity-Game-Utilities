@@ -29,12 +29,12 @@ namespace GameUtils
 
         public void RemoveListener(UnityAction<T> call)
         {
-            // Prepara i dati di confronto con lo stesso formato usato in fase di registrazione.
-            var listenerTuple = BuildListenerTuple(call.Target, call.Method.Name);
+            // Prepara il riferimento Unity per il confronto diretto del caller.
+            var callerReference = call.Target as Object;
 
             foreach (var listener in Listeners)
             {
-                if (listener.EventData.Equals(listenerTuple.EventData) && listener.EventName.Equals(listenerTuple.EventName))
+                if (listener.Caller == callerReference && listener.MethodName.Equals(call.Method.Name))
                 {
                     MutableListeners.Remove(listener);
                     break;

@@ -22,15 +22,28 @@ namespace GameUtils
         // Costruisce i dati del listener con il nome dell'oggetto reale e il dettaglio script/metodo.
         protected EventTuple BuildListenerTuple(object target, string methodName)
         {
-            // Recupera il nome dell'oggetto reale che ha registrato il listener.
-            var objectName = GetListenerObjectName(target);
+            // Recupera il riferimento Unity reale (se disponibile) insieme al fallback testuale per il debug.
+            var callerReference = GetListenerObjectReference(target);
+            var callerDisplay = GetListenerObjectName(target);
 
             // Compone il nome dello script e della funzione in un'unica stringa leggibile.
             var scriptName = GetListenerScriptName(target);
             var methodLabel = $"{scriptName} ({methodName})";
 
             // Ritorna la tupla con le informazioni formattate.
-            return new EventTuple(objectName, methodLabel);
+            return new EventTuple(callerReference, callerDisplay, methodLabel);
+        }
+
+        // Estrae il riferimento Unity serializzabile del caller quando possibile.
+        private static Object GetListenerObjectReference(object target)
+        {
+            // Restituisce direttamente il riferimento Unity se il target lo implementa.
+            if (target is Object unityObject)
+            {
+                return unityObject;
+            }
+
+            return null;
         }
 
         // Estrae il nome dell'oggetto reale associato al target del listener.

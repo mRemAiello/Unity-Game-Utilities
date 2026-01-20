@@ -1,18 +1,22 @@
 using System;
+using UnityEngine;
 
 namespace GameUtils
 {
     [Serializable]
     public class EventTuple
     {
-        public string EventName;
-        public string EventData;
+        public Object Caller;
+        public string CallerDisplay;
+        public string MethodName;
 
         //
-        public EventTuple(string firstData, string secondData)
+        public EventTuple(Object caller, string callerDisplay, string methodName)
         {
-            EventName = firstData;
-            EventData = secondData;
+            // Memorizza il riferimento serializzabile al caller con un fallback testuale e il nome metodo.
+            Caller = caller;
+            CallerDisplay = callerDisplay;
+            MethodName = methodName;
         }
     }
 }
