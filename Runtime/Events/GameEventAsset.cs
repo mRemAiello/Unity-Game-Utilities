@@ -1,65 +1,64 @@
+using System;
+using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameUtils
 {
-    public abstract class GameEventAsset<T> : GameEventAssetBase
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("log", Title = "Log")]
+    public abstract class GameEventAsset<T> : ScriptableObject, ILoggable
     {
-        [SerializeField, Group("debug"), PropertyOrder(1), ReadOnly] private T _currentValue;
+        [SerializeField, Group("log")] private bool _logEnabled = false;
+        [SerializeField, Group("debug"), ReadOnly] private T _currentValue;
+        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<EventTuple> _runtimeListeners = new();
 
-        // private readonly
-        protected UnityEvent<T> _onInvoked;
+        //
+        protected Action<T> _onInvoked;
 
-        // public
+        //
+        public bool LogEnabled => _logEnabled;
         public T CurrentValue => _currentValue;
 
         //
-        public void AddListener(UnityAction<T> call)
+        public void AddListener(Action<T> action)
         {
-            if (call == null)
-            {
+            if (action == null)
                 return;
-            }
 
-            // Registra il listener con riferimento al caller del target.
-            MutableListeners.Add(BuildListenerTuple(call.Target));
-            _onInvoked.AddListener(call);
-        }
-
-        public void RemoveListener(UnityAction<T> call)
-        {
-            // Recupera i riferimenti del caller per individuare la tupla corretta.
-            var callerGameObject = GetListenerGameObject(call.Target);
-            var callerScriptable = GetListenerScriptableObject(call.Target);
-
-            foreach (var listener in Listeners)
-            {
-                if (listener.CallerGameObject == callerGameObject && listener.CallerScriptable == callerScriptable)
-                {
-                    MutableListeners.Remove(listener);
-                    break;
-                }
-            }
-            
             //
-            _onInvoked.RemoveListener(call);
+            _runtimeListeners.Add(new EventTuple
+            {
+                Caller = action.Target != null ? action.Target.ToString() : "Static",
+                MethodName = action.Method.Name,
+                ClassName = action.Method.DeclaringType?.Name
+            });
+
+            //
+            _onInvoked += action;
         }
 
+        public void RemoveListener(Action<T> action)
+        {
+            // Deletes the listener and its reference from the runtime listeners list.
+            _runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
+
+            //
+            _onInvoked -= action;
+        }
+
+        [Button(ButtonSizes.Medium)]
         public void RemoveAllListeners()
         {
-            MutableListeners.Clear();
-            _onInvoked.RemoveAllListeners();
+            _runtimeListeners.Clear();
+            _onInvoked = null;
         }
 
         public virtual void Invoke(T param)
         {
             // Gestisce l'invocazione dell'evento con tracciamento opzionale.
-            if (LogEnabled)
-            {
-                this.Log($"Event invoked: {param}");
-            }              
-            
+            this.Log($"[GameEventAsset<{typeof(T).Name}>] Invoked with param: {param}", this);
+
             //
             _currentValue = param;
             _onInvoked?.Invoke(param);
