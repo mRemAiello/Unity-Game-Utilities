@@ -1,53 +1,65 @@
+using System;
+using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("log", Title = "Log")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.EVENT_NAME + "Void", order = 99)]
-    public class VoidEventAsset : GameEventAssetBase
+    public class VoidEventAsset : ScriptableObject, ILoggable
     {
-        // private
-        protected UnityEvent _onInvoked;
+        [SerializeField, Group("log")] private bool _logEnabled = false;
+        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<EventTuple> _runtimeListeners = new();
 
-        public void AddListener(UnityAction call)
+        // private
+        protected Action _onInvoked;
+
+        //
+        public bool LogEnabled => _logEnabled;
+
+        //
+        public void AddListener(Action action)
         {
-            if (call == null)
+            if (action == null)
                 return;
 
-            // Registra il listener con riferimento Unity e nome metodo formattato.
-            MutableListeners.Add(BuildListenerTuple(call.Target, call.Method.Name));
-            _onInvoked.AddListener(call);
-        }
-
-        public void RemoveListener(UnityAction call)
-        {
-            // Confronta il riferimento Unity del caller per rimuovere il listener corretto.
-            var callerReference = call.Target as Object;
-
-            foreach (var listener in Listeners)
+            //
+            _runtimeListeners.Add(new EventTuple
             {
-                if (listener.Caller == callerReference && listener.MethodName.Equals(call.Method.Name))
-                {
-                    MutableListeners.Remove(listener);
-                    break;
-                }
-            }
+                Caller = action.Target != null ? action.Target.ToString() : "Static",
+                MethodName = action.Method.Name,
+                ClassName = action.Method.DeclaringType?.Name
+            });
 
             //
-            _onInvoked.RemoveListener(call);
+            _onInvoked += action;
         }
 
+        public void RemoveListener(Action action)
+        {
+            // Deletes the listener and its reference from the runtime listeners list.
+            _runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
+
+            //
+            _onInvoked -= action;
+        }
+
+        [Button(ButtonSizes.Medium)]
         public void RemoveAllListeners()
         {
-            MutableListeners.Clear();
-            _onInvoked.RemoveAllListeners();
+            _runtimeListeners.Clear();
+            _onInvoked = null;
         }
 
         [Button(ButtonSizes.Medium)]
         public void Invoke()
         {
-            this.Log($"{name} event invoked", this);
+            // Gestisce l'invocazione dell'evento con tracciamento opzionale.
+            this.Log($"[VoidEventAsset] Invoked", this);
+
+            //
             _onInvoked?.Invoke();
         }
     }
