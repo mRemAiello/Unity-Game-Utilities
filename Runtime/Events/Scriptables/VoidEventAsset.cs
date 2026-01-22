@@ -5,19 +5,11 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("log", Title = "Log")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.EVENT_NAME + "Void", order = 99)]
-    public class VoidEventAsset : ScriptableObject, ILoggable
+    public class VoidEventAsset : GameEventAssetBase
     {
-        [SerializeField, Group("log")] private bool _logEnabled = false;
-        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<EventTuple> _runtimeListeners = new();
-
         // private
         protected Action _onInvoked;
-
-        //
-        public bool LogEnabled => _logEnabled;
 
         //
         public void AddListener(Action action)

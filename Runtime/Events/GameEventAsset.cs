@@ -5,22 +5,26 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("log", Title = "Log")]
-    public abstract class GameEventAsset<T> : ScriptableObject, ILoggable
+    public abstract class GameEventAsset<T> : GameEventAssetBase
     {
-        [SerializeField, Group("log")] private bool _logEnabled = false;
-        [SerializeField, Group("debug"), ReadOnly] private T _currentValue;
-        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<EventTuple> _runtimeListeners = new();
+        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<T> _callHistory;
 
         //
+        protected T _currentValue;
         protected Action<T> _onInvoked;
 
         //
-        public bool LogEnabled => _logEnabled;
         public T CurrentValue => _currentValue;
 
         //
+        public override void ResetData()
+        {
+            base.ResetData();
+
+            //
+            _callHistory = new List<T>();
+        }
+
         public void AddListener(Action<T> action)
         {
             if (action == null)
@@ -30,8 +34,8 @@ namespace GameUtils
             _runtimeListeners.Add(new EventTuple
             {
                 Caller = action.Target != null ? action.Target.ToString() : "Static",
-                MethodName = action.Method.Name,
-                ClassName = action.Method.DeclaringType?.Name
+                ClassName = action.Method.DeclaringType?.Name,
+                MethodName = action.Method.Name
             });
 
             //
@@ -60,6 +64,7 @@ namespace GameUtils
             this.Log($"[GameEventAsset<{typeof(T).Name}>] Invoked with param: {param}", this);
 
             //
+            _callHistory.Add(param);
             _currentValue = param;
             _onInvoked?.Invoke(param);
         }

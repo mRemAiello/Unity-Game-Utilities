@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TriInspector;
 using UnityEditor;
 using UnityEngine;
@@ -6,12 +5,11 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("internal", Title = "Internal")]
-    [DeclareBoxGroup("features", Title = "Features")]
-    public abstract class ItemIdentifierData : ScriptableObject, ITaggable
+    public abstract class ItemIdentifierData : ScriptableObject
     {
         [SerializeField, Group("internal"), ReadOnly] private string _id = "";
-        [SerializeField, Group("features")] private List<GameTag> _tags = new();
 
+        //
         private void OnValidate()
         {
             if (string.IsNullOrEmpty(_id))
@@ -60,6 +58,5 @@ namespace GameUtils
 
         // Getters
         public string ID => _id;
-        public IReadOnlyList<GameTag> Tags => _tags;
     }
 }
