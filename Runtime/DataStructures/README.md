@@ -1,34 +1,36 @@
 # DataStructures
 
-Questa cartella contiene le **ScriptableObject** di base usate per descrivere dati di oggetti (item) nei progetti Unity.
+This folder contains the base **ScriptableObject** data structures used to describe item data in Unity projects.
 
 ## ItemIdentifierData
-`ItemIdentifierData` è una classe astratta che estende `ScriptableObject` e implementa `ITaggable`. Gestisce:
-- **ID** univoco generato automaticamente (tramite `GUID.Generate()` in `OnValidate`) con un pulsante di rigenerazione.
-- **Tags** tramite una lista di `GameTag`.
+`ItemIdentifierData` is an abstract `ScriptableObject` that manages a unique ID:
+- **ID** is auto-generated through `GUID.Generate()` in `OnValidate` and can be regenerated from the inspector button.
+- Equality is based on the ID value.
 
-L'uguaglianza tra istanze è basata sul confronto dell'ID.
+## ItemTagsData
+`ItemTagsData` extends `ItemIdentifierData` and implements `ITaggable` by exposing:
+- **Tags** stored in a `List<GameTag>` (read-only via `IReadOnlyList`).
 
 ## ItemLocalizedData
-`ItemLocalizedData` estende `ItemIdentifierData` aggiungendo campi dedicati alla localizzazione:
-- **Internal Name**: stringa utilizzata internamente.
-- **Name** e **Description**: `LocalizedString` che recuperano il testo localizzato tramite Unity Localization.
+`ItemLocalizedData` extends `ItemTagsData` and adds localization fields:
+- **Internal Name**: internal string identifier.
+- **Name** and **Description**: `LocalizedString` values resolved through Unity Localization.
 
 ## ItemVisualData
-`ItemVisualData` estende `ItemLocalizedData` e gestisce gli aspetti grafici e le feature di un item:
-- **AssetReferenceIcon**: riferimento `Addressables` a una sprite.
-- **Icon**: `Task<Sprite>` ottenuto tramite `AssetLoader.LoadAssetAsync`.
-- **ItemColor**: colore associato all'item.
-- **ItemFeatureData**: lista serializzata tramite `SerializeReference`, con accesso tipizzato via `TryGetFeature<TFeature>`.
+`ItemVisualData` extends `ItemLocalizedData` and manages visual data and features:
+- **AssetReferenceIcon**: Addressables reference to the item sprite.
+- **Icon**: `Task<Sprite>` loaded via `AssetLoader.LoadAssetAsync`.
+- **ItemColor**: color associated with the item.
+- **ItemFeatureData**: serialized list (using `SerializeReference`) accessible via `TryGetFeature<TFeature>`.
 
 ## ItemFeatureData
-Classe astratta serializzabile per descrivere dati aggiuntivi di un item. È pensata per essere estesa da feature specifiche e inserita in `ItemVisualData`.
+Serializable abstract base class for additional item feature data. Extend it with custom feature types and place them inside `ItemVisualData`.
 
 ## ItemAssetManager
-`ItemAssetManager<TManager, TAsset>` è una classe astratta che estende `GenericDataManager` e fornisce una ricerca veloce per **Internal Name** sugli asset che derivano da `ItemVisualData`.
+`ItemAssetManager<TManager, TAsset>` is an abstract manager that extends `GenericDataManager` and provides fast lookups by **Internal Name** for assets derived from `ItemVisualData`.
 
-Metodi principali:
-- `bool TrySearchByInternalName(string internalName, out TAsset result)` – restituisce l'asset se l'internal name esiste.
-- `TAsset SearchByInternalName(string internalName)` – come sopra, ma logga un errore se l'asset non viene trovato.
+Main methods:
+- `bool TrySearchByInternalName(string internalName, out TAsset result)` – returns the asset if the internal name exists.
+- `TAsset SearchByInternalName(string internalName)` – same as above, but logs an error when missing.
 
-L'istanza del manager carica automaticamente tutti gli asset dal percorso configurato e costruisce il dizionario in `OnPostAwake`.
+The manager instance automatically loads all assets from the configured path and builds the lookup dictionary in `OnPostAwake`.
