@@ -1,4 +1,5 @@
 ## Unreleased
+- Tradotto in inglese il README con dettagli aggiornati sulla cartella Events e sui suoi asset evento.
 - Aggiornate le tuple evento per distinguere GameObject e ScriptableObject con visibilità condizionale in inspector.
 - Resa virtuale l'invocazione in GameEventAsset e override nei relativi asset parametrizzati.
 - Aggiunta l'invocazione con pulsante agli asset evento scriptable con parametro.
