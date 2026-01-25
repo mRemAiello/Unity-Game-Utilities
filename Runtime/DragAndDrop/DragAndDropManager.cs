@@ -7,52 +7,41 @@ namespace GameUtils
     /// <summary>
     /// Drag and Drop manager.
     /// </summary>
-    [DeclareBoxGroup("debug")]
-    [DeclareBoxGroup("references")]
-    public class DragAndDropManager : Singleton<DragAndDropManager>//, ILoggable
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("references", Title = "References")]
+    public class DragAndDropManager : Singleton<DragAndDropManager>, ILoggable
     {
-        /*[SerializeField, Group("debug")] private bool _logEnabled = false;
-
-        // Layer of the objects to be detected.
         [SerializeField] private LayerMask _raycastMask;
-
         [SerializeField, Range(0.1f, 2.0f)] private float dragSpeed = 1.0f;
-
-        // Height at which we want the card to be in a drag operation.
         [SerializeField, Range(0.0f, 10.0f)] private float height = 1.0f;
+        [SerializeField] private Vector2 _cardSize;
 
-        [SerializeField] private Vector2 cardSize;
-
-        // How many impacts of the beam we want to obtain.
-        private const int HitsCount = 5;
-
-        // Object to which we are doing a drag operation
-        // or null if no drag operation currently exists.
-        private IDraggable currentDrag;
-
-        // IDrag objects that the mouse passes over.
-        private IDraggable possibleDrag;
-
-        // To know the position of the drag object.
-        private Transform currentDragTransform;
-
-        // Information on the impacts of shooting a ray.
-        private readonly RaycastHit[] raycastHits = new RaycastHit[HitsCount];
-
-        // Information on impacts from the corners of a card.
-        private readonly RaycastHit[] cardHits = new RaycastHit[4];
-
-        // Ray created from the camera to the projection of the mouse
-        // coordinates on the scene.  
-        private Ray mouseRay;
-
-        // To calculate the mouse offset (in world-space).
-        private Vector3 oldMouseWorldPosition;
+        //
+        [SerializeField, Group("debug")] private bool _logEnabled = false;
+        [SerializeField, Group("debug")] private int _hitsCount = 5;
+        [SerializeField, Group("debug")] private IDraggable _currentDrag;
+        [SerializeField, Group("debug")] private IDraggable possibleDrag;
+        [SerializeField, Group("debug")] private Transform currentDragTransform;
+        [SerializeField, Group("debug")] private RaycastHit[] raycastHits;
+        [SerializeField, Group("debug")] private RaycastHit[] cardHits;
+        [SerializeField, Group("debug")] private Ray mouseRay;
+        [SerializeField, Group("debug")] private Vector3 oldMouseWorldPosition;
 
         //
         public bool LogEnabled => _logEnabled;
 
         //
+        private void OnEnable()
+        {
+            raycastHits = new RaycastHit[_hitsCount];
+            cardHits = new RaycastHit[4];
+            possibleDrag = null;
+            currentDragTransform = null;
+
+            //
+            ResetCursor();
+        }
+
         private Vector3 MousePositionToWorldPoint()
         {
             Vector3 mousePosition = Input.mousePosition;
@@ -61,8 +50,6 @@ namespace GameUtils
 
             return Camera.main.ScreenToWorldPoint(mousePosition);
         }
-
-        private void ResetCursor() => Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
         /// <summary>
         /// Returns the Transfrom of the object closest to the origin
@@ -77,7 +64,7 @@ namespace GameUtils
             if (Physics.RaycastNonAlloc(mouseRay, raycastHits, Camera.main.farClipPlane, _raycastMask) > 0)
             {
                 // We order the impacts according to distance.
-                System.Array.Sort(raycastHits, (x, y) => x.distance.CompareTo(y.distance));
+                Array.Sort(raycastHits, (x, y) => x.distance.CompareTo(y.distance));
 
                 // We are only interested in the first one.
                 hit = raycastHits[0].transform;
@@ -94,7 +81,7 @@ namespace GameUtils
 
             // The four corners of the card.
             Vector3 cardPosition = currentDragTransform.position;
-            Vector2 halfCardSize = cardSize * 0.5f;
+            Vector2 halfCardSize = _cardSize * 0.5f;
             Vector3[] cardConner =
             {
                 new(cardPosition.x + halfCardSize.x, cardPosition.y, cardPosition.z - halfCardSize.y),
@@ -135,16 +122,15 @@ namespace GameUtils
 
         /// <summary>Detects an IDrag object under the mouse pointer.</summary>
         /// <returns>IDrag or null.</returns>
-        public IDrag DetectDraggable()
+        public IDraggable DetectDraggable()
         {
-            IDrag draggable = null;
-
             mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Transform hit = MouseRaycast();
+            IDraggable draggable = null;
             if (hit != null)
             {
-                draggable = hit.GetComponent<IDrag>();
+                draggable = hit.GetComponent<IDraggable>();
                 if (draggable is { IsDraggable: true })
                     currentDragTransform = hit;
                 else
@@ -156,9 +142,9 @@ namespace GameUtils
 
         private void Update()
         {
-            if (currentDrag == null)
+            if (_currentDrag == null)
             {
-                IDrag draggable = DetectDraggable();
+                IDraggable draggable = DetectDraggable();
 
                 // Left mouse button pressed?
                 if (Input.GetMouseButtonDown(0) == true)
@@ -167,7 +153,7 @@ namespace GameUtils
                     if (draggable != null)
                     {
                         // We already have an object to start the drag operation!
-                        currentDrag = draggable;
+                        _currentDrag = draggable;
                         //currentDragTransform = hit;
                         oldMouseWorldPosition = MousePositionToWorldPoint();
 
@@ -178,8 +164,8 @@ namespace GameUtils
                         Cursor.lockState = CursorLockMode.Confined;
 
                         // The drag operation begins.
-                        currentDrag.Dragging = true;
-                        currentDrag.OnBeginDrag(new Vector3(raycastHits[0].point.x, raycastHits[0].point.y + height, raycastHits[0].point.z));
+                        _currentDrag.Dragging = true;
+                        _currentDrag.OnBeginDrag(new Vector3(raycastHits[0].point.x, raycastHits[0].point.y + height, raycastHits[0].point.z));
                     }
                 }
                 else
@@ -217,7 +203,7 @@ namespace GameUtils
                     Vector3 offset = (mouseWorldPosition - oldMouseWorldPosition) * dragSpeed;
 
                     // OnDrag is executed.
-                    currentDrag.OnDrag(offset, droppable);
+                    _currentDrag.OnDrag(offset, droppable);
 
                     oldMouseWorldPosition = mouseWorldPosition;
                 }
@@ -225,9 +211,9 @@ namespace GameUtils
                 {
                     // The left mouse button is released and
                     // the drag operation is finished.
-                    currentDrag.Dragging = false;
-                    currentDrag.OnEndDrag(raycastHits[0].point, droppable);
-                    currentDrag = null;
+                    _currentDrag.Dragging = false;
+                    _currentDrag.OnEndDrag(raycastHits[0].point, droppable);
+                    _currentDrag = null;
                     currentDragTransform = null;
 
                     // We return the mouse icon to its normal state.
@@ -237,12 +223,6 @@ namespace GameUtils
             }
         }
 
-        private void OnEnable()
-        {
-            possibleDrag = null;
-            currentDragTransform = null;
-
-            ResetCursor();
-        }*/
+        private void ResetCursor() => Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }

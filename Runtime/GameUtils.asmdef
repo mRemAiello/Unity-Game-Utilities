@@ -2,6 +2,7 @@
     "name": "GameUtils",
     "rootNamespace": "GameUtils",
     "references": [
+        "DOTween.Modules",
         "Unity.ResourceManager",
         "Unity.Addressables",
         "Unity.Localization",
