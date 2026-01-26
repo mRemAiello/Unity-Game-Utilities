@@ -29,12 +29,31 @@ namespace UnityEditor.GameUtils
         [Button(ButtonSizes.Medium)]
         protected virtual List<string> CreateAutoAssetFolders(int depth)
         {
+            // 
             List<string> result = new();
             string assetsPath = Application.dataPath;
 
             //
-            _bundleDatas = new List<AutoBundleData>();
+            ResetBundleDatas();
 
+            // 
+            AutoBundleArgs args = BuildAutoBundleArgs(assetsPath, depth, result);
+            ExploreFolders(args);
+
+            //
+            PopulateBundleDatas(result, assetsPath);
+
+            return result;
+        }
+
+        private void ResetBundleDatas()
+        {
+            // 
+            _bundleDatas = new List<AutoBundleData>();
+        }
+
+        private AutoBundleArgs BuildAutoBundleArgs(string assetsPath, int depth, List<string> result)
+        {
             // 
             AutoBundleArgs args = new()
             {
@@ -45,17 +64,29 @@ namespace UnityEditor.GameUtils
                 ExcludedFolders = _excludedFolders,
                 MergedFolders = _mergedFolders
             };
-            ExploreFolders(args);
 
-            //
-            for (int i = 0; i < result.Count; i++)
+            return args;
+        }
+
+        private void PopulateBundleDatas(List<string> folders, string assetsPath)
+        {
+            // 
+            for (int i = 0; i < folders.Count; i++)
             {
-                result[i] = "Assets" + result[i].Replace(assetsPath, "").Replace("\\", "/");
-                string groupName = GetGroupName(result[i]);
-                _bundleDatas.Add(new AutoBundleData(result[i], groupName));
-            }
+                // 
+                folders[i] = BuildAssetPath(folders[i], assetsPath);
 
-            return result;
+                //
+                string groupName = GetGroupName(folders[i]);
+                _bundleDatas.Add(new AutoBundleData(folders[i], groupName));
+            }
+        }
+
+        private string BuildAssetPath(string folderPath, string assetsPath)
+        {
+            // 
+            string assetPath = "Assets" + folderPath.Replace(assetsPath, "").Replace("\\", "/");
+            return assetPath;
         }
 
         // Funzione ricorsiva per esplorare le cartelle
@@ -91,54 +122,12 @@ namespace UnityEditor.GameUtils
         protected virtual void MarkAllFilesAsAddressables()
         {
             // 
-            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            var settings = GetAddressableSettings();
             if (settings == null)
-            {
-                this.LogError("No Addressables settings found.");
                 return;
-            }
 
             //
-            foreach (var bundleData in _bundleDatas)
-            {
-                var group = SetupGroup(settings, bundleData);
-
-                //
-                string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
-                foreach (string file in files)
-                {
-                    //
-                    if (AssetDatabase.IsValidFolder(file))
-                        continue;
-
-                    //
-                    foreach (string ext in _excludedExtensions)
-                    {
-                        if (file.EndsWith(ext))
-                            continue;
-                    }
-
-                    //
-                    string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
-                    var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
-                    if (entry == null)
-                    {
-                        this.Log($"Failed to make an entry for {relativePath}");
-                        continue;
-                    }
-
-                    // 
-                        var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
-                    if (assetType != null)
-                    {
-                        SetupLabel(assetType, entry, bundleData);
-                        SetupAddress(entry);
-
-                        // 
-                        this.Log($"Added {relativePath} as Addressable.");
-                    }
-                }
-            }
+            ProcessBundleDatas(settings);
 
             // 
             AssetDatabase.SaveAssets();
@@ -146,6 +135,80 @@ namespace UnityEditor.GameUtils
 
             //
             this.Log("All files marked as Addressables.");
+        }
+
+        private AddressableAssetSettings GetAddressableSettings()
+        {
+            // 
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                this.LogError("No Addressables settings found.");
+                return null;
+            }
+
+            return settings;
+        }
+
+        private void ProcessBundleDatas(AddressableAssetSettings settings)
+        {
+            // 
+            foreach (var bundleData in _bundleDatas)
+            {
+                // 
+                ProcessBundleData(settings, bundleData);
+            }
+        }
+
+        private void ProcessBundleData(AddressableAssetSettings settings, AutoBundleData bundleData)
+        {
+            // 
+            var group = SetupGroup(settings, bundleData);
+
+            //
+            string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
+            foreach (string file in files)
+            {
+                //
+                if (ShouldSkipFile(file))
+                    continue;
+
+                //
+                string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
+                var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
+                if (entry == null)
+                {
+                    this.Log($"Failed to make an entry for {relativePath}");
+                    continue;
+                }
+
+                // 
+                var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
+                if (assetType != null)
+                {
+                    SetupLabel(assetType, entry, bundleData);
+                    SetupAddress(entry);
+
+                    // 
+                    this.Log($"Added {relativePath} as Addressable.");
+                }
+            }
+        }
+
+        private bool ShouldSkipFile(string filePath)
+        {
+            // 
+            if (AssetDatabase.IsValidFolder(filePath))
+                return true;
+
+            //
+            foreach (string ext in _excludedExtensions)
+            {
+                if (filePath.EndsWith(ext))
+                    return true;
+            }
+
+            return false;
         }
 
         private string GetGroupName(string folderName)

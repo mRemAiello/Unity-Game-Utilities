@@ -1,5 +1,6 @@
 ## Unreleased
 - Added English README documentation for the Task folder usage.
+- Rifattorizzato AutoBundles per suddividere il flusso in funzioni riutilizzabili.
 - Tradotto in inglese il README con dettagli aggiornati sulla cartella Events e sui suoi asset evento.
 - Aggiornate le tuple evento per distinguere GameObject e ScriptableObject con visibilità condizionale in inspector.
 - Resa virtuale l'invocazione in GameEventAsset e override nei relativi asset parametrizzati.
