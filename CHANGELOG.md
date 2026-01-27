@@ -1,4 +1,5 @@
 ## Unreleased
+- Aggiunta la rimozione automatica dagli Addressables degli asset con estensioni escluse in AutoBundles.
 - Added English README documentation for the Task folder usage.
 - Rifattorizzato AutoBundles per suddividere il flusso in funzioni riutilizzabili.
 - Tradotto in inglese il README con dettagli aggiornati sulla cartella Events e sui suoi asset evento.

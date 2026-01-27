@@ -127,6 +127,9 @@ namespace UnityEditor.GameUtils
                 return;
 
             //
+            RemoveExcludedExtensionsFromGroups(settings);
+
+            //
             ProcessBundleDatas(settings);
 
             // 
@@ -209,6 +212,68 @@ namespace UnityEditor.GameUtils
             }
 
             return false;
+        }
+
+        private void RemoveExcludedExtensionsFromGroups(AddressableAssetSettings settings)
+        {
+            //
+            HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
+            if (normalizedExtensions.Count == 0)
+                return;
+
+            //
+            foreach (AddressableAssetGroup group in settings.groups)
+            {
+                // 
+                if (group == null)
+                    continue;
+
+                // 
+                List<AddressableAssetEntry> entries = group.entries;
+                for (int i = entries.Count - 1; i >= 0; i--)
+                {
+                    // 
+                    AddressableAssetEntry entry = entries[i];
+                    if (entry == null)
+                        continue;
+
+                    // 
+                    string assetPath = AssetDatabase.GUIDToAssetPath(entry.guid);
+                    if (string.IsNullOrEmpty(assetPath))
+                        continue;
+
+                    // 
+                    string extension = Path.GetExtension(assetPath).ToLowerInvariant();
+                    if (!normalizedExtensions.Contains(extension))
+                        continue;
+
+                    //
+                    group.RemoveAssetEntry(entry);
+
+                    //
+                    this.Log($"Removed {assetPath} from group {group.Name} due to excluded extension.");
+                }
+            }
+        }
+
+        private HashSet<string> BuildNormalizedExtensions()
+        {
+            // 
+            HashSet<string> normalizedExtensions = new(StringComparer.OrdinalIgnoreCase);
+
+            //
+            foreach (string extension in _excludedExtensions)
+            {
+                //
+                if (string.IsNullOrWhiteSpace(extension))
+                    continue;
+
+                // 
+                string normalizedExtension = extension.StartsWith(".") ? extension : $".{extension}";
+                normalizedExtensions.Add(normalizedExtension.ToLowerInvariant());
+            }
+
+            return normalizedExtensions;
         }
 
         private string GetGroupName(string folderName)
