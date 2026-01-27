@@ -243,8 +243,19 @@ namespace UnityEditor.GameUtils
                         continue;
 
                     // 
-                    string extension = Path.GetExtension(assetPath).ToLowerInvariant();
-                    if (!normalizedExtensions.Contains(extension))
+                    bool hasExcludedExtension = false;
+                    foreach (string excludedExtension in normalizedExtensions)
+                    {
+                        // 
+                        if (assetPath.EndsWith(excludedExtension, StringComparison.OrdinalIgnoreCase))
+                        {
+                            hasExcludedExtension = true;
+                            break;
+                        }
+                    }
+
+                    //
+                    if (!hasExcludedExtension)
                         continue;
 
                     //
