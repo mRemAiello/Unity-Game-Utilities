@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("references")]
-    [DeclareBoxGroup("animations")]
-    [DeclareBoxGroup("debug")]
+    [DeclareBoxGroup("references", Title = "References")]
+    [DeclareBoxGroup("animations", Title = "Animations")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class CardDrag : MonoBehaviour, IDraggable, ILoggable
     {
         //

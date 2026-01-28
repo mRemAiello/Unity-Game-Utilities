@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("pitch")]
-    [DeclareBoxGroup("roll")]
-    [DeclareBoxGroup("misc")]
-    [DeclareBoxGroup("debug")]
+    [DeclareBoxGroup("pitch", Title = "Pitch")]
+    [DeclareBoxGroup("roll", Title = "Roll")]
+    [DeclareBoxGroup("misc", Title = "Misc")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
     public class CardTilter : MonoBehaviour
     {
         [SerializeField, Group("pitch")] private float pitchForce = 10.0f;
