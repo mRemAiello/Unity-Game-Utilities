@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using GameUtils;
 using TriInspector;
 using UnityEngine;
@@ -22,5 +25,144 @@ namespace UnityEditor.GameUtils
 
         //
         public bool LogEnabled => _logEnabled;
+
+        //
+        [Button(ButtonSizes.Medium)]
+        public void PopulateBundleDatasFromAssets()
+        {
+            // 
+            if (_bundleDatas == null)
+            {
+                _bundleDatas = new List<AutoBundleData>();
+            }
+
+            // 
+            string assetsPath = Application.dataPath;
+            List<string> folders = CollectAssetFolders(assetsPath);
+
+            // 
+            AddMissingBundleDatas(folders, assetsPath);
+
+            // 
+            SortBundleDatas();
+        }
+
+        private List<string> CollectAssetFolders(string assetsPath)
+        {
+            // 
+            List<string> result = new();
+
+            // 
+            string[] topLevelFolders = Directory.GetDirectories(assetsPath);
+            foreach (string folder in topLevelFolders)
+            {
+                // 
+                string relativePath = BuildRelativeAssetPath(folder, assetsPath);
+                if (!IsExcluded(relativePath))
+                {
+                    result.Add(folder);
+                }
+
+                // 
+                string[] subFolders = Directory.GetDirectories(folder);
+                foreach (string subFolder in subFolders)
+                {
+                    // 
+                    string subRelativePath = BuildRelativeAssetPath(subFolder, assetsPath);
+                    if (IsExcluded(subRelativePath))
+                        continue;
+
+                    // 
+                    result.Add(subFolder);
+                }
+            }
+
+            return result;
+        }
+
+        private void AddMissingBundleDatas(List<string> folders, string assetsPath)
+        {
+            // 
+            HashSet<string> existingFolders = BuildExistingFolderSet();
+
+            // 
+            foreach (string folder in folders)
+            {
+                // 
+                string assetPath = BuildAssetPath(folder, assetsPath);
+                if (existingFolders.Contains(assetPath))
+                    continue;
+
+                // 
+                string groupName = GetGroupName(assetPath);
+                _bundleDatas.Add(new AutoBundleData(assetPath, groupName));
+            }
+        }
+
+        private HashSet<string> BuildExistingFolderSet()
+        {
+            // 
+            HashSet<string> existingFolders = new(StringComparer.OrdinalIgnoreCase);
+
+            // 
+            foreach (AutoBundleData bundleData in _bundleDatas)
+            {
+                // 
+                if (bundleData == null)
+                    continue;
+
+                // 
+                if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                    continue;
+
+                // 
+                existingFolders.Add(bundleData.FolderName);
+            }
+
+            return existingFolders;
+        }
+
+        private string BuildRelativeAssetPath(string folderPath, string assetsPath)
+        {
+            // 
+            string relativePath = folderPath.Replace(assetsPath, string.Empty).Replace("\\", "/").TrimStart('/');
+            return relativePath;
+        }
+
+        private bool IsExcluded(string relativePath)
+        {
+            // 
+            foreach (string excludedFolder in _excludedFolders)
+            {
+                // 
+                if (string.Equals(relativePath, excludedFolder, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private string BuildAssetPath(string folderPath, string assetsPath)
+        {
+            // 
+            string assetPath = "Assets/" + BuildRelativeAssetPath(folderPath, assetsPath);
+            return assetPath;
+        }
+
+        private string GetGroupName(string assetPath)
+        {
+            // 
+            string groupName = assetPath.Replace("Assets/", "").Replace("/", "").Replace("\\", "").Replace(" ", "");
+            return groupName;
+        }
+
+        private void SortBundleDatas()
+        {
+            // 
+            _bundleDatas = _bundleDatas
+                .Where(bundleData => bundleData != null)
+                .OrderBy(bundleData => bundleData.GroupName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
     }
 }
