@@ -8,7 +8,7 @@ To use this package you need the following assets:
 
 ### Unity Packages
 
-* [Addressables](https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
+* [Addressables (2.7.6+)](https://docs.unity3d.com/Packages/com.unity.addressables@2.1/manual/index.html)
 * [New Input System](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.10/manual/index.html)
 
 ### Third-party
@@ -33,7 +33,7 @@ Main subfolders:
 - [DataStructures](./Runtime/DataStructures): common ScriptableObjects.
 - [Debug](./Runtime/Debug): debugging and logging utilities.
 - [Dictionary](./Runtime/Dictionary): serializable dictionaries.
-- [Events](./Runtime/Events): ScriptableObject-based game events with listener tracking, optional logging, and per-type assets. Includes `GameEventAssetBase` for log/listener data, `GameEventAsset<T>` for typed call history/current value, `VoidEventAsset`, and built-in typed assets (int, float, Vector2, Vector3, Quaternion, Transform, GameObject), plus `GameEventDataManager` to reset event data at runtime.
+- [Events](./Runtime/Events): ScriptableObject-based game events with listener tracking, optional logging, and per-type assets.
 - [Extensions](./Runtime/Extensions): assorted extension methods.
 - [Input](./Runtime/Input): input system components.
 - [Math](./Runtime/Math): helper math functions.

@@ -13,12 +13,11 @@ namespace UnityEditor.GameUtils
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-        [Title("Results")]
-        [SerializeField, ListDrawerSettings(Draggable = false, AlwaysExpanded = true)] private List<AutoBundleData> _bundleDatas;
-
-        [Title("Settings")]
         [SerializeField] private bool _logEnabled = false;
-        [SerializeField] private List<string> _excludedFolders = new();
+
+        //
+        [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)] private List<AutoBundleData> _bundleDatas;
+        [SerializeField] private List<string> _excludedFolders = new() { "AddressableAssetsData", "Editor", "Plugins", "Resources", "Scripts", "Settings" };
         [SerializeField] private List<string> _mergedFolders = new();
         [SerializeField] private List<string> _excludedExtensions = new() { ".meta", ".cs" };
 
@@ -29,7 +28,6 @@ namespace UnityEditor.GameUtils
         [Button(ButtonSizes.Medium)]
         protected virtual List<string> CreateAutoAssetFolders(int depth)
         {
-            // 
             List<string> result = new();
             string assetsPath = Application.dataPath;
 
@@ -121,15 +119,12 @@ namespace UnityEditor.GameUtils
         [Button(ButtonSizes.Medium)]
         protected virtual void MarkAllFilesAsAddressables()
         {
-            // 
             var settings = GetAddressableSettings();
             if (settings == null)
                 return;
 
             //
             RemoveExcludedExtensionsFromGroups(settings);
-
-            //
             ProcessBundleDatas(settings);
 
             // 
@@ -216,24 +211,22 @@ namespace UnityEditor.GameUtils
 
         private void RemoveExcludedExtensionsFromGroups(AddressableAssetSettings settings)
         {
-            //
-            HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
+            /*HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
             if (normalizedExtensions.Count == 0)
                 return;
 
             //
             foreach (AddressableAssetGroup group in settings.groups)
             {
-                // 
                 if (group == null)
                     continue;
 
                 // 
-                List<AddressableAssetEntry> entries = group.entries;
+                var entries = group.entries;
                 for (int i = entries.Count - 1; i >= 0; i--)
                 {
                     // 
-                    AddressableAssetEntry entry = entries[i];
+                    AddressableAssetEntry entry = entries.;
                     if (entry == null)
                         continue;
 
@@ -264,7 +257,7 @@ namespace UnityEditor.GameUtils
                     //
                     this.Log($"Removed {assetPath} from group {group.Name} due to excluded extension.");
                 }
-            }
+            }*/
         }
 
         private HashSet<string> BuildNormalizedExtensions()

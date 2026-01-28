@@ -1,6 +1,6 @@
 using TMPro;
+using Unity.Profiling;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace GameUtils
 {
@@ -9,12 +9,12 @@ namespace GameUtils
     /// </summary>
     public class PerformanceStatsUI : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _fpsText;
-        [SerializeField] private TMP_Text _drawCallsText;
-        [SerializeField] private TMP_Text _batchesText;
-        [SerializeField] private TMP_Text _setPassCallsText;
-        [SerializeField] private TMP_Text _trianglesText;
-        [SerializeField] private TMP_Text _verticesText;
+        [SerializeField] private TextMeshProUGUI _fpsText;
+        [SerializeField] private TextMeshProUGUI _drawCallsText;
+        [SerializeField] private TextMeshProUGUI _batchesText;
+        [SerializeField] private TextMeshProUGUI _setPassCallsText;
+        [SerializeField] private TextMeshProUGUI _trianglesText;
+        [SerializeField] private TextMeshProUGUI _verticesText;
         [SerializeField] private float _updateInterval = 0.5f;
         [SerializeField] private int _highFpsThreshold = 55;
         [SerializeField] private int _mediumFpsThreshold = 30;
