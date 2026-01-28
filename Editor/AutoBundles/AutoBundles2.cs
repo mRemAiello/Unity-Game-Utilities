@@ -18,9 +18,6 @@ namespace UnityEditor.GameUtils
         private List<string> _excludedFolders = new() { "AddressableAssetsData", "Editor", "Plugins", "Resources", "Scripts", "Settings" };
         
         [SerializeField,  TableList(Draggable = false, AlwaysExpanded = true)] 
-        private List<string> _mergedFolders = new();
-        
-        [SerializeField,  TableList(Draggable = false, AlwaysExpanded = true)] 
         private List<string> _excludedExtensions = new() { ".meta", ".cs" };
 
         //
