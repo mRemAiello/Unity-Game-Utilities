@@ -8,9 +8,9 @@ namespace UnityEditor.GameUtils
     [Serializable]
     public class AutoBundleData
     {
-        [SerializeField, ReadOnly] private string _folderName;
-        [SerializeField, ReadOnly] private string _groupName;
-        [SerializeField] private List<string> _labels;
+        [SerializeField] private string _folderName;
+        [SerializeField, HideInInspector] private string _groupName;
+        [SerializeField, TableList()] private List<string> _labels;
 
         // public fields
         public string FolderName => _folderName;
