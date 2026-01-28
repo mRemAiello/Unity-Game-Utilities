@@ -39,13 +39,8 @@ namespace UnityEditor.GameUtils
 
             // 
             AddMissingBundleDatas(folders, assetsPath);
+            SyncBundleDatasWithFolders(folders, assetsPath);
             SortBundleDatas();
-        }
-
-        [Button(ButtonSizes.Medium)]
-        public void ClearBundleData()
-        {
-            _bundleDatas = new List<AutoBundleData>();
         }
 
         private List<string> CollectAssetFolders(string assetsPath)
@@ -71,7 +66,6 @@ namespace UnityEditor.GameUtils
 
                         // 
                         result.Add(subFolder);
-                        this.Log(subFolder);
                     }
                 }
             }
@@ -82,7 +76,6 @@ namespace UnityEditor.GameUtils
 
         private void AddMissingBundleDatas(List<string> folders, string assetsPath)
         {
-            // 
             HashSet<string> existingFolders = BuildExistingFolderSet();
 
             // 
@@ -97,6 +90,35 @@ namespace UnityEditor.GameUtils
                 string groupName = GetGroupName(assetPath);
                 _bundleDatas.Add(new AutoBundleData(assetPath, groupName));
             }
+        }
+
+        private void SyncBundleDatasWithFolders(List<string> folders, string assetsPath)
+        {
+            // 
+            HashSet<string> validAssetPaths = new(StringComparer.OrdinalIgnoreCase);
+
+            // 
+            foreach (string folder in folders)
+            {
+                // 
+                string assetPath = BuildAssetPath(folder, assetsPath);
+                validAssetPaths.Add(assetPath);
+            }
+
+            // 
+            _bundleDatas = _bundleDatas.Where(bundleData =>
+                {
+                    if (bundleData == null)
+                        return false;
+
+                    // 
+                    if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                        return false;
+
+                    // 
+                    return validAssetPaths.Contains(bundleData.FolderName);
+                })
+                .ToList();
         }
 
         private HashSet<string> BuildExistingFolderSet()
