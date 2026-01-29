@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using GameUtils;
 using TriInspector;
-using UnityEditor.VersionControl;
+using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
 
 namespace UnityEditor.GameUtils
@@ -43,6 +46,29 @@ namespace UnityEditor.GameUtils
             SortBundleDatas();
         }
 
+        [Button(ButtonSizes.Medium)]
+        public void SyncAddressableGroups()
+        {
+            // 
+            AddressableAssetSettings settings = GetAddressableSettings();
+            if (settings == null)
+                return;
+
+            // 
+            RemoveExcludedExtensionsFromGroups(settings);
+
+            // 
+            foreach (AutoBundleData bundleData in _bundleDatas)
+            {
+                // 
+                ProcessBundleData(settings, bundleData);
+            }
+
+            // 
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         private List<string> CollectAssetFolders(string assetsPath)
         {
             List<string> result = new();
@@ -72,6 +98,57 @@ namespace UnityEditor.GameUtils
 
             //
             return result;
+        }
+
+        private AddressableAssetSettings GetAddressableSettings()
+        {
+            // 
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                // 
+                this.LogError("No Addressables settings found.");
+                return null;
+            }
+
+            return settings;
+        }
+
+        private void ProcessBundleData(AddressableAssetSettings settings, AutoBundleData bundleData)
+        {
+            // 
+            if (bundleData == null)
+                return;
+
+            // 
+            if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                return;
+
+            // 
+            AddressableAssetGroup group = SetupGroup(settings, bundleData);
+
+            // 
+            string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
+            foreach (string file in files)
+            {
+                // 
+                if (ShouldSkipFile(file))
+                    continue;
+
+                // 
+                string assetPath = BuildAssetPathFromFile(file);
+                AddressableAssetEntry entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(assetPath), group);
+                if (entry == null)
+                    continue;
+
+                // 
+                Type assetType = AssetDatabase.GetMainAssetTypeAtPath(assetPath);
+                if (assetType == null)
+                    continue;
+
+                // 
+                SetupLabels(assetType, entry, bundleData);
+            }
         }
 
         private void AddMissingBundleDatas(List<string> folders, string assetsPath)
@@ -142,6 +219,152 @@ namespace UnityEditor.GameUtils
             }
 
             return existingFolders;
+        }
+
+        private bool ShouldSkipFile(string filePath)
+        {
+            // 
+            if (AssetDatabase.IsValidFolder(filePath))
+                return true;
+
+            // 
+            foreach (string ext in _excludedExtensions)
+            {
+                // 
+                if (filePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private string BuildAssetPathFromFile(string filePath)
+        {
+            // 
+            string normalizedFilePath = filePath.Replace("\\", "/");
+
+            // 
+            string normalizedDataPath = Application.dataPath.Replace("\\", "/");
+
+            // 
+            if (normalizedFilePath.StartsWith(normalizedDataPath, StringComparison.OrdinalIgnoreCase))
+            {
+                // 
+                string relativePath = normalizedFilePath.Substring(normalizedDataPath.Length);
+                return "Assets" + relativePath;
+            }
+
+            // 
+            string assetPath = "Assets" + normalizedFilePath;
+            return assetPath;
+        }
+
+        private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
+        {
+            // 
+            AddressableAssetGroup group = settings.FindGroup(bundleData.GroupName);
+            if (group == null)
+            {
+                // 
+                Type contentGroup = typeof(ContentUpdateGroupSchema);
+                Type bundledAssetGroup = typeof(BundledAssetGroupSchema);
+
+                // 
+                group = settings.CreateGroup(bundleData.GroupName, false, false, true, null, contentGroup, bundledAssetGroup);
+            }
+
+            return group;
+        }
+
+        private void SetupLabels(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
+        {
+            // 
+            entry.labels.Clear();
+
+            // 
+            List<string> labels = new(bundleData.Labels)
+            {
+                assetType.Name
+            };
+
+            // 
+            foreach (string label in labels)
+            {
+                // 
+                if (!entry.labels.Contains(label))
+                    entry.SetLabel(label, true, true);
+            }
+        }
+
+        private void RemoveExcludedExtensionsFromGroups(AddressableAssetSettings settings)
+        {
+            // 
+            HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
+            if (normalizedExtensions.Count == 0)
+                return;
+
+            // 
+            foreach (AddressableAssetGroup group in settings.groups)
+            {
+                // 
+                if (group == null)
+                    continue;
+
+                // 
+                List<AddressableAssetEntry> entries = group.entries.ToList();
+                for (int i = entries.Count - 1; i >= 0; i--)
+                {
+                    // 
+                    AddressableAssetEntry entry = entries[i];
+                    if (entry == null)
+                        continue;
+
+                    // 
+                    string assetPath = AssetDatabase.GUIDToAssetPath(entry.guid);
+                    if (string.IsNullOrWhiteSpace(assetPath))
+                        continue;
+
+                    // 
+                    if (!HasExcludedExtension(assetPath, normalizedExtensions))
+                        continue;
+
+                    // 
+                    group.RemoveAssetEntry(entry);
+                }
+            }
+        }
+
+        private bool HasExcludedExtension(string assetPath, HashSet<string> normalizedExtensions)
+        {
+            // 
+            foreach (string excludedExtension in normalizedExtensions)
+            {
+                // 
+                if (assetPath.EndsWith(excludedExtension, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private HashSet<string> BuildNormalizedExtensions()
+        {
+            // 
+            HashSet<string> normalizedExtensions = new(StringComparer.OrdinalIgnoreCase);
+
+            // 
+            foreach (string extension in _excludedExtensions)
+            {
+                // 
+                if (string.IsNullOrWhiteSpace(extension))
+                    continue;
+
+                // 
+                string normalizedExtension = extension.StartsWith(".") ? extension : $".{extension}";
+                normalizedExtensions.Add(normalizedExtension.ToLowerInvariant());
+            }
+
+            return normalizedExtensions;
         }
 
         private string BuildRelativeAssetPath(string folderPath, string assetsPath)
