@@ -1,4 +1,5 @@
 ## Unreleased
+- Implementata in AutoBundles2 la sincronizzazione dei group Addressables con asset, label e pulizia per estensioni escluse.
 - Implementata la popolazione automatica di AutoBundles2 con cartelle di Assets (profondità 1), esclusioni precise e ordinamento alfabetico dei bundle.
 - Aggiunto il monitor di performance UI con TextMeshPro per FPS e statistiche di rendering.
 - Allineata la pulizia degli Addressables alle estensioni escluse con match per suffisso (es. .tar.gz).
