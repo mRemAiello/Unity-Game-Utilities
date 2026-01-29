@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GameUtils;
 using TriInspector;
 using UnityEditor.AddressableAssets;
@@ -13,134 +14,98 @@ namespace UnityEditor.GameUtils
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-        [SerializeField] private bool _logEnabled = false;
+       [SerializeField] private bool _logEnabled = false;
 
         //
-        [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)] private List<AutoBundleData> _bundleDatas;
-        [SerializeField] private List<string> _excludedFolders = new() { "AddressableAssetsData", "Editor", "Plugins", "Resources", "Scripts", "Settings" };
-        [SerializeField] private List<string> _mergedFolders = new();
-        [SerializeField] private List<string> _excludedExtensions = new() { ".meta", ".cs" };
+        [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)]
+        private List<AutoBundleData> _bundleDatas;
+
+        [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)]
+        private List<string> _excludedFolders = new() { "AddressableAssetsData", "Editor", "Plugins", "Resources", "Scripts", "Settings" };
+
+        [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)]
+        private List<string> _excludedExtensions = new() { ".meta", ".cs" };
 
         //
         public bool LogEnabled => _logEnabled;
 
         //
         [Button(ButtonSizes.Medium)]
-        protected virtual List<string> CreateAutoAssetFolders(int depth)
+        public void PopulateBundleDatasFromAssets()
         {
-            List<string> result = new();
+            _bundleDatas ??= new List<AutoBundleData>();
+
+            // 
             string assetsPath = Application.dataPath;
-
-            //
-            ResetBundleDatas();
+            List<string> folders = CollectAssetFolders(assetsPath);
 
             // 
-            AutoBundleArgs args = BuildAutoBundleArgs(assetsPath, depth, result);
-            ExploreFolders(args);
-
-            //
-            PopulateBundleDatas(result, assetsPath);
-
-            return result;
-        }
-
-        private void ResetBundleDatas()
-        {
-            // 
-            _bundleDatas = new List<AutoBundleData>();
-        }
-
-        private AutoBundleArgs BuildAutoBundleArgs(string assetsPath, int depth, List<string> result)
-        {
-            // 
-            AutoBundleArgs args = new()
-            {
-                CurrentPath = assetsPath,
-                CurrentDepth = 1,
-                MaxDepth = depth,
-                Result = result,
-                ExcludedFolders = _excludedFolders,
-                MergedFolders = _mergedFolders
-            };
-
-            return args;
-        }
-
-        private void PopulateBundleDatas(List<string> folders, string assetsPath)
-        {
-            // 
-            for (int i = 0; i < folders.Count; i++)
-            {
-                // 
-                folders[i] = BuildAssetPath(folders[i], assetsPath);
-
-                //
-                string groupName = GetGroupName(folders[i]);
-                _bundleDatas.Add(new AutoBundleData(folders[i], groupName));
-            }
-        }
-
-        private string BuildAssetPath(string folderPath, string assetsPath)
-        {
-            // 
-            string assetPath = "Assets" + folderPath.Replace(assetsPath, "").Replace("\\", "/");
-            return assetPath;
-        }
-
-        // Funzione ricorsiva per esplorare le cartelle
-        protected virtual void ExploreFolders(AutoBundleArgs args)
-        {
-            if (args.CurrentDepth > args.MaxDepth)
-                return;
-
-            //
-            string[] subFolders = Directory.GetDirectories(args.CurrentPath);
-            foreach (string folder in subFolders)
-            {
-                string folderName = Path.GetFileName(folder);
-
-                //
-                if (args.ExcludedFolders.Contains(folderName))
-                    continue;
-
-                //
-                args.Result.Add(folder);
-
-                //
-                if (args.MergedFolders.Contains(folderName))
-                    continue;
-
-                // 
-                args.CurrentDepth += 1;
-                ExploreFolders(args);
-            }
+            AddMissingBundleDatas(folders, assetsPath);
+            SyncBundleDatasWithFolders(folders, assetsPath);
+            SortBundleDatas();
         }
 
         [Button(ButtonSizes.Medium)]
-        protected virtual void MarkAllFilesAsAddressables()
+        public void SyncAddressableGroups()
         {
-            var settings = GetAddressableSettings();
+            // 
+            AddressableAssetSettings settings = GetAddressableSettings();
             if (settings == null)
                 return;
 
-            //
+            // 
             RemoveExcludedExtensionsFromGroups(settings);
-            ProcessBundleDatas(settings);
+
+            // 
+            foreach (AutoBundleData bundleData in _bundleDatas)
+            {
+                // 
+                ProcessBundleData(settings, bundleData);
+            }
 
             // 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private List<string> CollectAssetFolders(string assetsPath)
+        {
+            List<string> result = new();
+
+            // 
+            string[] topLevelFolders = Directory.GetDirectories(assetsPath);
+            foreach (string folder in topLevelFolders)
+            {
+                string relativePath = BuildRelativeAssetPath(folder, assetsPath);
+                if (!IsExcluded(relativePath))
+                {
+                    result.Add(folder);
+
+                    // 
+                    string[] subFolders = Directory.GetDirectories(folder);
+                    foreach (string subFolder in subFolders)
+                    {
+                        string subRelativePath = BuildRelativeAssetPath(subFolder, assetsPath);
+                        if (IsExcluded(subRelativePath))
+                            continue;
+
+                        // 
+                        result.Add(subFolder);
+                    }
+                }
+            }
 
             //
-            this.Log("All files marked as Addressables.");
+            return result;
         }
 
         private AddressableAssetSettings GetAddressableSettings()
         {
             // 
-            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings == null)
             {
+                // 
                 this.LogError("No Addressables settings found.");
                 return null;
             }
@@ -148,49 +113,111 @@ namespace UnityEditor.GameUtils
             return settings;
         }
 
-        private void ProcessBundleDatas(AddressableAssetSettings settings)
-        {
-            // 
-            foreach (var bundleData in _bundleDatas)
-            {
-                // 
-                ProcessBundleData(settings, bundleData);
-            }
-        }
-
         private void ProcessBundleData(AddressableAssetSettings settings, AutoBundleData bundleData)
         {
             // 
-            var group = SetupGroup(settings, bundleData);
+            if (bundleData == null)
+                return;
 
-            //
+            // 
+            if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                return;
+
+            // 
+            AddressableAssetGroup group = SetupGroup(settings, bundleData);
+
+            // 
             string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                //
+                // 
                 if (ShouldSkipFile(file))
                     continue;
 
-                //
-                string relativePath = file.Replace(Application.dataPath, "").Replace("\\", "/");
-                var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(relativePath), group);
+                // 
+                string assetPath = BuildAssetPathFromFile(file);
+                AddressableAssetEntry entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(assetPath), group);
                 if (entry == null)
-                {
-                    this.Log($"Failed to make an entry for {relativePath}");
                     continue;
-                }
 
                 // 
-                var assetType = AssetDatabase.GetMainAssetTypeAtPath(relativePath);
-                if (assetType != null)
+                Type assetType = AssetDatabase.GetMainAssetTypeAtPath(assetPath);
+                if (assetType == null)
+                    continue;
+
+                // 
+                SetupLabels(assetType, entry, bundleData);
+            }
+        }
+
+        private void AddMissingBundleDatas(List<string> folders, string assetsPath)
+        {
+            HashSet<string> existingFolders = BuildExistingFolderSet();
+
+            // 
+            foreach (string folder in folders)
+            {
+                // 
+                string assetPath = BuildAssetPath(folder, assetsPath);
+                if (existingFolders.Contains(assetPath))
+                    continue;
+
+                // 
+                string groupName = GetGroupName(assetPath);
+                _bundleDatas.Add(new AutoBundleData(assetPath, groupName));
+            }
+        }
+
+        private void SyncBundleDatasWithFolders(List<string> folders, string assetsPath)
+        {
+            // 
+            HashSet<string> validAssetPaths = new(StringComparer.OrdinalIgnoreCase);
+
+            // 
+            foreach (string folder in folders)
+            {
+                // 
+                string assetPath = BuildAssetPath(folder, assetsPath);
+                validAssetPaths.Add(assetPath);
+            }
+
+            // 
+            _bundleDatas = _bundleDatas.Where(bundleData =>
                 {
-                    SetupLabel(assetType, entry, bundleData);
-                    SetupAddress(entry);
+                    if (bundleData == null)
+                        return false;
 
                     // 
-                    this.Log($"Added {relativePath} as Addressable.");
-                }
+                    if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                        return false;
+
+                    // 
+                    return validAssetPaths.Contains(bundleData.FolderName);
+                })
+                .ToList();
+        }
+
+        private HashSet<string> BuildExistingFolderSet()
+        {
+            // 
+            HashSet<string> existingFolders = new(StringComparer.OrdinalIgnoreCase);
+
+            // 
+            foreach (AutoBundleData bundleData in _bundleDatas)
+            {
+                // 
+                if (bundleData == null)
+                    continue;
+
+                // 
+                if (string.IsNullOrWhiteSpace(bundleData.FolderName))
+                    continue;
+
+                // 
+                existingFolders.Add(bundleData.FolderName);
             }
+
+            return existingFolders;
         }
 
         private bool ShouldSkipFile(string filePath)
@@ -199,65 +226,124 @@ namespace UnityEditor.GameUtils
             if (AssetDatabase.IsValidFolder(filePath))
                 return true;
 
-            //
+            // 
             foreach (string ext in _excludedExtensions)
             {
-                if (filePath.EndsWith(ext))
+                // 
+                if (filePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
             return false;
         }
 
+        private string BuildAssetPathFromFile(string filePath)
+        {
+            // 
+            string normalizedFilePath = filePath.Replace("\\", "/");
+
+            // 
+            string normalizedDataPath = Application.dataPath.Replace("\\", "/");
+
+            // 
+            if (normalizedFilePath.StartsWith(normalizedDataPath, StringComparison.OrdinalIgnoreCase))
+            {
+                // 
+                string relativePath = normalizedFilePath.Substring(normalizedDataPath.Length);
+                return "Assets" + relativePath;
+            }
+
+            // 
+            string assetPath = "Assets" + normalizedFilePath;
+            return assetPath;
+        }
+
+        private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
+        {
+            // 
+            AddressableAssetGroup group = settings.FindGroup(bundleData.GroupName);
+            if (group == null)
+            {
+                // 
+                Type contentGroup = typeof(ContentUpdateGroupSchema);
+                Type bundledAssetGroup = typeof(BundledAssetGroupSchema);
+
+                // 
+                group = settings.CreateGroup(bundleData.GroupName, false, false, true, null, contentGroup, bundledAssetGroup);
+            }
+
+            return group;
+        }
+
+        private void SetupLabels(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
+        {
+            // 
+            entry.labels.Clear();
+
+            // 
+            List<string> labels = new(bundleData.Labels)
+            {
+                assetType.Name
+            };
+
+            // 
+            foreach (string label in labels)
+            {
+                // 
+                if (!entry.labels.Contains(label))
+                    entry.SetLabel(label, true, true);
+            }
+        }
+
         private void RemoveExcludedExtensionsFromGroups(AddressableAssetSettings settings)
         {
-            /*HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
+            // 
+            HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
             if (normalizedExtensions.Count == 0)
                 return;
 
-            //
+            // 
             foreach (AddressableAssetGroup group in settings.groups)
             {
+                // 
                 if (group == null)
                     continue;
 
                 // 
-                var entries = group.entries;
+                List<AddressableAssetEntry> entries = group.entries.ToList();
                 for (int i = entries.Count - 1; i >= 0; i--)
                 {
                     // 
-                    AddressableAssetEntry entry = entries.;
+                    AddressableAssetEntry entry = entries[i];
                     if (entry == null)
                         continue;
 
                     // 
                     string assetPath = AssetDatabase.GUIDToAssetPath(entry.guid);
-                    if (string.IsNullOrEmpty(assetPath))
+                    if (string.IsNullOrWhiteSpace(assetPath))
                         continue;
 
                     // 
-                    bool hasExcludedExtension = false;
-                    foreach (string excludedExtension in normalizedExtensions)
-                    {
-                        // 
-                        if (assetPath.EndsWith(excludedExtension, StringComparison.OrdinalIgnoreCase))
-                        {
-                            hasExcludedExtension = true;
-                            break;
-                        }
-                    }
-
-                    //
-                    if (!hasExcludedExtension)
+                    if (!HasExcludedExtension(assetPath, normalizedExtensions))
                         continue;
 
-                    //
+                    // 
                     group.RemoveAssetEntry(entry);
-
-                    //
-                    this.Log($"Removed {assetPath} from group {group.Name} due to excluded extension.");
                 }
-            }*/
+            }
+        }
+
+        private bool HasExcludedExtension(string assetPath, HashSet<string> normalizedExtensions)
+        {
+            // 
+            foreach (string excludedExtension in normalizedExtensions)
+            {
+                // 
+                if (assetPath.EndsWith(excludedExtension, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
         }
 
         private HashSet<string> BuildNormalizedExtensions()
@@ -265,10 +351,10 @@ namespace UnityEditor.GameUtils
             // 
             HashSet<string> normalizedExtensions = new(StringComparer.OrdinalIgnoreCase);
 
-            //
+            // 
             foreach (string extension in _excludedExtensions)
             {
-                //
+                // 
                 if (string.IsNullOrWhiteSpace(extension))
                     continue;
 
@@ -280,54 +366,39 @@ namespace UnityEditor.GameUtils
             return normalizedExtensions;
         }
 
-        private string GetGroupName(string folderName)
+        private string BuildRelativeAssetPath(string folderPath, string assetsPath)
         {
             // 
-            string groupName = folderName.Replace("Assets/", "").Replace("/", "").Replace("\\", "").Replace(" ", "");
+            string relativePath = folderPath.Replace(assetsPath, string.Empty).Replace("\\", "/").TrimStart('/');
+            return relativePath;
+        }
+
+        private bool IsExcluded(string relativePath)
+        {
+            foreach (string excludedFolder in _excludedFolders)
+            {
+                if (string.Equals(relativePath, excludedFolder, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private string BuildAssetPath(string folderPath, string assetsPath)
+        {
+            string assetPath = "Assets/" + BuildRelativeAssetPath(folderPath, assetsPath);
+            return assetPath;
+        }
+
+        private string GetGroupName(string assetPath)
+        {
+            string groupName = assetPath.Replace("Assets/", "").Replace("/", "").Replace("\\", "").Replace(" ", "");
             return groupName;
         }
 
-        private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
+        private void SortBundleDatas()
         {
-            // 
-            var group = settings.FindGroup(bundleData.GroupName);
-            if (group == null)
-            {
-                var contentGroup = typeof(ContentUpdateGroupSchema);
-                var bundledAssetGroup = typeof(BundledAssetGroupSchema);
-
-                //
-                group = settings.CreateGroup(bundleData.GroupName, false, false, true, null, contentGroup, bundledAssetGroup);
-            }
-
-            return group;
-        }
-
-        private void SetupLabel(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
-        {
-            // 
-            entry.labels.Clear();
-
-            //
-            var labels = new List<string>(bundleData.Labels)
-            {
-                assetType.Name
-            };
-
-            // 
-            foreach (var label in labels)
-            {
-                if (!entry.labels.Contains(label))
-                {
-                    entry.SetLabel(label, true, true);
-                }
-            }
-        }
-
-        private void SetupAddress(AddressableAssetEntry entry)
-        {
-            string fileName = Path.GetFileNameWithoutExtension(entry.address).Replace("_", " ");
-            entry.SetAddress(fileName);
+            _bundleDatas = _bundleDatas.Where(bundle => bundle != null).OrderBy(bundle => bundle.GroupName, StringComparer.OrdinalIgnoreCase).ToList();
         }
     }
 }
