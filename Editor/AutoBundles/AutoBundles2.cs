@@ -241,7 +241,21 @@ namespace UnityEditor.GameUtils
         private string BuildAssetPathFromFile(string filePath)
         {
             // 
-            string assetPath = "Assets" + filePath.Replace(Application.dataPath, "").Replace("\\", "/");
+            string normalizedFilePath = filePath.Replace("\\", "/");
+
+            // 
+            string normalizedDataPath = Application.dataPath.Replace("\\", "/");
+
+            // 
+            if (normalizedFilePath.StartsWith(normalizedDataPath, StringComparison.OrdinalIgnoreCase))
+            {
+                // 
+                string relativePath = normalizedFilePath.Substring(normalizedDataPath.Length);
+                return "Assets" + relativePath;
+            }
+
+            // 
+            string assetPath = "Assets" + normalizedFilePath;
             return assetPath;
         }
 
