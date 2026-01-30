@@ -56,7 +56,7 @@ Main subfolders:
 
 ### [Editor](./Editor)
 Tools and windows for the Unity editor.
-- [AutoBundles](./Editor/AutoBundles): automatic bundle generation.
+- [AutoBundles](./Editor/AutoBundles): automatic bundle generation ([details](./Editor/AutoBundles/README.md)).
 - [Dictionary](./Editor/Dictionary): drawers for SerializableDictionary.
 - [Utils](./Editor/Utils): small support tools.
 - [Windows](./Editor/Windows): custom editor windows.

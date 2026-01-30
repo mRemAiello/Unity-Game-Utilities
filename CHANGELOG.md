@@ -1,4 +1,5 @@
 ## Unreleased
+- Added AutoBundles documentation and linked it from the root README.
 - Implementata in AutoBundles2 la sincronizzazione dei group Addressables con asset, label e pulizia per estensioni escluse.
 - Normalizzati i separatori dei percorsi in AutoBundles2 per generare asset path validi su Windows.
 - Implementata la popolazione automatica di AutoBundles2 con cartelle di Assets (profondità 1), esclusioni precise e ordinamento alfabetico dei bundle.
