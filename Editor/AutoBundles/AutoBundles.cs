@@ -7,6 +7,7 @@ using TriInspector;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace UnityEditor.GameUtils
@@ -14,7 +15,7 @@ namespace UnityEditor.GameUtils
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ADDRESSABLES_NAME + "Auto Bundle")]
     public class AutoBundles : ScriptableObject, ILoggable
     {
-       [SerializeField] private bool _logEnabled = false;
+        [SerializeField] private bool _logEnabled = false;
 
         //
         [SerializeField, TableList(Draggable = false, AlwaysExpanded = true)]
@@ -48,24 +49,21 @@ namespace UnityEditor.GameUtils
         [Button(ButtonSizes.Medium)]
         public void SyncAddressableGroups()
         {
-            // 
             AddressableAssetSettings settings = GetAddressableSettings();
+
             if (settings == null)
                 return;
 
             // 
             RemoveExcludedExtensionsFromGroups(settings);
-
-            // 
             foreach (AutoBundleData bundleData in _bundleDatas)
             {
-                // 
                 ProcessBundleData(settings, bundleData);
-            }
 
-            // 
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+                // 
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
 
         private List<string> CollectAssetFolders(string assetsPath)
@@ -101,7 +99,6 @@ namespace UnityEditor.GameUtils
 
         private AddressableAssetSettings GetAddressableSettings()
         {
-            // 
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings == null)
             {
@@ -115,7 +112,6 @@ namespace UnityEditor.GameUtils
 
         private void ProcessBundleData(AddressableAssetSettings settings, AutoBundleData bundleData)
         {
-            // 
             if (bundleData == null)
                 return;
 
@@ -125,12 +121,9 @@ namespace UnityEditor.GameUtils
 
             // 
             AddressableAssetGroup group = SetupGroup(settings, bundleData);
-
-            // 
             string[] files = Directory.GetFiles(bundleData.FolderName, "*.*", SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                // 
                 if (ShouldSkipFile(file))
                     continue;
 
@@ -157,7 +150,6 @@ namespace UnityEditor.GameUtils
             // 
             foreach (string folder in folders)
             {
-                // 
                 string assetPath = BuildAssetPath(folder, assetsPath);
                 if (existingFolders.Contains(assetPath))
                     continue;
@@ -170,13 +162,11 @@ namespace UnityEditor.GameUtils
 
         private void SyncBundleDatasWithFolders(List<string> folders, string assetsPath)
         {
-            // 
             HashSet<string> validAssetPaths = new(StringComparer.OrdinalIgnoreCase);
 
             // 
             foreach (string folder in folders)
             {
-                // 
                 string assetPath = BuildAssetPath(folder, assetsPath);
                 validAssetPaths.Add(assetPath);
             }
@@ -205,7 +195,6 @@ namespace UnityEditor.GameUtils
             // 
             foreach (AutoBundleData bundleData in _bundleDatas)
             {
-                // 
                 if (bundleData == null)
                     continue;
 
@@ -222,14 +211,12 @@ namespace UnityEditor.GameUtils
 
         private bool ShouldSkipFile(string filePath)
         {
-            // 
             if (AssetDatabase.IsValidFolder(filePath))
                 return true;
 
             // 
             foreach (string ext in _excludedExtensions)
             {
-                // 
                 if (filePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
@@ -239,32 +226,29 @@ namespace UnityEditor.GameUtils
 
         private string BuildAssetPathFromFile(string filePath)
         {
-            // 
             string normalizedFilePath = filePath.Replace("\\", "/");
-
-            // 
             string normalizedDataPath = Application.dataPath.Replace("\\", "/");
 
             // 
             if (normalizedFilePath.StartsWith(normalizedDataPath, StringComparison.OrdinalIgnoreCase))
             {
-                // 
                 string relativePath = normalizedFilePath.Substring(normalizedDataPath.Length);
                 return "Assets" + relativePath;
             }
 
             // 
             string assetPath = "Assets" + normalizedFilePath;
+            assetPath = assetPath.Replace("AssetsAssets", "Assets");
+
+            //
             return assetPath;
         }
 
         private AddressableAssetGroup SetupGroup(AddressableAssetSettings settings, AutoBundleData bundleData)
         {
-            // 
             AddressableAssetGroup group = settings.FindGroup(bundleData.GroupName);
             if (group == null)
             {
-                // 
                 Type contentGroup = typeof(ContentUpdateGroupSchema);
                 Type bundledAssetGroup = typeof(BundledAssetGroupSchema);
 
@@ -277,19 +261,12 @@ namespace UnityEditor.GameUtils
 
         private void SetupLabels(Type assetType, AddressableAssetEntry entry, AutoBundleData bundleData)
         {
-            // 
             entry.labels.Clear();
 
             // 
-            List<string> labels = new(bundleData.Labels)
-            {
-                assetType.Name
-            };
-
-            // 
+            List<string> labels = new(bundleData.Labels) { assetType.Name };
             foreach (string label in labels)
             {
-                // 
                 if (!entry.labels.Contains(label))
                     entry.SetLabel(label, true, true);
             }
@@ -297,7 +274,6 @@ namespace UnityEditor.GameUtils
 
         private void RemoveExcludedExtensionsFromGroups(AddressableAssetSettings settings)
         {
-            // 
             HashSet<string> normalizedExtensions = BuildNormalizedExtensions();
             if (normalizedExtensions.Count == 0)
                 return;
@@ -305,7 +281,6 @@ namespace UnityEditor.GameUtils
             // 
             foreach (AddressableAssetGroup group in settings.groups)
             {
-                // 
                 if (group == null)
                     continue;
 
@@ -313,7 +288,6 @@ namespace UnityEditor.GameUtils
                 List<AddressableAssetEntry> entries = group.entries.ToList();
                 for (int i = entries.Count - 1; i >= 0; i--)
                 {
-                    // 
                     AddressableAssetEntry entry = entries[i];
                     if (entry == null)
                         continue;
@@ -335,10 +309,8 @@ namespace UnityEditor.GameUtils
 
         private bool HasExcludedExtension(string assetPath, HashSet<string> normalizedExtensions)
         {
-            // 
             foreach (string excludedExtension in normalizedExtensions)
             {
-                // 
                 if (assetPath.EndsWith(excludedExtension, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
@@ -348,13 +320,11 @@ namespace UnityEditor.GameUtils
 
         private HashSet<string> BuildNormalizedExtensions()
         {
-            // 
             HashSet<string> normalizedExtensions = new(StringComparer.OrdinalIgnoreCase);
 
             // 
             foreach (string extension in _excludedExtensions)
             {
-                // 
                 if (string.IsNullOrWhiteSpace(extension))
                     continue;
 
@@ -368,7 +338,6 @@ namespace UnityEditor.GameUtils
 
         private string BuildRelativeAssetPath(string folderPath, string assetsPath)
         {
-            // 
             string relativePath = folderPath.Replace(assetsPath, string.Empty).Replace("\\", "/").TrimStart('/');
             return relativePath;
         }
