@@ -20,7 +20,7 @@ Specialized event assets (for example `ModalWindowButtonEventAsset`) live in the
 ### `GameEventAssetBase`
 
 `GameEventAssetBase` stores runtime listener metadata (`EventTuple`) for debug inspection.
-It also exposes a `Log Enabled` toggle (via `ILoggable`) and a `ResetData()` method that clears runtime listeners.
+It also exposes a `Log Enabled` toggle (via `ILoggable`) and a `ResetData()` method that clears the debug listener list (not the active callbacks).
 
 ### `GameEventAsset<T>`
 
@@ -49,7 +49,7 @@ When `Invoke` is called, the asset:
 ## Runtime management
 
 `GameEventDataManager` inherits from `GenericDataManager` and resets all managed events on `Awake` and `OnDestroy`.
-This ensures listener lists and call history are cleared when the manager lifecycle changes.
+This clears the debug listener metadata and call history, but active listeners remain unless `RemoveAllListeners()` is called.
 
 ## Example usage
 
