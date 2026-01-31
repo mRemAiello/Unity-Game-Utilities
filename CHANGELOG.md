@@ -1,4 +1,9 @@
-## Unreleased
+## 3.4.0
+
+- Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
+
+## Others
+
 - Clarified that ResetData clears debug data but does not remove active event listeners.
 - Updated and translated the Runtime/Events README to match the current event API.
 - Added AutoBundles documentation and linked it from the root README.

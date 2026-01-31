@@ -1,33 +1,35 @@
 # AGENTS.md
 
-## Scopo del repository
-Utility package per Unity 2022.3 (`com.gedemy.gameutils`). Gli script di runtime vivono in `Runtime/`, gli strumenti editor in `Editor/`, e le feature sperimentali in `WIP/`.
+## Repository scope
+Utility package for Unity 2022.3 (`com.gedemy.gameutils`). Runtime scripts live in `Runtime/`, editor tools in `Editor/`, and experimental features in `WIP/`.
 
-## Struttura principale
-- `Runtime/` — codice utilizzabile in gioco (namespace `GameUtils`).
-- `Editor/` — strumenti e finestre editor (namespace `UnityEditor.GameUtils`).
-- `WIP/` — feature in sviluppo; mantenere separato dal runtime stabile.
-- `*.asmdef` — rispettare la separazione Runtime/Editor.
+## Main structure
+- `Runtime/` — gameplay-usable code (namespace `GameUtils`).
+- `Editor/` — editor tools and windows (namespace `UnityEditor.GameUtils`).
+- `WIP/` — in-development features; keep separate from stable runtime.
+- `*.asmdef` — respect the Runtime/Editor separation.
 
-## Convenzioni di codice
-- **Namespace**:  
-  - Runtime: `GameUtils`  
+## Code conventions
+- **Namespace**:
+  - Runtime: `GameUtils`
   - Editor: `UnityEditor.GameUtils`
-- **Naming convention interna**: rispettare sempre le convenzioni di questo progetto (namespace, nomi file/classe, campi serializzati, stile).
-- **Nomi file/classe**: 1 classe pubblica principale per file, nome file = nome classe.
-- **Campi serializzati**: `private` con prefisso `_` e `[SerializeField]`.
-- **API Unity**: usare `CreateAssetMenu`/`MenuItem` con `GameUtilsMenuConstants` per coerenza delle voci di menu.
-- **Stile**: PascalCase per classi/metodi/proprietà, camelCase per parametri, underscore per campi privati.
-- **ScriptableObject**: preferire SO per dati/configurazioni condivise; mantenere i path di menu consistenti.
-## Requisiti per l'agente
-- Includi sempre i `<summary>` nelle risposte finali.
-- Commenta sempre il codice che scrivi.
-- Le variabili di classe non vanno commentate.
-- A ogni modifica andrebbe aggiornato il CHANGELOG.
+- **Internal naming convention**: always follow this project's conventions (namespace, file/class names, serialized fields, style).
+- **File/class names**: 1 main public class per file, file name = class name.
+- **Serialized fields**: `private` with `_` prefix and `[SerializeField]`.
+- **Unity API**: use `CreateAssetMenu`/`MenuItem` with `GameUtilsMenuConstants` for consistent menu entries.
+- **Style**: PascalCase for classes/methods/properties, camelCase for parameters, underscore for private fields.
+- **ScriptableObject**: prefer SOs for shared data/configs; keep menu paths consistent.
 
-## Asset e meta
-- Non rimuovere o rinominare file `.meta` manualmente; Unity li gestisce.
-- Ogni nuovo asset/script deve avere un relativo `.meta`.
+## Agent requirements
+- Always include `<summary>` in final responses.
+- Always comment the code you write.
+- Class variables must not be commented.
+- Every change should update the CHANGELOG.
+- Every time a change is recorded in CHANGELOG.md, include the version found in package.json.
 
-## Note su WIP
-- Le feature in `WIP/` sono sperimentali: evitare dipendenze inverse da `Runtime/` stabile.
+## Assets and meta
+- Do not remove or rename `.meta` files manually; Unity manages them.
+- Every new asset/script must have a corresponding `.meta`.
+
+## WIP notes
+- Features in `WIP/` are experimental: avoid reverse dependencies from stable `Runtime/`.
