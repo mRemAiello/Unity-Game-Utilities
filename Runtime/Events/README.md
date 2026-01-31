@@ -1,73 +1,83 @@
 # Event System
 
-Questo modulo fornisce una semplice implementazione degli "Game Events" basata su `ScriptableObject`.
-Gli eventi sono asset che mantengono una lista di listener e possono essere richiamati direttamente o tramite `EventManager`.
+This module provides a lightweight "Game Events" implementation based on `ScriptableObject` assets.
+Each event asset stores runtime listeners and can be invoked directly from code.
 
-## ScriptableObject
+## Scriptable event assets
 
-Gli asset si creano dal menu `Game Utils/Events` e derivano tutti da `GameEventBaseAsset`.
-Esistono vari tipi già pronti:
+You can create event assets from the `Game Utils/Events` menu (via `GameUtilsMenuConstants.EVENT_NAME`).
+The default assets included in this folder are:
 
-- `VoidEventAsset` – evento senza parametri
+- `VoidEventAsset` — event without parameters
 - `FloatEventAsset`, `IntEventAsset`
 - `Vector2EventAsset`, `Vector3EventAsset`
 - `QuaternionEventAsset`, `TransformEventAsset`, `GameObjectEventAsset`
-- `SelectableEventAsset`, `ModalWindowButtonEventAsset`
 
-Ogni asset espone l'opzione `Log Enabled` per stampare a console gli invocation tramite l'interfaccia `ILoggable`.
+Specialized event assets (for example `ModalWindowButtonEventAsset`) live in the feature folders that own their data types.
 
-Gli asset di tipo generico (`GameEventAsset<T>`) espongono:
+## Base classes and behavior
 
-- `AddListener(UnityAction<T>)`
-- `RemoveListener(UnityAction<T>)`
+### `GameEventAssetBase`
+
+`GameEventAssetBase` stores runtime listener metadata (`EventTuple`) for debug inspection.
+It also exposes a `Log Enabled` toggle (via `ILoggable`) and a `ResetData()` method that clears the debug listener list (not the active callbacks).
+
+### `GameEventAsset<T>`
+
+`GameEventAsset<T>` extends the base class with the following API:
+
+- `AddListener(Action<T>)`
+- `RemoveListener(Action<T>)`
 - `RemoveAllListeners()`
 - `Invoke(T param)`
 
-`VoidEventAsset` offre gli stessi metodi ma senza parametri.
+When `Invoke` is called, the asset:
 
-## EventCollectionData
+- Logs (if `Log Enabled` is enabled).
+- Stores the call in `_callHistory` and updates `CurrentValue`.
+- Invokes all registered listeners.
 
-È un semplice contenitore di eventi accessibili tramite chiave stringa. Può essere utilizzato per organizzare e recuperare gli asset con `GetEventAsset(key)`.
+### `VoidEventAsset`
 
-## EventManager
+`VoidEventAsset` mirrors the same listener API without parameters:
 
-Singleton che fornisce un punto di accesso globale agli eventi registrati nelle collezioni configurate. Le funzioni principali sono:
+- `AddListener(Action)`
+- `RemoveListener(Action)`
+- `RemoveAllListeners()`
+- `Invoke()`
+
+## Runtime management
+
+`GameEventDataManager` inherits from `GenericDataManager` and resets all managed events on `Awake` and `OnDestroy`.
+This clears the debug listener metadata and call history, but active listeners remain unless `RemoveAllListeners()` is called.
+
+## Example usage
 
 ```cs
-GameEventAsset<T> GetEventAssetByName<T>(string eventName);
-void AddListenerToEventByName<T>(string eventName, UnityAction<T> call);
-void RemoveListenerToEventByName<T>(string eventName, UnityAction<T> call);
-void RemoveAllListerToEventByName<T>(string eventName);
-void InvokeEventByName<T>(string eventName, T param);
-```
-
-## Esempio di utilizzo
-
-```cs
-// Creiamo un FloatEventAsset (menu: Game Utils/Events/Numeric/Float)
-// e lo aggiungiamo a una EventCollectionData.
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private EventCollectionData _events;
-    [SerializeField] private string _damageEvent = "OnDamage";
+    [SerializeField] private FloatEventAsset _damageEvent;
 
     private void OnEnable()
     {
-        EventManager.Instance.AddListenerToEventByName<float>(_damageEvent, OnDamage);
+        _damageEvent.AddListener(OnDamage);
     }
 
     private void OnDisable()
     {
-        EventManager.Instance.RemoveListenerToEventByName<float>(_damageEvent, OnDamage);
+        _damageEvent.RemoveListener(OnDamage);
     }
 
     private void OnDamage(float value)
     {
         Debug.Log($"Player damaged for {value}");
     }
-}
 
-// Invocazione dell'evento
-EventManager.Instance.InvokeEventByName<float>("OnDamage", 10f);
+    private void DealDamage()
+    {
+        _damageEvent.Invoke(10f);
+    }
+}
 ```
