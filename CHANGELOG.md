@@ -1,4 +1,5 @@
 ## Unreleased
+- [3.4.0] Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
 - Added AutoBundles documentation and linked it from the root README.
 - Implementata in AutoBundles2 la sincronizzazione dei group Addressables con asset, label e pulizia per estensioni escluse.
 - Normalizzati i separatori dei percorsi in AutoBundles2 per generare asset path validi su Windows.
