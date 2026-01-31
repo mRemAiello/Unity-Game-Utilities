@@ -1,4 +1,5 @@
 ## Unreleased
+- Updated and translated the Runtime/Events README to match the current event API.
 - Added AutoBundles documentation and linked it from the root README.
 - Implementata in AutoBundles2 la sincronizzazione dei group Addressables con asset, label e pulizia per estensioni escluse.
 - Normalizzati i separatori dei percorsi in AutoBundles2 per generare asset path validi su Windows.
