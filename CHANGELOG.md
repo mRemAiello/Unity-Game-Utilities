@@ -1,6 +1,9 @@
 ## 3.4.0
 
 - Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
+- Added ClickInputManager and IClickable for Input System raycast click handling.
+- Added README documentation for the Runtime/Input utilities and interfaces.
+- Translated the Runtime/Input README documentation to English.
 
 ## Others
 
