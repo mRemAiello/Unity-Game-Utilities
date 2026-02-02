@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace GameUtils
 {
     // Manages click raycasts using the new Input System.
-    public class ClickInputManager : MonoBehaviour
+    public class ClickInputManager : Singleton<ClickInputManager>
     {
         [SerializeField] private InputActionReference _pointerPositionAction;
         [SerializeField] private InputActionReference _clickAction;
@@ -64,8 +64,7 @@ namespace GameUtils
                 return;
             }
 
-            IClickable clickable = hitInfo.collider.GetComponent<IClickable>();
-            if (clickable == null)
+            if (!hitInfo.collider.TryGetComponent<IClickable>(out var clickable))
             {
                 return;
             }
