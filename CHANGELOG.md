@@ -2,6 +2,7 @@
 
 - Added modal window button cleanup with warnings for missing button prefab/root.
 - Added null guards with warnings for modal window header/body text setters.
+- (3.4.0) Added README documentation for the ModalWindow UI utilities.
 
 ## 3.4.0
 
