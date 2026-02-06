@@ -1,5 +1,6 @@
 ## 3.4.0
 
+- Added null guards with warnings for modal window header/body text setters.
 - Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
 - Added ClickInputManager and IClickable for Input System raycast click handling.
 - Added README documentation for the Runtime/Input utilities and interfaces.
