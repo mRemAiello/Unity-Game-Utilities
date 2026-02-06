@@ -1,6 +1,10 @@
+## 3.4.1
+
+- Added modal window button cleanup with warnings for missing button prefab/root.
+- Added null guards with warnings for modal window header/body text setters.
+
 ## 3.4.0
 
-- 3.4.0 - Added modal window button cleanup with warnings for missing button prefab/root.
 - Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
 - Added ClickInputManager and IClickable for Input System raycast click handling.
 - Added README documentation for the Runtime/Input utilities and interfaces.

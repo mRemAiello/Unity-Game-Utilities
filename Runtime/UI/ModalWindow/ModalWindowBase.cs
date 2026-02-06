@@ -38,12 +38,26 @@ namespace GameUtils
         [Button(ButtonSizes.Medium)]
         public virtual void SetHeaderText(string headerText)
         {
+            // Guard against missing header reference to avoid null access.
+            if (!_headerText)
+            {
+                this.LogWarning("[ModalWindowBase] Header text reference is null.", this);
+                return;
+            }
+
             _headerText.text = headerText;
         }
 
         [Button(ButtonSizes.Medium)]
         public virtual void SetBodyText(string text)
         {
+            // Guard against missing body reference to avoid null access.
+            if (!_questionText)
+            {
+                this.LogWarning("[ModalWindowBase] Body text reference is null.", this);
+                return;
+            }
+
             _questionText.text = text;
         }
 
