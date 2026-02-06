@@ -19,7 +19,7 @@ namespace GameUtils
         //
         public ModalButtonType Type => _type;
 
-        public void Init(string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type = ModalButtonType.Normal)
+        public void Init(string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type = ModalButtonType.Normal, UnityEvent onButtonClicked = null)
         {
             _text.text = text;
             _type = type;
@@ -27,11 +27,19 @@ namespace GameUtils
 
             //
             _button.onClick.AddListener(new UnityAction(Click));
+            // Notify modal-level listeners when the button is clicked.
+            _button.onClick.AddListener(() => InvokeButtonEvent(onButtonClicked));
         }
 
         private void Click()
         {
             _buttonEvent?.Invoke(this);
+        }
+
+        private void InvokeButtonEvent(UnityEvent onButtonClicked)
+        {
+            // Invoke the optional modal-level button event.
+            onButtonClicked?.Invoke();
         }
     }
 }

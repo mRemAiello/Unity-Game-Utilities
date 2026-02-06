@@ -2,6 +2,7 @@
 using TMPro;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameUtils
 {
@@ -12,6 +13,7 @@ namespace GameUtils
         [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
         [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
         [SerializeField, Group("references")] private Transform _buttonsRoot;
+        [SerializeField, Group("references")] private UnityEvent _onButtonClicked;
         [SerializeField, Group("debug")] private bool _logEnabled = false;
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] protected List<ModalWindowButton> _buttons = new();
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private bool _ignorable;
@@ -84,7 +86,8 @@ namespace GameUtils
             var button = Instantiate(buttonPrefab, _buttonsRoot);
             if (button.TryGetComponent(out ModalWindowButton buttonScript))
             {
-                buttonScript.Init(text, buttonEvent, type);
+                // Provide the modal-level button event to the button initialization.
+                buttonScript.Init(text, buttonEvent, type, _onButtonClicked);
                 _buttons.Add(buttonScript);
             }
         }
