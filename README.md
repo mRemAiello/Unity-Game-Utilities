@@ -37,6 +37,7 @@ Main subfolders:
 - [Extensions](./Runtime/Extensions): assorted extension methods.
 - [Input](./Runtime/Input): input system components.
 - [Math](./Runtime/Math): helper math functions.
+- [ModalWindow](./Runtime/ModalWindow): modal window UI flow and button events.
 - [Misc](./Runtime/Misc): generic utilities.
 - [Movement](./Runtime/Movement): movement scripts.
 - [Placement](./Runtime/Placement): object placement.

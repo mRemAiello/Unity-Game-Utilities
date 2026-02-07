@@ -1,13 +1,13 @@
 # Modal Window UI
 
 ## Overview
-The modal window utilities provide a small, reusable UI flow for showing prompts with configurable buttons. The workflow is:
+The modal window utilities provide a reusable UI flow for showing prompts with configurable buttons. The workflow is:
 
 1. Add a concrete modal window component (such as `ModalWindowSimple`) to your canvas.
-2. Configure the header/body `TextMeshProUGUI` references and button root in the inspector.
+2. Configure the header/body `TextMeshProUGUI` references, the button root, and the optional animator in the inspector.
 3. Use `ModalWindowBase` APIs to set text, create buttons, and show/close the modal.
 
-## Classes
+## Components
 
 ### `ModalWindowBase`
 `ModalWindowBase` is the abstract foundation for all modal windows. It handles text assignment, button creation, visibility, and lifecycle hooks.
@@ -17,24 +17,23 @@ The modal window utilities provide a small, reusable UI flow for showing prompts
 - `bool Ignorable` — Indicates whether the modal can be dismissed without user input.
 - `SetHeaderText(string headerText)` — Assigns the header text.
 - `SetBodyText(string text)` — Assigns the body/question text.
-- `AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type)` — Instantiates a new button and wires it to the event asset.
-- `Show()` / `Close()` — Toggles visibility and clears generated buttons on close.
+- `AddButton(GameObject buttonPrefab, string text, UnityAction onButtonClicked)` — Instantiates a new button and wires a callback.
+- `Show()` / `Close()` — Toggles visibility, plays `Open`/`Close` animator triggers, and clears buttons on close.
 - `ClearButtons()` — Removes all runtime-created buttons.
 
 ### `ModalWindowSimple`
 `ModalWindowSimple` is a minimal concrete implementation that stores `Visible` as a serialized boolean. Use it when you want to control visibility via custom UI logic or animations in the scene.
 
 ### `ModalWindowButton`
-`ModalWindowButton` is the runtime component that represents each modal action button. It exposes the `Type` (normal/danger/success) and invokes a `ModalWindowButtonEventAsset` when clicked.
-
-### `ModalButtonType`
-An enum used to tag buttons:
-- `Normal`
-- `Danger`
-- `Success`
+`ModalWindowButton` is the runtime component that represents each modal action button. It invokes the `UnityAction` passed in `ModalWindowBase.AddButton` and then raises the optional `ModalWindowButtonEventAsset` assigned on the button component.
 
 ### `ModalWindowButtonEventAsset`
-A `ScriptableObject` event (`GameEventAsset<ModalWindowButton>`) raised when a modal button is clicked. It allows you to react to modal actions from any listener without direct references.
+A `ScriptableObject` event (`GameEventAsset<ModalWindowButton>`) raised when a modal button is clicked. It allows you to react to modal actions from listeners without direct references.
+
+## Setup notes
+- The button prefab must include a `ModalWindowButton` component with a `TextMeshProUGUI` and `Button` reference assigned.
+- The modal window uses animator triggers named `Open` and `Close` if an animator is assigned.
+- Button click order is: `UnityAction` callback first, then the optional event asset.
 
 ## Usage examples
 
@@ -48,7 +47,6 @@ namespace GameUtils
     {
         [SerializeField] private ModalWindowSimple _modal;
         [SerializeField] private GameObject _buttonPrefab;
-        [SerializeField] private ModalWindowButtonEventAsset _buttonEvent;
 
         private void Start()
         {
@@ -56,9 +54,9 @@ namespace GameUtils
             _modal.SetHeaderText("Quit game?");
             _modal.SetBodyText("Are you sure you want to exit the game?");
 
-            // Add buttons with different styles.
-            _modal.AddButton(_buttonPrefab, "Cancel", _buttonEvent, ModalButtonType.Normal);
-            _modal.AddButton(_buttonPrefab, "Quit", _buttonEvent, ModalButtonType.Danger);
+            // Add buttons with per-button callbacks.
+            _modal.AddButton(_buttonPrefab, "Cancel", () => _modal.Close());
+            _modal.AddButton(_buttonPrefab, "Quit", () => Application.Quit());
 
             // Show the modal window.
             _modal.Show();
@@ -67,7 +65,7 @@ namespace GameUtils
 }
 ```
 
-### Listen to button clicks
+### Listen to button clicks via the event asset
 ```csharp
 using UnityEngine;
 
@@ -91,12 +89,8 @@ namespace GameUtils
 
         private void OnModalButtonClicked(ModalWindowButton button)
         {
-            // React to the button type.
-            if (button.Type == ModalButtonType.Danger)
-            {
-                // Handle a danger action.
-                Debug.Log("Danger action selected.");
-            }
+            // React to the clicked button instance.
+            Debug.Log($"Modal button clicked: {button.name}");
         }
     }
 }
