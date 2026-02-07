@@ -1,6 +1,7 @@
 ## 3.4.1
 
-- Improved ModalWindowBase logging for missing button components and animator references.
+- Removed Singleton from ModalWindow.
+- Improved ModalWindowBase logging.
 - Added modal window button cleanup with warnings for missing button prefab/root.
 - Added null guards with warnings for modal window header/body text setters.
 - Added a modal-level UnityEvent hook for modal button clicks.
