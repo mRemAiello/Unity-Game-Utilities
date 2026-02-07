@@ -13,6 +13,8 @@
 - Added ClickInputManager and IClickable for Input System raycast click handling.
 - Added README documentation for the Runtime/Input utilities and interfaces.
 - Translated the Runtime/Input README documentation to English.
+- Updated README documentation for the ModalWindow UI utilities.
+- Added root README entry for the ModalWindow runtime folder.
 
 ## Others
 
