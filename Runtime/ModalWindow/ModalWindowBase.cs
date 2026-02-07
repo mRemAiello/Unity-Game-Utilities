@@ -2,16 +2,19 @@
 using TMPro;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("references", Title = "References")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("animations", Title = "Animations")]
     public abstract class ModalWindowBase : Singleton<ModalWindowBase>, ILoggable
     {
         [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
         [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
         [SerializeField, Group("references")] private Transform _buttonsRoot;
+        [SerializeField, Group("animations")] private Animator _animator;
         [SerializeField, Group("debug")] private bool _logEnabled = false;
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] protected List<ModalWindowButton> _buttons = new();
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private bool _ignorable;
@@ -22,6 +25,8 @@ namespace GameUtils
             get => _ignorable;
             protected set => _ignorable = value;
         }
+
+        //
         public abstract bool Visible { get; set; }
         public bool LogEnabled => _logEnabled;
 
@@ -62,13 +67,13 @@ namespace GameUtils
         }
 
         [Button(ButtonSizes.Medium)]
-        public virtual void AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type)
+        public virtual void AddButton(GameObject buttonPrefab, string text, UnityAction onButtonClicked)
         {
             // Validate the button prefab before instantiation.
             if (!buttonPrefab)
             {
                 // Warn about a missing button prefab.
-                Debug.LogWarning($"{nameof(ModalWindowBase)}: Button prefab is null.", this);
+                this.LogWarning("[ModalWindowBase] Button prefab is null. Cannot create modal button.", this);
                 return;
             }
 
@@ -76,7 +81,7 @@ namespace GameUtils
             if (!_buttonsRoot)
             {
                 // Warn about a missing buttons root.
-                Debug.LogWarning($"{nameof(ModalWindowBase)}: Buttons root is missing.", this);
+                this.LogWarning("[ModalWindowBase] Buttons root is missing. Cannot parent modal button.", this);
                 return;
             }
 
@@ -84,9 +89,18 @@ namespace GameUtils
             var button = Instantiate(buttonPrefab, _buttonsRoot);
             if (button.TryGetComponent(out ModalWindowButton buttonScript))
             {
-                buttonScript.Init(text, buttonEvent, type);
+                // Provide the modal-level button event to the button initialization.
+                buttonScript.Init(text, onButtonClicked);
                 _buttons.Add(buttonScript);
+                // Exit after successful button initialization.
+                return;
             }
+
+            // Warn when the prefab lacks the expected button component.
+            this.LogWarning("[ModalWindowBase] Button prefab is missing ModalWindowButton. Destroying instance.", this);
+
+            // Destroy the invalid button instance.
+            Destroy(button);
         }
 
         [Button(ButtonSizes.Medium)]
@@ -97,12 +111,34 @@ namespace GameUtils
             //
             Visible = true;
             transform.SetAsLastSibling();
+
+            //
+            if (_animator == null)
+            {
+                // Warn when the animator reference is missing.
+                this.LogWarning("[ModalWindowBase] Animator reference is null. Open trigger skipped.", this);
+                return;
+            }
+
+            //
+            _animator.SetTrigger("Open");
         }
 
         [Button(ButtonSizes.Medium)]
         public void Close()
         {
             Visible = false;
+
+            //
+            if (_animator == null)
+            {
+                // Warn when the animator reference is missing.
+                this.LogWarning("[ModalWindowBase] Animator reference is null. Close trigger skipped.", this);
+                return;
+            }
+
+            //
+            _animator.SetTrigger("Close");
 
             //
             ClearButtons();
