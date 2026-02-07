@@ -9,7 +9,7 @@ namespace GameUtils
     [DeclareBoxGroup("references", Title = "References")]
     [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("animations", Title = "Animations")]
-    public abstract class ModalWindowBase : Singleton<ModalWindowBase>, ILoggable
+    public abstract class ModalWindowBase : MonoBehaviour, ILoggable
     {
         [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
         [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
@@ -31,13 +31,15 @@ namespace GameUtils
         public bool LogEnabled => _logEnabled;
 
         //
-        protected override void OnPostAwake()
+        void Awake()
         {
-            base.OnPostAwake();
-
-            //
+            // Initialize the modal state when the component awakens.
             _buttons = new();
             _ignorable = false;
+
+            // Allow derived classes to hook into the initialization.
+            OnPostAwake();
+
         }
 
         [Button(ButtonSizes.Medium)]
@@ -171,5 +173,6 @@ namespace GameUtils
         //
         protected virtual void OnBeforeShow() { }
         protected virtual void OnPostClose() { }
+        protected virtual void OnPostAwake() { }
     }
 }
