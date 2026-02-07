@@ -6,14 +6,15 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("references", Title = "References")]
+    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("animations", Title = "Animations")]
     public abstract class ModalWindowBase : Singleton<ModalWindowBase>, ILoggable
     {
         [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
         [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
         [SerializeField, Group("references")] private Transform _buttonsRoot;
-        [SerializeField, Group("references")] private UnityEvent _onButtonClicked;
+        [SerializeField, Group("animations")] private Animator _animator;
         [SerializeField, Group("debug")] private bool _logEnabled = false;
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] protected List<ModalWindowButton> _buttons = new();
         [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private bool _ignorable;
@@ -24,6 +25,8 @@ namespace GameUtils
             get => _ignorable;
             protected set => _ignorable = value;
         }
+
+        //
         public abstract bool Visible { get; set; }
         public bool LogEnabled => _logEnabled;
 
@@ -64,7 +67,7 @@ namespace GameUtils
         }
 
         [Button(ButtonSizes.Medium)]
-        public virtual void AddButton(GameObject buttonPrefab, string text, ModalWindowButtonEventAsset buttonEvent, ModalButtonType type)
+        public virtual void AddButton(GameObject buttonPrefab, string text, UnityAction onButtonClicked)
         {
             // Validate the button prefab before instantiation.
             if (!buttonPrefab)
@@ -87,7 +90,7 @@ namespace GameUtils
             if (button.TryGetComponent(out ModalWindowButton buttonScript))
             {
                 // Provide the modal-level button event to the button initialization.
-                buttonScript.Init(text, buttonEvent, type, _onButtonClicked);
+                buttonScript.Init(text, onButtonClicked);
                 _buttons.Add(buttonScript);
             }
         }
@@ -100,12 +103,32 @@ namespace GameUtils
             //
             Visible = true;
             transform.SetAsLastSibling();
+
+            //
+            if (_animator == null)
+            {
+                this.Log("FIX");
+                return;
+            }
+
+            //
+            _animator.SetTrigger("Open");
         }
 
         [Button(ButtonSizes.Medium)]
         public void Close()
         {
             Visible = false;
+
+            //
+            if (_animator == null)
+            {
+                this.Log("FIX");
+                return;
+            }
+
+            //
+            _animator.SetTrigger("Close");
 
             //
             ClearButtons();
