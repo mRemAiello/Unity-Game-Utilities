@@ -1,10 +1,10 @@
 ## 3.4.1
 
-- (3.4.0) Improved ModalWindowBase logging for missing button components and animator references.
+- Improved ModalWindowBase logging for missing button components and animator references.
 - Added modal window button cleanup with warnings for missing button prefab/root.
 - Added null guards with warnings for modal window header/body text setters.
-- (3.4.0) Added a modal-level UnityEvent hook for modal button clicks.
-- (3.4.0) Added README documentation for the ModalWindow UI utilities.
+- Added a modal-level UnityEvent hook for modal button clicks.
+- Added README documentation for the ModalWindow UI utilities.
 
 ## 3.4.0
 
