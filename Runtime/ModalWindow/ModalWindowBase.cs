@@ -73,7 +73,7 @@ namespace GameUtils
             if (!buttonPrefab)
             {
                 // Warn about a missing button prefab.
-                Debug.LogWarning($"{nameof(ModalWindowBase)}: Button prefab is null.", this);
+                this.LogWarning("[ModalWindowBase] Button prefab is null. Cannot create modal button.", this);
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace GameUtils
             if (!_buttonsRoot)
             {
                 // Warn about a missing buttons root.
-                Debug.LogWarning($"{nameof(ModalWindowBase)}: Buttons root is missing.", this);
+                this.LogWarning("[ModalWindowBase] Buttons root is missing. Cannot parent modal button.", this);
                 return;
             }
 
@@ -92,7 +92,15 @@ namespace GameUtils
                 // Provide the modal-level button event to the button initialization.
                 buttonScript.Init(text, onButtonClicked);
                 _buttons.Add(buttonScript);
+                // Exit after successful button initialization.
+                return;
             }
+
+            // Warn when the prefab lacks the expected button component.
+            this.LogWarning("[ModalWindowBase] Button prefab is missing ModalWindowButton. Destroying instance.", this);
+
+            // Destroy the invalid button instance.
+            Destroy(button);
         }
 
         [Button(ButtonSizes.Medium)]
@@ -107,7 +115,8 @@ namespace GameUtils
             //
             if (_animator == null)
             {
-                this.Log("FIX");
+                // Warn when the animator reference is missing.
+                this.LogWarning("[ModalWindowBase] Animator reference is null. Open trigger skipped.", this);
                 return;
             }
 
@@ -123,7 +132,8 @@ namespace GameUtils
             //
             if (_animator == null)
             {
-                this.Log("FIX");
+                // Warn when the animator reference is missing.
+                this.LogWarning("[ModalWindowBase] Animator reference is null. Close trigger skipped.", this);
                 return;
             }
 
