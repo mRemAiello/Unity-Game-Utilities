@@ -1,5 +1,6 @@
 ## 3.4.1
 
+- (3.4.0) Added Clone extension methods for classes and ScriptableObjects.
 - Removed Singleton from ModalWindow.
 - Improved ModalWindowBase logging.
 - Added modal window button cleanup with warnings for missing button prefab/root.
