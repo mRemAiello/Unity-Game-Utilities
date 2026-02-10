@@ -19,6 +19,8 @@ Utility package for Unity 2022.3 (`com.gedemy.gameutils`). Runtime scripts live 
 - **Unity API**: use `CreateAssetMenu`/`MenuItem` with `GameUtilsMenuConstants` for consistent menu entries.
 - **Style**: PascalCase for classes/methods/properties, camelCase for parameters, underscore for private fields.
 - **ScriptableObject**: prefer SOs for shared data/configs; keep menu paths consistent.
+- **Tri-Inspector**: when creating `MonoBehaviour` or `ScriptableObject` classes, use Tri-Inspector and specifically `[Group]` and `[DeclareBoxGroup]` to keep inspector layouts consistent.
+- **Logging**: log important function-related information. When possible, rely on the `ILoggable` interface and its `Log()` helpers.
 
 ## Agent requirements
 - Always include `<summary>` in final responses.
