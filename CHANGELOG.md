@@ -9,6 +9,7 @@
 
 ## 3.4.0
 
+- Added AGENTS.md guidance for Tri-Inspector usage (`[Group]`, `[DeclareBoxGroup]`) in MonoBehaviour/ScriptableObject classes and important-function logging via `ILoggable.Log()`.
 - Translated AGENTS.md to English and clarified the CHANGELOG version requirement.
 - Added ClickInputManager and IClickable for Input System raycast click handling.
 - Added README documentation for the Runtime/Input utilities and interfaces.
