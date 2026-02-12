@@ -6,6 +6,8 @@
 - Added null guards with warnings for modal window header/body text setters.
 - Added a modal-level UnityEvent hook for modal button clicks.
 - Added README documentation for the ModalWindow UI utilities.
+- Added tracker to Attributes.
+- Added a more robust Name and Description getter.
 
 ## 3.4.0
 
