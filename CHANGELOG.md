@@ -1,3 +1,7 @@
+## 3.4.2
+
+- Added GameEventAsset2<T1, T2>
+
 ## 3.4.1
 
 - Removed Singleton from ModalWindow.
