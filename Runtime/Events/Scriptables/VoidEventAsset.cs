@@ -18,12 +18,12 @@ namespace GameUtils
                 return;
 
             //
-            _runtimeListeners.Add(new EventTuple
+            /*_runtimeListeners.Add(new EventTuple
             {
                 Caller = action.Target != null ? action.Target.ToString() : "Static",
                 MethodName = action.Method.Name,
                 ClassName = action.Method.DeclaringType?.Name
-            });
+            });*/
 
             //
             _onInvoked += action;
@@ -32,7 +32,7 @@ namespace GameUtils
         public void RemoveListener(Action action)
         {
             // Deletes the listener and its reference from the runtime listeners list.
-            _runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
+            //_runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
 
             //
             _onInvoked -= action;
@@ -49,7 +49,7 @@ namespace GameUtils
         public void Invoke()
         {
             // Gestisce l'invocazione dell'evento con tracciamento opzionale.
-            this.Log($"[VoidEventAsset] Invoked", this);
+            this.Log($"Invoked", this);
 
             //
             _onInvoked?.Invoke();

@@ -10,11 +10,11 @@ namespace GameUtils
         [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<T> _callHistory;
 
         //
-        protected T _currentValue;
+        [NonSerialized] protected T _currentValue;
         protected Action<T> _onInvoked;
 
         //
-        public T CurrentValue => _currentValue;
+        [ShowInInspector, Group("internal"), ReadOnly] public T CurrentValue => _currentValue;
 
         //
         public override void ResetData()
@@ -31,12 +31,12 @@ namespace GameUtils
                 return;
 
             //
-            _runtimeListeners.Add(new EventTuple
+            /*_runtimeListeners.Add(new EventTuple
             {
-                Caller = action.Target != null ? action.Target.ToString() : "Static",
+                Caller = ,
                 ClassName = action.Method.DeclaringType?.Name,
                 MethodName = action.Method.Name
-            });
+            });*/
 
             //
             _onInvoked += action;
@@ -45,7 +45,7 @@ namespace GameUtils
         public void RemoveListener(Action<T> action)
         {
             // Deletes the listener and its reference from the runtime listeners list.
-            _runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
+            //_runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
 
             //
             _onInvoked -= action;
@@ -61,9 +61,12 @@ namespace GameUtils
         public virtual void Invoke(T param)
         {
             // Gestisce l'invocazione dell'evento con tracciamento opzionale.
-            this.Log($"[GameEventAsset<{typeof(T).Name}>] Invoked with param: {param}", this);
+            this.Log($"Invoked with param: {param}", this);
 
-            //
+            // Inizializza la cronologia solo in runtime per evitare persistenza sull'asset.
+            _callHistory ??= new List<T>();
+
+            // Aggiunge il parametro alla cronologia di debug runtime.
             _callHistory.Add(param);
             _currentValue = param;
             _onInvoked?.Invoke(param);

@@ -7,15 +7,17 @@ namespace GameUtils
 {
     public abstract class GameEventAsset2<T1, T2> : GameEventAssetBase
     {
-        [SerializeField, Group("internal"), ReadOnly] protected T1 _currentValue;
-        [SerializeField, Group("internal"), ReadOnly] protected T2 _currentValue2;
-        [SerializeField, Group("internal"), TableList(AlwaysExpanded = true), ReadOnly] protected List<(T1, T2)> _callHistory;
+        [NonSerialized] protected T1 _currentValue;
+        [NonSerialized] protected T2 _currentValue2;
+        [NonSerialized] protected List<(T1, T2)> _callHistory;
 
         //
         protected Action<T1, T2> _onInvoked;
 
         //
-        public T1 CurrentValue => _currentValue;
+        [ShowInInspector, Group("internal"), ReadOnly] public T1 CurrentValue => _currentValue;
+        [ShowInInspector, Group("internal"), ReadOnly] public T2 CurrentValue2 => _currentValue2;
+        [ShowInInspector, Group("internal"), TableList(), ReadOnly] public List<(T1, T2)> CallHistory => _callHistory;
 
         //
         public override void ResetData()
@@ -35,12 +37,12 @@ namespace GameUtils
             }
 
             //
-            _runtimeListeners.Add(new EventTuple
+            /*_runtimeListeners.Add(new EventTuple
             {
                 Caller = action.Target != null ? action.Target.ToString() : "Static",
                 ClassName = action.Method.DeclaringType?.Name,
                 MethodName = action.Method.Name
-            });
+            });*/
 
             //
             _onInvoked += action;
@@ -49,7 +51,7 @@ namespace GameUtils
         public void RemoveListener(Action<T1, T2> action)
         {
             // Deletes the listener and its reference from the runtime listeners list.
-            _runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
+            //_runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
 
             //
             _onInvoked -= action;
