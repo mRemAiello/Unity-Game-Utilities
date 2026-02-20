@@ -13,6 +13,7 @@
 - Added README documentation for the ModalWindow UI utilities.
 - Added tracker to Attributes.
 - Added a more robust Name and Description getter.
+- [3.4.1] Added generic GameEventAsset variants for 3 to 6 parameters and updated Runtime/Events documentation.
 
 ## 3.4.0
 
