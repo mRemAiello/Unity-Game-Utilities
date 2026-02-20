@@ -6,7 +6,7 @@ namespace GameUtils
     /// <summary>
     /// Provides cloning helpers for classes and ScriptableObjects.
     /// </summary>
-    public static class CloneExtensions
+    /*public static class CloneExtensions
     {
         /// <summary>
         /// Clones a plain class instance via JSON serialization.
@@ -14,7 +14,7 @@ namespace GameUtils
         /// <typeparam name="T">Type of the class to clone.</typeparam>
         /// <param name="self">Instance to clone.</param>
         /// <returns>Cloned instance.</returns>
-        public static T Clone<T>(this T self) where T : class
+        public static T Clone<T>(this T self) where T : MonoBehaviour
         {
             // Return null when there's nothing to clone.
             if (self == null)
@@ -55,5 +55,5 @@ namespace GameUtils
             // Return the populated clone instance.
             return clone;
         }
-    }
+    }*/
 }

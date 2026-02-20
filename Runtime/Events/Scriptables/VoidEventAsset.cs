@@ -8,10 +8,19 @@ namespace GameUtils
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.EVENT_NAME + "Void", order = 99)]
     public class VoidEventAsset : GameEventAssetBase
     {
-        // private
+        //
+        [NonSerialized] protected List<EventTuple> _runtimeListeners = new();
         protected Action _onInvoked;
 
         //
+        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
+
+        //
+        public override void ResetData()
+        {
+            _runtimeListeners = new List<EventTuple>();
+        }
+
         public void AddListener(Action action)
         {
             if (action == null)

@@ -1,27 +1,26 @@
 using System;
 using System.Collections.Generic;
 using TriInspector;
-using UnityEngine;
 
 namespace GameUtils
 {
     public abstract class GameEventAsset<T> : GameEventAssetBase
     {
-        [SerializeField, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] protected List<T> _callHistory;
-
-        //
+        [NonSerialized] protected List<EventTuple> _runtimeListeners = new();
+        [NonSerialized] protected List<T> _callHistory;
         [NonSerialized] protected T _currentValue;
         protected Action<T> _onInvoked;
 
         //
-        [ShowInInspector, Group("internal"), ReadOnly] public T CurrentValue => _currentValue;
+        [ShowInInspector, Group("debug"), ReadOnly] public T CurrentValue => _currentValue;
+        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
+        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<T> CallHistory => _callHistory;
 
         //
+        [Button(ButtonSizes.Medium)]
         public override void ResetData()
         {
-            base.ResetData();
-
-            //
+            _runtimeListeners = new List<EventTuple>();
             _callHistory = new List<T>();
         }
 
