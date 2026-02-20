@@ -37,12 +37,12 @@ namespace GameUtils
 
         void OnEnable()
         {
-            _onDamage.AddListener(OnDamage);
+            _onDamage.AddListener(this, OnDamage);
         }
 
         void OnDisable()
         {
-            _onDamage.RemoveListener(OnDamage);
+            _onDamage.RemoveListener(this, OnDamage);
         }
 
         void Update()
