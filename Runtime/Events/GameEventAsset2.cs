@@ -4,7 +4,7 @@ using TriInspector;
 
 namespace GameUtils
 {
-    public abstract class GameEventAsset2<T1, T2> : GameEventAssetBase
+    public abstract class GameEventAsset<T1, T2> : GameEventAssetBase
     {
         [NonSerialized] protected List<EventTuple> _runtimeListeners = new();
         [NonSerialized] protected List<(T1, T2)> _callHistory;
