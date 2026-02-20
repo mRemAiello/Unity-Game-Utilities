@@ -37,6 +37,24 @@ When `Invoke` is called, the asset:
 - Stores the call in `_callHistory` and updates `CurrentValue`.
 - Invokes all registered listeners.
 
+### `GameEventAsset<T1, T2>`
+
+`GameEventAsset<T1, T2>` extends the same pattern to events with two parameters:
+
+- `AddListener(Action<T1, T2>)`
+- `RemoveListener(Action<T1, T2>)`
+- `RemoveAllListeners()`
+- `Invoke(T1 param1, T2 param2)`
+
+The package also provides multi-parameter generic variants with the same API shape:
+
+- `GameEventAsset<T1, T2, T3>`
+- `GameEventAsset<T1, T2, T3, T4>`
+- `GameEventAsset<T1, T2, T3, T4, T5>`
+- `GameEventAsset<T1, T2, T3, T4, T5, T6>`
+
+Each variant stores call history for debug purposes, tracks the latest values in inspector properties, and invokes all registered listeners in order.
+
 ### `VoidEventAsset`
 
 `VoidEventAsset` mirrors the same listener API without parameters:
