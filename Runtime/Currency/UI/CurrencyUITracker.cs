@@ -25,7 +25,7 @@ namespace GameUtils
         //
         void Start()
         {
-            _onChangeEvent?.AddListener(OnCurrencyChangeEvent);
+            _onChangeEvent?.AddListener(this, OnCurrencyChangeEvent);
 
             // Prime the UI
             UpdateUI();
