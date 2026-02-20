@@ -1,6 +1,6 @@
 ## 3.4.2
 
-- Added GameEventAsset2<T1, T2>
+- Added GameEventAsset with generic T1, T2, T3, T4, T5, T6
 - Added Clone extension methods for classes and ScriptableObjects.
 
 ## 3.4.1
@@ -13,7 +13,7 @@
 - Added README documentation for the ModalWindow UI utilities.
 - Added tracker to Attributes.
 - Added a more robust Name and Description getter.
-- [3.4.1] Added generic GameEventAsset variants for 3 to 6 parameters and updated Runtime/Events documentation.
+- Added generic GameEventAsset variants for 3 to 6 parameters and updated Runtime/Events documentation.
 
 ## 3.4.0
 

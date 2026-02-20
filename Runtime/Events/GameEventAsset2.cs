@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TriInspector;
+using UnityEngine;
 
 namespace GameUtils
 {
@@ -26,7 +27,7 @@ namespace GameUtils
             _callHistory = new List<(T1, T2)>();
         }
 
-        public void AddListener(Action<T1, T2> action)
+        public void AddListener(MonoBehaviour caller, Action<T1, T2> action)
         {
             if (action == null)
             {
@@ -35,23 +36,21 @@ namespace GameUtils
             }
 
             //
-            /*_runtimeListeners.Add(new EventTuple
+            _runtimeListeners.Add(new EventTuple
             {
-                Caller = action.Target != null ? action.Target.ToString() : "Static",
-                ClassName = action.Method.DeclaringType?.Name,
+                CallerGameObject = caller.gameObject,
+                CallerScript = caller,
                 MethodName = action.Method.Name
-            });*/
+            });
 
             //
             _onInvoked += action;
         }
 
-        public void RemoveListener(Action<T1, T2> action)
+        public void RemoveListener(MonoBehaviour caller, Action<T1, T2> action)
         {
             // Deletes the listener and its reference from the runtime listeners list.
-            //_runtimeListeners.RemoveAll(tuple => tuple.Caller == action.Target?.ToString() && tuple.MethodName == action.Method.Name);
-
-            //
+            _runtimeListeners.RemoveAll(tuple => tuple.CallerScript == caller && tuple.MethodName == action.Method.Name);
             _onInvoked -= action;
         }
 
@@ -62,6 +61,7 @@ namespace GameUtils
             _onInvoked = null;
         }
 
+        [Button(ButtonSizes.Medium)]
         public virtual void Invoke(T1 param1, T2 param2)
         {
             // Gestisce l'invocazione dell'evento con tracciamento opzionale.
@@ -69,8 +69,6 @@ namespace GameUtils
 
             //
             _callHistory ??= new List<(T1, T2)>();
-
-            //
             _callHistory.Add((param1, param2));
             _currentValue = param1;
             _currentValue2 = param2;

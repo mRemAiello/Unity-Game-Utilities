@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TriInspector;
+using UnityEngine;
 
 namespace GameUtils
 {
@@ -31,15 +32,23 @@ namespace GameUtils
             _callHistory = new List<(T1, T2, T3, T4, T5)>();
         }
 
-        public void AddListener(Action<T1, T2, T3, T4, T5> action)
+        public void AddListener(MonoBehaviour caller, Action<T1, T2, T3, T4, T5> action)
         {
-            // Guards against invalid listener registration.
             if (action == null)
             {
-                this.LogWarning("Attempted to add a null listener.", this);
+                this.LogWarning($"Attempted to add a null listener.", this);
                 return;
             }
 
+            //
+            _runtimeListeners.Add(new EventTuple
+            {
+                CallerGameObject = caller.gameObject,
+                CallerScript = caller,
+                MethodName = action.Method.Name
+            });
+
+            //
             _onInvoked += action;
         }
 
@@ -57,11 +66,13 @@ namespace GameUtils
             _onInvoked = null;
         }
 
+        [Button(ButtonSizes.Medium)]
         public virtual void Invoke(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5)
         {
             // Tracks invocation details for runtime diagnostics.
             this.Log($"Invoked with params: {param1}, {param2}, {param3}, {param4}, {param5}", this);
 
+            //
             _callHistory ??= new List<(T1, T2, T3, T4, T5)>();
             _callHistory.Add((param1, param2, param3, param4, param5));
             _currentValue = param1;
