@@ -1,8 +1,7 @@
 ## 3.4.2
 
-- v3.4.2: Added `AttributeBlueprintData` ScriptableObject (ItemIdentifierData) with ordered `AttributeData` list and a `[Button]` to auto-populate missing attributes.
-- v3.4.2: Added `ClassData.ApplyBlueprint(AttributeBlueprintData)` to remove attributes not in blueprint and reorder remaining attributes by blueprint order.
-- v3.4.2: Fixed `ClassData.ApplyBlueprint(AttributeBlueprintData)` to handle null blueprint attribute lists safely before filtering.
+- Added `AttributeBlueprintData` ScriptableObject (ItemIdentifierData) with ordered `AttributeData` list and a `[Button]` to auto-populate missing attributes.
+- Added `ClassData.ApplyBlueprint(AttributeBlueprintData)` to remove attributes not in blueprint and reorder remaining attributes by blueprint order.
 - Improvements to Projectile
 - Added GameEventAsset with generic T1, T2, T3, T4, T5, T6
 - Added Clone extension methods for classes and ScriptableObjects.
