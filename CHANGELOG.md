@@ -1,5 +1,6 @@
 ## 3.4.2
 
+- Improvements to Projectile
 - Added GameEventAsset with generic T1, T2, T3, T4, T5, T6
 - Added Clone extension methods for classes and ScriptableObjects.
 

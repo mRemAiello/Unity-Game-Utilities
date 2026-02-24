@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace GameUtils
@@ -13,7 +12,7 @@ namespace GameUtils
         public float GetNextPositionXCorrectionAbsolute();
 
         //
-        void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null, Action<Projectile2D> onHit = null);
+        void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null);
         void InitAnimationCurves(AnimationCurve trajectoryCurve, AnimationCurve axisCorrectCurve, AnimationCurve projSpeedCurve);
     }
 }

@@ -6,30 +6,35 @@ namespace GameUtils
 {
     [DeclareBoxGroup("projectile", Title = "Projectile")]
     [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("events", Title = "Events")]
     public class Projectile2D : MonoBehaviour, IProjectile
     {
-        [SerializeField, Group("projectile")] private float _thresholdToDestroy = 1f;
-        [SerializeField, Group("projectile")] private ProjectileVisual2D _projectileVisual;
+        [SerializeField, Group("projectile")] protected float _thresholdToDestroy = 1f;
+        [SerializeField, Group("projectile")] protected ProjectileVisual2D _projectileVisual;
 
-        public event Action<Projectile2D> OnHit;
+        [SerializeField, Group("events")] protected VoidEventAsset _onHitEvent;
 
+        //
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _target;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _moveSpeed;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _maxMoveSpeed;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryStartPoint;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryRange;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _trajectoryMaxRelativeHeight;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _projectileMoveDir;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextYTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextXTrajectoryPosition;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextPositionYCorrectionAbsolute;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextPositionXCorrectionAbsolute;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _trajectoryCurve;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _axisCorrectCurve;
+        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _projSpeedCurve;
+
+        //
         private IPoolable _pool;
 
         //
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _target;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _moveSpeed;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _maxMoveSpeed;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _trajectoryStartPoint;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _trajectoryRange;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _trajectoryMaxRelativeHeight;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private Vector3 _projectileMoveDir;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextYTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextXTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextPositionYCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private float _nextPositionXCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _trajectoryCurve;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _axisCorrectCurve;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] private AnimationCurve _projSpeedCurve;
+        public Vector3 Target => _target;
 
         //
         void Start()
@@ -37,13 +42,11 @@ namespace GameUtils
             _trajectoryStartPoint = transform.position;
         }
 
-        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null, Action<Projectile2D> onHit = null)
+        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null)
         {
             _target = target;
             _maxMoveSpeed = maxMoveSpeed;
             _pool = pool;
-            if (onHit != null)
-                OnHit += onHit;
 
             //
             float xDistanceToTarget = _target.x - transform.position.x;
@@ -62,11 +65,10 @@ namespace GameUtils
 
         void Update()
         {
-            //
             UpdateProjectilePosition();
             if (Vector3.Distance(transform.position, _target) < _thresholdToDestroy)
             {
-                OnHit?.Invoke(this);
+                _onHitEvent?.Invoke();
                 enabled = false;
                 if (_pool != null)
                 {

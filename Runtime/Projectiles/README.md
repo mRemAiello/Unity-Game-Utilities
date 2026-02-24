@@ -8,14 +8,9 @@ GameObject projGameObject = Instantiate(_projPrefab, transform.position, Quatern
 if (projGameObject.TryGetComponent(out IProjectile projectile))
 {
     // Imposta bersaglio, velocità massima e altezza relativa
-    projectile.InitProjectile(_target.position, _projMaxMoveSpeed, _projMaxHeight, onHit: OnProjectileHit);
+    projectile.InitProjectile(_target.position, _projMaxMoveSpeed, _projMaxHeight);
     // Applica le curve della traiettoria, correzione asse e velocità
     projectile.InitAnimationCurves(_trajectoryCurve, _axisCorrectionCurve, _projSpeedCurve);
-}
-
-void OnProjectileHit(Projectile2D proj)
-{
-    // Restituisci al pool o gestisci l'impatto
 }
 ```
 
@@ -39,4 +34,3 @@ _projectileVisual.SetTarget(_target.position);
 ```
 
 Per un uso rapido è disponibile `Shooter`, che istanzia il prefab ogni `_shootRate` secondi e inizializza automaticamente l'`IProjectile` con i parametri e le curve specificate.
-
