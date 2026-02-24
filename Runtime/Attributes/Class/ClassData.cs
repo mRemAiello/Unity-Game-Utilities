@@ -39,8 +39,11 @@ namespace GameUtils
             // Ensure list operations are safe even on new assets.
             _attributes ??= new List<AttributeValuePair>();
 
+            // Treat a missing blueprint list as empty to avoid null-reference errors.
+            var blueprintSource = blueprint.Attributes ?? new List<AttributeData>();
+
             // Build lookup and ordering data from the blueprint while ignoring null entries.
-            var blueprintAttributes = blueprint.Attributes.Where(attribute => attribute != null).ToList();
+            var blueprintAttributes = blueprintSource.Where(attribute => attribute != null).ToList();
             var blueprintSet = new HashSet<AttributeData>(blueprintAttributes);
 
             // Remove attributes that are not declared by the selected blueprint.
