@@ -1,6 +1,6 @@
 # Unity Game Utilities
 
-This package contains a set of utility scripts for Unity projects.
+A lightweight, modular and easy to use **Unity utility package** providing reusable runtime systems, editor tooling, and experimental gameplay modules editor utilities (events, save system, extensions, projectiles, currency, and more) to accelerate game development workflows. 
 
 ## Requirements
 
