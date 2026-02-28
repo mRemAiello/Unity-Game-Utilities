@@ -1,5 +1,6 @@
 ## 3.4.2
 
+- Rewrote and translated `Runtime/States/README.md` in English with a detailed implementation guide for both `BaseStateMachine` and `StateMachineMB<T>` workflows.
 - Added `AttributeBlueprintData` ScriptableObject (ItemIdentifierData) with ordered `AttributeData` list and a `[Button]` to auto-populate missing attributes.
 - Added `ClassData.ApplyBlueprint(AttributeBlueprintData)` to remove attributes not in blueprint and reorder remaining attributes by blueprint order.
 - Improvements to Projectile
