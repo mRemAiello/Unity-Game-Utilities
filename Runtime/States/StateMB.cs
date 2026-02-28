@@ -13,7 +13,7 @@ namespace GameUtils
         public bool LogEnabled => _logEnabled;
 
         //
-        public void InjectStateMachine(StateMachineMB<T> stateMachine)
+        public void InjectStateMachine(StackStateMachineMB<T> stateMachine)
         {
             Fsm = stateMachine as T;
             this.Log("BaseStateMachine Assigned");

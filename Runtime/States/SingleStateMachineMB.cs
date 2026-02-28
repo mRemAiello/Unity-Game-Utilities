@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
 {
-    public abstract class SingleStateMachineMB<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class SingleStateMachineMB<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
+        [SerializeField] private bool _logEnabled = false;
+        [SerializeField, ReadOnly] private StateMB<T> _currentState;
         readonly Dictionary<Type, StateMB<T>> _statesRegister = new();
-        StateMB<T> _currentState;
 
-        public bool EnableLogs = true;
+        //
         public bool IsInitialized { get; private set; }
 
-        // Initializes and registers all states attached to the same GameObject.
+        //
+        public bool LogEnabled => _logEnabled;
+
+        // 
         public void Initialize()
         {
             // Allows subclasses to prepare data before state registration.
@@ -37,40 +42,41 @@ namespace GameUtils
             this.Log("Initialized!");
         }
 
-        // Override to execute logic before states are initialized.
-        protected virtual void OnBeforeInitialize()
-        {
-        }
-
-        // Override to execute logic after all states are initialized.
-        protected virtual void OnInitialize()
-        {
-        }
-
         // Initializes the machine and forwards Awake lifecycle to all registered states.
-        protected virtual void Awake()
+        private void Awake()
         {
             Initialize();
             foreach (var state in _statesRegister.Values)
                 state.OnAwake();
 
+            //
+            OnPostAwake();
+
+            //
             this.Log("States Awaken");
         }
 
         // Forwards Start lifecycle to all registered states.
-        protected virtual void Start()
+        private void Start()
         {
             foreach (var state in _statesRegister.Values)
                 state.OnStart();
 
+            //
+            OnPostStart();
+
+            //
             this.Log("States Started");
         }
 
         // Updates only the currently active state.
-        protected virtual void Update()
+        private void Update()
         {
             if (_currentState != null)
                 _currentState.OnUpdate();
+
+            //
+            OnPostUpdate();
         }
 
         // Checks whether the active state matches the requested type.
@@ -135,5 +141,12 @@ namespace GameUtils
             if (!isSilent)
                 state.OnExitState();
         }
+
+        //
+        protected virtual void OnBeforeInitialize() { }
+        protected virtual void OnInitialize() { }
+        protected virtual void OnPostAwake() { }
+        protected virtual void OnPostStart() { }
+        protected virtual void OnPostUpdate() { }
     }
 }

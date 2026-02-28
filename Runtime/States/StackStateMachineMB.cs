@@ -4,12 +4,15 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public abstract class StateMachineMB<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class StackStateMachineMB<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
+        [SerializeField] private bool _logEnabled = false;
         readonly Stack<StateMB<T>> _stack = new();
         readonly Dictionary<Type, StateMB<T>> _statesRegister = new();
-        public bool EnableLogs = true;
         public bool IsInitialized { get; private set; }
+
+        //
+        public bool LogEnabled => _logEnabled;
 
         //
         public void Initialize()
@@ -35,35 +38,39 @@ namespace GameUtils
             this.Log("Initialized!");
         }
 
-        protected virtual void OnBeforeInitialize()
-        {
-        }
-
-        protected virtual void OnInitialize()
-        {
-        }
-        protected virtual void Awake()
+        private void Awake()
         {
             Initialize();
             foreach (var state in _statesRegister.Values)
                 state.OnAwake();
 
+            //
+            OnPostAwake();
+
+            //
             this.Log("States Awaken");
         }
 
-        protected virtual void Start()
+        private void Start()
         {
             foreach (var state in _statesRegister.Values)
                 state.OnStart();
 
+            //
+            OnPostStart();
+
+            //
             this.Log("States Started");
         }
 
-        protected virtual void Update()
+        private void Update()
         {
             var current = PeekState();
             if (current != null)
                 current.OnUpdate();
+
+            //
+            OnPostUpdate();
         }
 
         public bool IsCurrent<T1>() where T1 : StateMB<T>
@@ -132,5 +139,12 @@ namespace GameUtils
                 state.OnEnterState();
             }
         }
+
+        //
+        protected virtual void OnBeforeInitialize() { }
+        protected virtual void OnInitialize() { }
+        protected virtual void OnPostAwake() { }
+        protected virtual void OnPostStart() { }
+        protected virtual void OnPostUpdate() { }
     }
 }
