@@ -276,3 +276,23 @@ public class PlayerBootstrap
 ```
 
 This setup gives you deterministic lifecycle control, explicit transitions, and reusable state modules.
+
+---
+
+## How to implement a single-active-state machine (`MonoBehaviour` workflow)
+
+Use this approach when you want exactly one active state at a time (no stack layering).
+
+### `SingleStateMachineMB<T>` behavior
+
+- Auto-discovers all `StateMB<T>` components on the same `GameObject`.
+- Registers them by runtime type during `Initialize()`.
+- Runs state setup in `Awake()` / `Start()`.
+- Replaces the active state on `PushState`.
+- Clears the active state on `PopState`.
+
+### Transition rules
+
+- `PushState<T>()` exits the current state (unless `isSilent = true`) and enters the next state.
+- `PopState()` exits the current state (unless `isSilent = true`) and leaves the machine with no active state.
+- `PeekState()` returns the currently active state or `null`.
