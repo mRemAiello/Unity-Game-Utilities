@@ -19,6 +19,13 @@ namespace GameUtils
             this.Log("BaseStateMachine Assigned");
         }
 
+        // Injects a single-state machine reference while keeping the same typed FSM API.
+        public void InjectStateMachine(SingleStateMachineMB<T> stateMachine)
+        {
+            Fsm = stateMachine as T;
+            this.Log("SingleStateMachine Assigned");
+        }
+
         public virtual void OnAwake()
         {
         }
