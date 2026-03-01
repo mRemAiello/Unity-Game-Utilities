@@ -1,9 +1,13 @@
-## 3.4.2
+## 3.4.3
 
 - Added `SingleStateMachineMB<T>` in `Runtime/States` to support MonoBehaviour FSM workflows with exactly one active state at a time (no stack semantics).
 - Added `StateMB<T>.InjectStateMachine(SingleStateMachineMB<T>)` overload to let states bind to single-state machines.
 - Updated `Runtime/States/README.md` with usage and transition behavior for `SingleStateMachineMB<T>`.
 - Rewrote and translated `Runtime/States/README.md` in English with a detailed implementation guide for both `BaseStateMachine` and `StateMachineMB<T>` workflows.
+
+
+## 3.4.2
+
 - Added `AttributeBlueprintData` ScriptableObject (ItemIdentifierData) with ordered `AttributeData` list and a `[Button]` to auto-populate missing attributes.
 - Added `ClassData.ApplyBlueprint(AttributeBlueprintData)` to remove attributes not in blueprint and reorder remaining attributes by blueprint order.
 - Improvements to Projectile

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("debug", Title = "Debug")]
-    public abstract class StateMB<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
+    public abstract class StateMonoBehaviour<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
         [SerializeField, Group("debug")] private bool _logEnabled = true;
 
@@ -13,14 +13,14 @@ namespace GameUtils
         public bool LogEnabled => _logEnabled;
 
         //
-        public void InjectStateMachine(StackStateMachineMB<T> stateMachine)
+        public void InjectStateMachine(StackStateMachineMonoBehaviour<T> stateMachine)
         {
             Fsm = stateMachine as T;
             this.Log("BaseStateMachine Assigned");
         }
 
         // Injects a single-state machine reference while keeping the same typed FSM API.
-        public void InjectStateMachine(SingleStateMachineMB<T> stateMachine)
+        public void InjectStateMachine(SingleStateMachineMonoBehaviour<T> stateMachine)
         {
             Fsm = stateMachine as T;
             this.Log("SingleStateMachine Assigned");

@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    public abstract class StackStateMachineMB<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
+    public abstract class StackStateMachineMonoBehaviour<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
         [SerializeField] private bool _logEnabled = false;
-        readonly Stack<StateMB<T>> _stack = new();
-        readonly Dictionary<Type, StateMB<T>> _statesRegister = new();
+        readonly Stack<StateMonoBehaviour<T>> _stack = new();
+        readonly Dictionary<Type, StateMonoBehaviour<T>> _statesRegister = new();
         public bool IsInitialized { get; private set; }
 
         //
@@ -20,7 +20,7 @@ namespace GameUtils
             OnBeforeInitialize();
 
             //grab all states of this BaseStateMachine Type attached to this gameobject
-            var allStates = GetComponents<StateMB<T>>();
+            var allStates = GetComponents<StateMonoBehaviour<T>>();
 
             //StatesRegister all states
             foreach (var state in allStates)
@@ -73,7 +73,7 @@ namespace GameUtils
             OnPostUpdate();
         }
 
-        public bool IsCurrent<T1>() where T1 : StateMB<T>
+        public bool IsCurrent<T1>() where T1 : StateMonoBehaviour<T>
         {
             var current = PeekState();
             if (current == null)
@@ -81,7 +81,7 @@ namespace GameUtils
             return current.GetType() == typeof(T1);
         }
 
-        public bool IsCurrent(StateMB<T> state)
+        public bool IsCurrent(StateMonoBehaviour<T> state)
         {
             if (state == null)
                 throw new ArgumentNullException();
@@ -92,14 +92,14 @@ namespace GameUtils
             return current.GetType() == state.GetType();
         }
 
-        public void PushState<T1>(bool isSilent = false) where T1 : StateMB<T>
+        public void PushState<T1>(bool isSilent = false) where T1 : StateMonoBehaviour<T>
         {
             var stateType = typeof(T1);
             var state = _statesRegister[stateType];
             PushState(state, isSilent);
         }
 
-        public void PushState(StateMB<T> state, bool isSilent = false)
+        public void PushState(StateMonoBehaviour<T> state, bool isSilent = false)
         {
             if (!_statesRegister.ContainsKey(state.GetType()))
                 throw new ArgumentException("State " + state + " not registered yet.");
@@ -115,9 +115,9 @@ namespace GameUtils
             state.OnEnterState();
         }
 
-        public StateMB<T> PeekState()
+        public StateMonoBehaviour<T> PeekState()
         {
-            StateMB<T> state = null;
+            StateMonoBehaviour<T> state = null;
             if (_stack.Count > 0)
                 state = _stack.Peek();
 
