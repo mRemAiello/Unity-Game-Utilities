@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using TriInspector;
+using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("Debug")]
     public abstract class BaseStateMachine : ILoggable
     {
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+
+        //
         readonly Stack<IState> stack = new();
         readonly Dictionary<Type, IState> register = new();
 
         //
         public bool IsInitialized { get; protected set; }
-        public bool LogEnabled => true;
+        public bool LogEnabled => _logEnabled;
         public IStateMachineHandler Handler { get; set; }
         public IState Current => PeekState();
 

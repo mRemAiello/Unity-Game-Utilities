@@ -45,35 +45,46 @@ namespace GameUtils
         // Initializes the machine and forwards Awake lifecycle to all registered states.
         private void Awake()
         {
+            OnPreAwake();
+
+            // Init all the states
             Initialize();
             foreach (var state in _statesRegister.Values)
+            {
                 state.OnAwake();
+            }
 
             //
             OnPostAwake();
-
-            //
             this.Log("States Awaken");
         }
 
         // Forwards Start lifecycle to all registered states.
         private void Start()
         {
+            OnPreStart();
+
+            //
             foreach (var state in _statesRegister.Values)
+            {
                 state.OnStart();
+            }
 
             //
             OnPostStart();
-
-            //
             this.Log("States Started");
         }
 
         // Updates only the currently active state.
         private void Update()
         {
+            OnPreUpdate();
+
+            // 
             if (_currentState != null)
+            {
                 _currentState.OnUpdate();
+            }
 
             //
             OnPostUpdate();
@@ -101,35 +112,42 @@ namespace GameUtils
         }
 
         // Activates a state by type, replacing the current one.
-        public void ChangeState<T1>(bool isSilent = false) where T1 : StateMonoBehaviour<T>
+        public void ChangeState<T1>() where T1 : StateMonoBehaviour<T>
         {
             var stateType = typeof(T1);
             var state = _statesRegister[stateType];
-            ChangeState(state, isSilent);
+            ChangeState(state);
         }
 
         // Activates a state instance, replacing the current one.
-        public void ChangeState(StateMonoBehaviour<T> state, bool isSilent = false)
+        public void ChangeState(StateMonoBehaviour<T> state)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
 
             if (!_statesRegister.ContainsKey(state.GetType()))
-                throw new ArgumentException("State " + state + " not registered yet.");
+                throw new ArgumentException($"State {state} not registered yet.");
 
-            this.Log($"State changed to: {state.GetType()}");
-            if (_currentState != null && !isSilent)
+            //
+            if (_currentState != null)
+            {
                 _currentState.OnExitState();
+            }
 
+            //
             _currentState = state;
+            this.Log($"State changed to: {state.GetType()}");
             _currentState.OnEnterState();
         }
 
         //
         protected virtual void OnBeforeInitialize() { }
         protected virtual void OnInitialize() { }
+        protected virtual void OnPreAwake() { }
         protected virtual void OnPostAwake() { }
+        protected virtual void OnPreStart() { }
         protected virtual void OnPostStart() { }
+        protected virtual void OnPreUpdate() { }
         protected virtual void OnPostUpdate() { }
     }
 }

@@ -26,20 +26,11 @@ namespace GameUtils
             this.Log("SingleStateMachine Assigned");
         }
 
-        public virtual void OnAwake()
-        {
-        }
-
-        public virtual void OnStart()
-        {
-        }
-
-        public virtual void OnUpdate()
-        {
-        }
-
         //
-        public virtual void OnEnterState() => this.Log("OnEnterState <---------");
-        public virtual void OnExitState() => this.Log("OnExitState <---------");
+        public virtual void OnAwake() => this.Log("OnAwake");
+        public virtual void OnStart() => this.Log("OnStart");
+        public virtual void OnUpdate() => this.Log("OnUpdate");
+        public virtual void OnEnterState() => this.Log("OnEnterState");
+        public virtual void OnExitState() => this.Log("OnExitState");
     }
 }
