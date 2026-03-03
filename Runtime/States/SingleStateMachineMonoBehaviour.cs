@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("Debug")]
     public abstract class SingleStateMachineMonoBehaviour<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
-        [SerializeField] private bool _logEnabled = false;
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
         [NonSerialized] private StateMonoBehaviour<T> _currentState;
         readonly Dictionary<Type, StateMonoBehaviour<T>> _statesRegister = new();
 
         //
-        [ShowInInspector, ReadOnly] public StateMonoBehaviour<T> CurrentState => _currentState;
+        [ShowInInspector, Group("Debug"), ReadOnly] public StateMonoBehaviour<T> CurrentState => _currentState;
         public bool LogEnabled => _logEnabled;
         public bool IsInitialized { get; private set; }
 

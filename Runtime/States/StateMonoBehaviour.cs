@@ -3,26 +3,26 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Debug")]
     public abstract class StateMonoBehaviour<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
-        [SerializeField, Group("debug")] private bool _logEnabled = true;
+        [SerializeField, Group("Debug")] private bool _logEnabled = true;
 
         //
-        public T Fsm { get; private set; }
+        public T StateMachine { get; private set; }
         public bool LogEnabled => _logEnabled;
 
         //
         public void InjectStateMachine(StackStateMachineMonoBehaviour<T> stateMachine)
         {
-            Fsm = stateMachine as T;
+            StateMachine = stateMachine as T;
             this.Log("BaseStateMachine Assigned");
         }
 
         // Injects a single-state machine reference while keeping the same typed FSM API.
         public void InjectStateMachine(SingleStateMachineMonoBehaviour<T> stateMachine)
         {
-            Fsm = stateMachine as T;
+            StateMachine = stateMachine as T;
             this.Log("SingleStateMachine Assigned");
         }
 
