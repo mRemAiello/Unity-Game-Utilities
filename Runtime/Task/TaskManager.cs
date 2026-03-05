@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DefaultExecutionOrder(0)]
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     public class TaskManager : Singleton<TaskManager>, ILoggable
     {
         [SerializeField] private List<ITask> _tasks = new();

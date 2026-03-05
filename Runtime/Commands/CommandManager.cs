@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DefaultExecutionOrder(-50)]
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     [DeclareBoxGroup("debug", Title = "Debug")]
     public class CommandManager : Singleton<CommandManager>, ILoggable
     {

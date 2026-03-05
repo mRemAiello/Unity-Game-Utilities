@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     public class InventoryManager : Singleton<InventoryManager>, ILoggable
     {
         [SerializeField] private RuntimeInventory _playerInventory;
