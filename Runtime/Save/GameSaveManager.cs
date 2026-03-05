@@ -11,7 +11,8 @@ namespace GameUtils
     [DeclareBoxGroup("debug", Title = "Debug")]
     [DeclareBoxGroup("save", Title = "Save")]
     [DeclareBoxGroup("events", Title = "Events")]
-    [DefaultExecutionOrder(-200)]
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
         [SerializeField, Group("save")] private bool _logEnabled = true;

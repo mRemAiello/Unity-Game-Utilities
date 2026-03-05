@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [DefaultExecutionOrder(0)]
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     public class TimedEventsManager : Singleton<TimedEventsManager>
     {
         [SerializeField] private List<TimedEventData> _initialEvents = new();

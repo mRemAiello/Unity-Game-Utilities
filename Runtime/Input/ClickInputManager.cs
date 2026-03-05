@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 namespace GameUtils
 {
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     // Manages click raycasts using the new Input System.
     public class ClickInputManager : Singleton<ClickInputManager>
     {

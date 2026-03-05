@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
+    [DefaultExecutionOrder(-10000)]
     /// <summary>
     /// Drag and Drop manager.
     /// </summary>

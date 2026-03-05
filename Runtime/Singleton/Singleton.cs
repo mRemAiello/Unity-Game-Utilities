@@ -2,6 +2,8 @@
 
 namespace GameUtils
 {
+    // Ensures singleton-based MonoBehaviours initialize much earlier than standard scripts.
+    [DefaultExecutionOrder(-10000)]
     public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         public static T Instance { get; protected set; }
@@ -15,6 +17,7 @@ namespace GameUtils
             }
             else
             {
+                // Registers the first valid instance before the rest of the scene startup flow.
                 Instance = (T)this;
                 OnPostAwake();
             }

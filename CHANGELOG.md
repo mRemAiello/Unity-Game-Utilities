@@ -1,5 +1,7 @@
 ## 3.4.3
 
+- Applied `DefaultExecutionOrder(-10000)` to all current `Singleton<T>` subclasses so each singleton MonoBehaviour starts much earlier than standard MonoBehaviours.
+- Updated singleton execution priority by adding `DefaultExecutionOrder(-10000)` to singleton base systems so singleton MonoBehaviours start much earlier than regular MonoBehaviours.
 - Added `SingleStateMachineMB<T>` in `Runtime/States` to support MonoBehaviour FSM workflows with exactly one active state at a time (no stack semantics).
 - Added `StateMB<T>.InjectStateMachine(SingleStateMachineMB<T>)` overload to let states bind to single-state machines.
 - Updated `Runtime/States/README.md` with usage and transition behavior for `SingleStateMachineMB<T>`.
