@@ -2,6 +2,21 @@
 
 A lightweight, modular and easy to use **Unity utility package** providing reusable runtime systems, editor tooling, and experimental gameplay modules editor utilities (events, save system, extensions, projectiles, currency, and more) to accelerate game development workflows. 
 
+## Why this exists
+
+After working on several Unity projects, the same issues kept resurfacing:
+
+- Rebuilding core runtime systems from scratch
+- Tightly coupled logic that made refactoring difficult
+- Unity abstractions that introduced overhead without providing real value
+- Systems that worked early in development but didn’t scale well over time
+
+This framework was created as a practical response to those problems.
+
+The goal is to keep systems **explicit**, **modular**, and **easy to extend**, **remove**, or **replace** as project requirements evolve.
+
+Rather than enforcing a rigid architecture, it focuses on providing a lightweight and flexible foundation for building runtime systems that remain maintainable as projects grow.
+
 ## Requirements
 
 To use this package you need the following assets:
@@ -17,12 +32,7 @@ To use this package you need the following assets:
 * [Quick Save](https://www.claytoninds.com/quick-save)
 * [DOTween](http://dotween.demigiant.com/)
 
-## Packages
-
-This section describes the main package areas and what each one contains.
-
-### [Runtime](./Runtime)
-Scripts intended for in-game usage and reusable gameplay systems.
+## Included Systems
 
 #### Achievements
 Contains achievement data and runtime logic to register and unlock achievements.
@@ -93,16 +103,16 @@ Provides singleton and manager base classes for global runtime services.
 #### States
 Contains finite state machine utilities and state lifecycle abstractions.
 
-#### StatusEffects
+#### Status Effects
 Implements status effect data and runtime application/removal logic.
 
-#### TagManager
+#### Tag Manager
 Contains custom tag management utilities for gameplay categorization.
 
 #### Task
 Provides asynchronous task helpers and coroutine-friendly runtime workflows.
 
-#### TimedEvents
+#### Timed Events
 Contains scheduled event utilities for delayed or periodic runtime execution.
 
 #### Tracker
@@ -111,11 +121,8 @@ Implements variable and value tracking utilities for runtime monitoring.
 #### UI
 Contains reusable UI runtime components, including modal window integrations.
 
-#### Utils
-Provides additional helper utilities used across multiple runtime modules.
-
-### [Editor](./Editor)
-Tools and windows designed for Unity Editor workflows and content authoring.
+#### Utils (Runtime and Editor)
+Provides additional helper utilities used across multiple runtime modules. Includes small editor-side helper tools to streamline repetitive tasks
 
 #### AutoBundles
 Provides automatic Addressables bundle generation tools and related editor automation.
@@ -123,14 +130,8 @@ Provides automatic Addressables bundle generation tools and related editor autom
 #### Dictionary
 Contains inspector drawers and editor utilities for SerializableDictionary types.
 
-#### Utils
-Includes small editor-side helper tools to streamline repetitive tasks.
-
 #### Windows
 Contains custom Unity Editor windows for project-specific workflows.
-
-### [WIP](./WIP)
-Experimental modules under active development that are not part of the stable runtime API.
 
 #### Health
 Prototype health and damage systems for future runtime integration.
@@ -144,7 +145,14 @@ Work-in-progress object pooling systems and related runtime patterns.
 #### Redeem
 Prototype reward/redeem code features and supporting systems.
 
-Other useful resources:
-- [CHANGELOG.md](./CHANGELOG.md)
-- [LICENSE.md](./LICENSE.md)
-- [package.json](./package.json)
+## Intended Audience
+
+This framework is designed for:
+
+- Indie developers and solo creators
+- Gameplay programmers
+- Technical programmers who work closely with runtime systems
+
+It is not intended to replace existing Unity packages or enforce a rigid architecture.
+
+Instead, think of it as a **runtime toolkit** — a flexible foundation you can build upon, customize, or use selectively depending on the needs of your project.
