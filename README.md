@@ -19,55 +19,130 @@ To use this package you need the following assets:
 
 ## Packages
 
-This section covers the contents of the package.
+This section describes the main package areas and what each one contains.
 
 ### [Runtime](./Runtime)
-Contains scripts intended for in-game usage.
-Main subfolders:
-- [Achievements](./Runtime/Achievements): achievement management.
-- [Attributes](./Runtime/Attributes): attribute system and RPG-style classes.
-- [Audio](./Runtime/Audio): audio clip playback.
-- [Commands](./Runtime/Commands): executable command queue.
-- [Constant](./Runtime/Constant): global values and constants.
-- [Currency](./Runtime/Currency): in-game currency logic.
-- [DataStructures](./Runtime/DataStructures): common ScriptableObjects.
-- [Debug](./Runtime/Debug): debugging and logging utilities.
-- [Dictionary](./Runtime/Dictionary): serializable dictionaries.
-- [Events](./Runtime/Events): ScriptableObject-based game events with listener tracking, optional logging, and per-type assets.
-- [Extensions](./Runtime/Extensions): assorted extension methods.
-- [Input](./Runtime/Input): input system components.
-- [Math](./Runtime/Math): helper math functions.
-- [ModalWindow](./Runtime/ModalWindow): modal window UI flow and button events.
-- [Misc](./Runtime/Misc): generic utilities.
-- [Movement](./Runtime/Movement): movement scripts.
-- [Placement](./Runtime/Placement): object placement.
-- [Projectiles](./Runtime/Projectiles): 2D projectile management.
-- [Random](./Runtime/Random): randomization tools.
-- [Renderer](./Runtime/Renderer): custom renderers.
-- [Save](./Runtime/Save): save/load management.
-- [Singleton](./Runtime/Singleton): base classes for singletons and managers.
-- [States](./Runtime/States): simple state machines.
-- [StatusEffects](./Runtime/StatusEffects): status effect system.
-- [TagManager](./Runtime/TagManager): custom tags.
-- [Task](./Runtime/Task): async task management.
-- [TimedEvents](./Runtime/TimedEvents): scheduled event management.
-- [Tracker](./Runtime/Tracker): variable tracking.
-- [UI](./Runtime/UI): UI components, including modal window button events.
-- [Utils](./Runtime/Utils): additional utilities.
+Scripts intended for in-game usage and reusable gameplay systems.
+
+#### Achievements
+Contains achievement data and runtime logic to register and unlock achievements.
+
+#### Attributes
+Provides an attribute/stat system with support for RPG-style classes and progression.
+
+#### Audio
+Includes utilities and components for audio clip playback and runtime audio handling.
+
+#### Commands
+Implements command patterns and executable queues for decoupled gameplay actions.
+
+#### Constant
+Stores shared constants and global values used across runtime systems.
+
+#### Currency
+Contains in-game currency models, helpers, and related gameplay logic.
+
+#### DataStructures
+Provides reusable ScriptableObject-based data containers and shared data models.
+
+#### Debug
+Offers debugging helpers and logging-focused runtime utilities.
+
+#### Dictionary
+Contains serializable dictionary implementations and related helpers.
+
+#### Events
+Implements ScriptableObject-based event assets and listener tracking utilities for decoupled communication.
+
+#### Extensions
+Provides general-purpose extension methods to simplify common coding patterns.
+
+#### Input
+Contains Input System components and interfaces for runtime player interaction.
+
+#### Math
+Includes mathematical helpers and utility methods for gameplay calculations.
+
+#### ModalWindow
+Provides modal window UI flow management and modal button event handling.
+
+#### Misc
+Contains assorted generic utilities that do not belong to a specific runtime domain.
+
+#### Movement
+Includes movement-related scripts and helpers for entity locomotion.
+
+#### Placement
+Provides runtime systems and helpers for object placement workflows.
+
+#### Projectiles
+Contains 2D projectile behaviors, configuration, and management logic.
+
+#### Random
+Includes randomization utilities and helper methods for gameplay variability.
+
+#### Renderer
+Provides custom rendering-related helpers and runtime renderer components.
+
+#### Save
+Contains save/load systems and persistence utilities.
+
+#### Singleton
+Provides singleton and manager base classes for global runtime services.
+
+#### States
+Contains finite state machine utilities and state lifecycle abstractions.
+
+#### StatusEffects
+Implements status effect data and runtime application/removal logic.
+
+#### TagManager
+Contains custom tag management utilities for gameplay categorization.
+
+#### Task
+Provides asynchronous task helpers and coroutine-friendly runtime workflows.
+
+#### TimedEvents
+Contains scheduled event utilities for delayed or periodic runtime execution.
+
+#### Tracker
+Implements variable and value tracking utilities for runtime monitoring.
+
+#### UI
+Contains reusable UI runtime components, including modal window integrations.
+
+#### Utils
+Provides additional helper utilities used across multiple runtime modules.
 
 ### [Editor](./Editor)
-Tools and windows for the Unity editor.
-- [AutoBundles](./Editor/AutoBundles): automatic bundle generation ([details](./Editor/AutoBundles/README.md)).
-- [Dictionary](./Editor/Dictionary): drawers for SerializableDictionary.
-- [Utils](./Editor/Utils): small support tools.
-- [Windows](./Editor/Windows): custom editor windows.
+Tools and windows designed for Unity Editor workflows and content authoring.
+
+#### AutoBundles
+Provides automatic Addressables bundle generation tools and related editor automation.
+
+#### Dictionary
+Contains inspector drawers and editor utilities for SerializableDictionary types.
+
+#### Utils
+Includes small editor-side helper tools to streamline repetitive tasks.
+
+#### Windows
+Contains custom Unity Editor windows for project-specific workflows.
 
 ### [WIP](./WIP)
-Experimental features under development.
-- [Health](./WIP/Health): health and damage system.
-- [Lights](./WIP/Lights): lighting and day/night cycle.
-- [Pool](./WIP/Pool): object pooling.
-- [Redeem](./WIP/Redeem): reward codes.
+Experimental modules under active development that are not part of the stable runtime API.
+
+#### Health
+Prototype health and damage systems for future runtime integration.
+
+#### Lights
+Experimental lighting and day/night cycle features.
+
+#### Pool
+Work-in-progress object pooling systems and related runtime patterns.
+
+#### Redeem
+Prototype reward/redeem code features and supporting systems.
 
 Other useful resources:
 - [CHANGELOG.md](./CHANGELOG.md)

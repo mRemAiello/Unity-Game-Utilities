@@ -1,5 +1,6 @@
 ## 3.4.3
 
+- Updated the root README `Packages` section with dedicated sub-sections and descriptive content for Runtime, Editor, and WIP modules.
 - Applied `DefaultExecutionOrder(-10000)` to all current `Singleton<T>` subclasses so each singleton MonoBehaviour starts much earlier than standard MonoBehaviours.
 - Updated singleton execution priority by adding `DefaultExecutionOrder(-10000)` to singleton base systems so singleton MonoBehaviours start much earlier than regular MonoBehaviours.
 - Added `SingleStateMachineMB<T>` in `Runtime/States` to support MonoBehaviour FSM workflows with exactly one active state at a time (no stack semantics).
