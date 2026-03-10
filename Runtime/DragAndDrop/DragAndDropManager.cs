@@ -1,35 +1,38 @@
 using System;
 using TriInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GameUtils
 {
-    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
-    /// <summary>
-    /// Drag and Drop manager.
-    /// </summary>
-    [DeclareBoxGroup("settings", Title = "Settings")]
-    [DeclareBoxGroup("cards", Title = "Cards")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Settings")]
+    [DeclareBoxGroup("Cards")]
+    [DeclareBoxGroup("Debug")]
     public class DragAndDropManager : Singleton<DragAndDropManager>, ILoggable
     {
-        [SerializeField, Group("settings")] private LayerMask _raycastMask;
-        [SerializeField, Group("settings")] private bool _hideCursor;
-        [SerializeField, Group("settings")] private int _hitsCount = 5;
-        [SerializeField, Range(0.1f, 2.0f), Group("cards")] private float _dragSpeed = 1.0f;
-        [SerializeField, Range(0.0f, 10.0f), Group("cards")] private float _height = 1.0f;
-        [SerializeField, Group("cards")] private Vector2 _cardSize;
+        [SerializeField, Group("Settings")] private InputActionReference _pointerPositionAction;
+        [SerializeField, Group("Settings")] private InputActionReference _clickAction;
+        [SerializeField, Group("Settings")] private Camera _camera;
+        [SerializeField, Group("Settings")] private LayerMask _raycastMask;
+        [SerializeField, Group("Settings")] private bool _hideCursor;
+        [SerializeField, Group("Settings")] private int _hitsCount = 5;
+        [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
+        [SerializeField, Range(0.0f, 10.0f), Group("Cards")] private float _height = 1.0f;
+        [SerializeField, Group("Cards")] private Vector2 _cardSize;
 
         //
-        [SerializeField, Group("debug")] private bool _logEnabled = false;
-        [SerializeField, Group("debug"), ReadOnly] private IDraggable _currentDrag;
-        [SerializeField, Group("debug"), ReadOnly] private IDraggable _possibleDrag;
-        [SerializeField, Group("debug"), ReadOnly] private Transform _currentDragTransform;
-        [SerializeField, Group("debug"), ReadOnly] private RaycastHit[] _raycastHits;
-        [SerializeField, Group("debug"), ReadOnly] private RaycastHit[] _cardHits;
-        [SerializeField, Group("debug"), ReadOnly] private Ray _mouseRay;
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+        [SerializeField, Group("Debug"), ReadOnly] private IDraggable _currentDrag;
+        [SerializeField, Group("Debug"), ReadOnly] private IDraggable _hoveredDraggable;
+        [SerializeField, Group("Debug"), ReadOnly] private IDroppable _currentDropTarget;
+        [SerializeField, Group("Debug"), ReadOnly] private Transform _currentDragTransform;
+        [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _raycastHits;
+        [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _cardHits;
+        [SerializeField, Group("Debug"), ReadOnly] private Ray _mouseRay;
+        [SerializeField, ReadOnly, Group("Debug")] private Vector3 _mousePosition;
+        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
+
 
         //
         public bool LogEnabled => _logEnabled;
@@ -39,20 +42,129 @@ namespace GameUtils
         {
             _raycastHits = new RaycastHit[_hitsCount];
             _cardHits = new RaycastHit[4];
-            _possibleDrag = null;
+            _hoveredDraggable = null;
             _currentDragTransform = null;
+
+            //
+            _clickAction.action.started += HandleMouseDown;
+            _clickAction.action.canceled += HandleMouseUp;
+            _pointerPositionAction.action.performed += HandlePointerMoved;
+
+            _clickAction.action.Enable();
+            _pointerPositionAction.action.Enable();
 
             //
             ResetCursor();
         }
 
+        private void OnDisable()
+        {
+            _clickAction.action.started -= HandleMouseDown;
+            _clickAction.action.canceled -= HandleMouseUp;
+            _pointerPositionAction.action.performed -= HandlePointerMoved;
+
+            _clickAction.action.Disable();
+            _pointerPositionAction.action.Disable();
+        }
+
+        private void HandleMouseDown(InputAction.CallbackContext ctx)
+        {
+            if (_currentDrag != null)
+                return;
+
+            if (_hoveredDraggable == null)
+                return;
+
+            _currentDrag = _hoveredDraggable;
+            _currentDragTransform = (_currentDrag as Component)?.transform;
+            _oldMouseWorldPosition = MousePositionToWorldPoint();
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+
+            _currentDrag.Dragging = true;
+            _currentDrag.OnBeginDrag(new Vector3(
+                _raycastHits[0].point.x,
+                _raycastHits[0].point.y + _height,
+                _raycastHits[0].point.z
+            ));
+        }
+
+        private void HandlePointerMoved(InputAction.CallbackContext ctx)
+        {
+            _mousePosition = ctx.ReadValue<Vector2>();
+
+            if (_currentDrag == null)
+            {
+                UpdateHover();
+                return;
+            }
+
+            UpdateDrag();
+        }
+
+        private void HandleMouseUp(InputAction.CallbackContext ctx)
+        {
+            if (_currentDrag == null)
+                return;
+
+            //
+            _currentDrag.Dragging = false;
+            _currentDrag.OnEndDrag(_raycastHits[0].point, _currentDropTarget);
+
+            //
+            _currentDrag = null;
+            _currentDragTransform = null;
+            _currentDropTarget = null;
+
+            //
+            if (!_hideCursor)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+
+            UpdateHover();
+        }
+
+        private void UpdateHover()
+        {
+            IDraggable newHovered = DetectDraggable();
+
+            if (newHovered == _hoveredDraggable)
+                return;
+
+            _hoveredDraggable?.OnPointerExit(_raycastHits[0].point);
+            _hoveredDraggable = newHovered;
+
+            if (_hoveredDraggable != null)
+            {
+                _hoveredDraggable.OnPointerEnter(_raycastHits[0].point);
+            }
+            else
+            {
+                ResetCursor();
+            }
+        }
+
+        private void UpdateDrag()
+        {
+            _currentDropTarget = DetectDroppable();
+
+            Vector3 mouseWorldPosition = MousePositionToWorldPoint();
+            Vector3 offset = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
+
+            _currentDrag.OnDrag(offset, _currentDropTarget);
+
+            _oldMouseWorldPosition = mouseWorldPosition;
+        }
+
         private Vector3 MousePositionToWorldPoint()
         {
-            Vector3 mousePosition = Input.mousePosition;
-            if (Camera.main.orthographic == false)
-                mousePosition.z = 10.0f;
+            if (_camera.orthographic == false)
+                _mousePosition.z = 10.0f;
 
-            return Camera.main.ScreenToWorldPoint(mousePosition);
+            return _camera.ScreenToWorldPoint(_mousePosition);
         }
 
         /// <summary>
@@ -65,7 +177,7 @@ namespace GameUtils
             Transform hit = null;
 
             // Fire the ray!
-            if (Physics.RaycastNonAlloc(_mouseRay, _raycastHits, Camera.main.farClipPlane, _raycastMask) > 0)
+            if (Physics.RaycastNonAlloc(_mouseRay, _raycastHits, _camera.farClipPlane, _raycastMask) > 0)
             {
                 // We order the impacts according to distance.
                 Array.Sort(_raycastHits, (x, y) => x.distance.CompareTo(y.distance));
@@ -101,7 +213,7 @@ namespace GameUtils
             {
                 Ray ray = new(cardConner[i], Vector3.down);
 
-                int hits = Physics.RaycastNonAlloc(ray, _raycastHits, Camera.main.farClipPlane, _raycastMask);
+                int hits = Physics.RaycastNonAlloc(ray, _raycastHits, _camera.farClipPlane, _raycastMask);
                 if (hits > 0)
                 {
                     // We order the impacts by distance from the origin of the ray.
@@ -128,7 +240,7 @@ namespace GameUtils
         /// <returns>IDrag or null.</returns>
         public IDraggable DetectDraggable()
         {
-            _mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            _mouseRay = _camera.ScreenPointToRay(_mousePosition);
 
             Transform hit = MouseRaycast();
             IDraggable draggable = null;
@@ -142,90 +254,6 @@ namespace GameUtils
             }
 
             return draggable;
-        }
-
-        private void Update()
-        {
-            if (_currentDrag == null)
-            {
-                IDraggable draggable = DetectDraggable();
-                if (Input.GetMouseButtonDown(0) == true)
-                {
-                    // Is there an IDrag object under the mouse pointer?
-                    if (draggable != null)
-                    {
-                        // We already have an object to start the drag operation!
-                        _currentDrag = draggable;
-                        //currentDragTransform = hit;
-                        _oldMouseWorldPosition = MousePositionToWorldPoint();
-
-                        // Hide the mouse icon.
-                        Cursor.visible = false;
-                        // And we lock the movements to the window frame,
-                        // so we can't move objects out of the camera's view.          
-                        Cursor.lockState = CursorLockMode.Confined;
-
-                        // The drag operation begins.
-                        _currentDrag.Dragging = true;
-                        _currentDrag.OnBeginDrag(new Vector3(_raycastHits[0].point.x, _raycastHits[0].point.y + _height, _raycastHits[0].point.z));
-                    }
-                }
-                else
-                {
-                    // Left mouse button not pressed?
-
-                    // We pass over a new IDrag?
-                    if (draggable != null && _possibleDrag == null)
-                    {
-                        // We execute its OnPointerEnter.
-                        _possibleDrag = draggable;
-                        _possibleDrag.OnPointerEnter(_raycastHits[0].point);
-                    }
-
-                    // We are leaving an IDrag?
-                    if (draggable == null && _possibleDrag != null)
-                    {
-                        // We execute its OnPointerExit.
-                        _possibleDrag.OnPointerExit(_raycastHits[0].point);
-                        _possibleDrag = null;
-
-                        ResetCursor();
-                    }
-                }
-            }
-            else
-            {
-                IDroppable droppable = DetectDroppable();
-
-                // Is the left mouse button held down?
-                if (Input.GetMouseButton(0) == true)
-                {
-                    // Calculate the offset of the mouse with respect to its previous position.
-                    Vector3 mouseWorldPosition = MousePositionToWorldPoint();
-                    Vector3 offset = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
-
-                    // OnDrag is executed.
-                    _currentDrag.OnDrag(offset, droppable);
-
-                    _oldMouseWorldPosition = mouseWorldPosition;
-                }
-                else if (Input.GetMouseButtonUp(0) == true)
-                {
-                    // The left mouse button is released and
-                    // the drag operation is finished.
-                    _currentDrag.Dragging = false;
-                    _currentDrag.OnEndDrag(_raycastHits[0].point, droppable);
-                    _currentDrag = null;
-                    _currentDragTransform = null;
-
-                    // We return the mouse icon to its normal state.
-                    if (!_hideCursor)
-                    {
-                        Cursor.visible = true;
-                        Cursor.lockState = CursorLockMode.None;
-                    }
-                }
-            }
         }
 
         private void ResetCursor() => Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
