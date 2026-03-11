@@ -23,14 +23,14 @@ namespace GameUtils
 
         //
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
-        [SerializeField, Group("Debug"), ReadOnly] private IDraggable _currentDrag;
-        [SerializeField, Group("Debug"), ReadOnly] private IDraggable _hoveredDraggable;
-        [SerializeField, Group("Debug"), ReadOnly] private IDroppable _currentDropTarget;
+        [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDrag;
+        [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _hoveredDraggable;
+        [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDropTarget;
         [SerializeField, Group("Debug"), ReadOnly] private Transform _currentDragTransform;
         [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _raycastHits;
         [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _cardHits;
         [SerializeField, Group("Debug"), ReadOnly] private Ray _mouseRay;
-        [SerializeField, ReadOnly, Group("Debug")] private Vector3 _mousePosition;
+        [SerializeField, ReadOnly, Group("Debug")] private Vector2 _mousePosition;
         [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
 
 
@@ -75,24 +75,31 @@ namespace GameUtils
             if (_hoveredDraggable == null)
                 return;
 
+            if (_hoveredDraggable is not IDraggable draggable)
+            {
+                this.Log($"{_hoveredDraggable} is not draggable");
+                return;
+            }
+
+            //
             _currentDrag = _hoveredDraggable;
-            _currentDragTransform = (_currentDrag as Component)?.transform;
+            _currentDragTransform = _currentDrag.transform;
             _oldMouseWorldPosition = MousePositionToWorldPoint();
 
+            //
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
 
-            _currentDrag.Dragging = true;
-            _currentDrag.OnBeginDrag(new Vector3(
-                _raycastHits[0].point.x,
-                _raycastHits[0].point.y + _height,
-                _raycastHits[0].point.z
-            ));
+            //
+            this.Log($"Start dragging {_currentDrag}");
+            draggable.Dragging = true;
+            draggable.OnBeginDrag(new Vector3(_raycastHits[0].point.x, _raycastHits[0].point.y + _height, _raycastHits[0].point.z));
         }
 
         private void HandlePointerMoved(InputAction.CallbackContext ctx)
         {
             _mousePosition = ctx.ReadValue<Vector2>();
+            this.Log($"Mouse screen position: {_mousePosition}");
 
             if (_currentDrag == null)
             {
@@ -108,16 +115,17 @@ namespace GameUtils
             if (_currentDrag == null)
                 return;
 
-            //
-            _currentDrag.Dragging = false;
-            _currentDrag.OnEndDrag(_raycastHits[0].point, _currentDropTarget);
+            IDroppable droppable = _currentDropTarget as IDroppable;
+            if (_currentDrag is IDraggable draggable)
+            {
+                draggable.Dragging = false;
+                draggable.OnEndDrag(_raycastHits[0].point, droppable);
+            }
 
-            //
             _currentDrag = null;
             _currentDragTransform = null;
             _currentDropTarget = null;
 
-            //
             if (!_hideCursor)
             {
                 Cursor.visible = true;
@@ -130,16 +138,19 @@ namespace GameUtils
         private void UpdateHover()
         {
             IDraggable newHovered = DetectDraggable();
+            MonoBehaviour newHoveredBehaviour = newHovered as MonoBehaviour;
 
-            if (newHovered == _hoveredDraggable)
+            if (newHoveredBehaviour == _hoveredDraggable)
                 return;
 
-            _hoveredDraggable?.OnPointerExit(_raycastHits[0].point);
-            _hoveredDraggable = newHovered;
+            if (_hoveredDraggable is IDraggable oldDraggable)
+                oldDraggable.OnPointerExit(_raycastHits[0].point);
 
-            if (_hoveredDraggable != null)
+            _hoveredDraggable = newHoveredBehaviour;
+
+            if (_hoveredDraggable is IDraggable hoveredDraggable)
             {
-                _hoveredDraggable.OnPointerEnter(_raycastHits[0].point);
+                hoveredDraggable.OnPointerEnter(_raycastHits[0].point);
             }
             else
             {
@@ -149,22 +160,19 @@ namespace GameUtils
 
         private void UpdateDrag()
         {
-            _currentDropTarget = DetectDroppable();
+            IDroppable droppable = DetectDroppable();
+            _currentDropTarget = droppable as MonoBehaviour;
 
+            // Calculate offset
             Vector3 mouseWorldPosition = MousePositionToWorldPoint();
             Vector3 offset = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
 
-            _currentDrag.OnDrag(offset, _currentDropTarget);
+            // Drag the card
+            if (_currentDrag is IDraggable draggable)
+                draggable.OnDrag(offset, droppable);
 
+            //
             _oldMouseWorldPosition = mouseWorldPosition;
-        }
-
-        private Vector3 MousePositionToWorldPoint()
-        {
-            if (_camera.orthographic == false)
-                _mousePosition.z = 10.0f;
-
-            return _camera.ScreenToWorldPoint(_mousePosition);
         }
 
         /// <summary>
@@ -256,6 +264,17 @@ namespace GameUtils
             return draggable;
         }
 
+        private Vector3 MousePositionToWorldPoint()
+        {
+            Vector3 mousePosition = _mousePosition;
+            if (_camera.orthographic == false)
+                mousePosition.z = 10.0f;
+
+            //
+            return _camera.ScreenToWorldPoint(mousePosition);
+        }
+
+        //
         private void ResetCursor() => Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }

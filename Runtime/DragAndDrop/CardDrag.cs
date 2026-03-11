@@ -55,7 +55,7 @@ namespace GameUtils
 
         public void OnDrag(Vector3 deltaPosition, IDroppable droppable)
         {
-            deltaPosition.y = 0.0f;
+            deltaPosition.z = 0;
             transform.position += deltaPosition;
 
             //
