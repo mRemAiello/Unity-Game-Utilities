@@ -14,12 +14,12 @@ namespace GameUtils
         [SerializeField, Group("Settings")] private InputActionReference _pointerPositionAction;
         [SerializeField, Group("Settings")] private InputActionReference _clickAction;
         [SerializeField, Group("Settings")] private Camera _camera;
-        [SerializeField, Group("Settings")] private LayerMask _raycastMask;
+        [SerializeField, Group("Settings")] private LayerMask _dragMask;
+        [SerializeField, Group("Settings")] private LayerMask _dropMask;
         [SerializeField, Group("Settings")] private bool _hideCursor;
         [SerializeField, Group("Settings")] private int _hitsCount = 5;
         [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
         [SerializeField, Range(0.0f, 10.0f), Group("Cards")] private float _height = 1.0f;
-        [SerializeField, Group("Cards")] private Vector2 _cardSize;
 
         //
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
@@ -27,12 +27,10 @@ namespace GameUtils
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _hoveredDraggable;
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDropTarget;
         [SerializeField, Group("Debug"), ReadOnly] private Transform _currentDragTransform;
-        [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _raycastHits;
-        [SerializeField, Group("Debug"), ReadOnly] private RaycastHit[] _cardHits;
-        [SerializeField, Group("Debug"), ReadOnly] private Ray _mouseRay;
         [SerializeField, ReadOnly, Group("Debug")] private Vector2 _mousePosition;
         [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
-
+        private RaycastHit[] _raycastHits;
+        private Ray _mouseRay;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -41,16 +39,16 @@ namespace GameUtils
         private void OnEnable()
         {
             _raycastHits = new RaycastHit[_hitsCount];
-            _cardHits = new RaycastHit[4];
             _hoveredDraggable = null;
             _currentDragTransform = null;
 
-            //
+            // Click events
             _clickAction.action.started += HandleMouseDown;
             _clickAction.action.canceled += HandleMouseUp;
-            _pointerPositionAction.action.performed += HandlePointerMoved;
-
             _clickAction.action.Enable();
+
+            // Pointer events
+            _pointerPositionAction.action.performed += HandlePointerMoved;
             _pointerPositionAction.action.Enable();
 
             //
@@ -59,11 +57,13 @@ namespace GameUtils
 
         private void OnDisable()
         {
+            // Click events
             _clickAction.action.started -= HandleMouseDown;
             _clickAction.action.canceled -= HandleMouseUp;
-            _pointerPositionAction.action.performed -= HandlePointerMoved;
-
             _clickAction.action.Disable();
+
+            // Pointer events
+            _pointerPositionAction.action.performed -= HandlePointerMoved;
             _pointerPositionAction.action.Disable();
         }
 
@@ -99,8 +99,8 @@ namespace GameUtils
         private void HandlePointerMoved(InputAction.CallbackContext ctx)
         {
             _mousePosition = ctx.ReadValue<Vector2>();
-            this.Log($"Mouse screen position: {_mousePosition}");
 
+            //
             if (_currentDrag == null)
             {
                 UpdateHover();
@@ -115,17 +115,21 @@ namespace GameUtils
             if (_currentDrag == null)
                 return;
 
+            //
             IDroppable droppable = _currentDropTarget as IDroppable;
             if (_currentDrag is IDraggable draggable)
             {
+                this.Log($"Stop dragging {_currentDrag}, drop on {_currentDropTarget}");
                 draggable.Dragging = false;
                 draggable.OnEndDrag(_raycastHits[0].point, droppable);
             }
 
+            //
             _currentDrag = null;
             _currentDragTransform = null;
             _currentDropTarget = null;
 
+            //
             if (!_hideCursor)
             {
                 Cursor.visible = true;
@@ -146,8 +150,8 @@ namespace GameUtils
             if (_hoveredDraggable is IDraggable oldDraggable)
                 oldDraggable.OnPointerExit(_raycastHits[0].point);
 
+            //
             _hoveredDraggable = newHoveredBehaviour;
-
             if (_hoveredDraggable is IDraggable hoveredDraggable)
             {
                 hoveredDraggable.OnPointerEnter(_raycastHits[0].point);
@@ -169,7 +173,9 @@ namespace GameUtils
 
             // Drag the card
             if (_currentDrag is IDraggable draggable)
+            {
                 draggable.OnDrag(offset, droppable);
+            }
 
             //
             _oldMouseWorldPosition = mouseWorldPosition;
@@ -185,7 +191,7 @@ namespace GameUtils
             Transform hit = null;
 
             // Fire the ray!
-            if (Physics.RaycastNonAlloc(_mouseRay, _raycastHits, _camera.farClipPlane, _raycastMask) > 0)
+            if (Physics.RaycastNonAlloc(_mouseRay, _raycastHits, _camera.farClipPlane, _dragMask) > 0)
             {
                 // We order the impacts according to distance.
                 Array.Sort(_raycastHits, (x, y) => x.distance.CompareTo(y.distance));
@@ -201,47 +207,45 @@ namespace GameUtils
         /// <returns>IDrop or null.</returns>
         private IDroppable DetectDroppable()
         {
-            IDroppable droppable = null;
+            if (_currentDragTransform == null || _camera == null)
+                return null;
 
-            // The four corners of the card.
-            Vector3 cardPosition = _currentDragTransform.position;
-            Vector2 halfCardSize = _cardSize * 0.5f;
-            Vector3[] cardConner =
+            Vector3 direction = _camera.transform.forward.normalized;
+            Vector3 origin = _currentDragTransform.position - direction * 0.05f;
+
+            Ray ray = new Ray(origin, direction);
+            int hitCount = Physics.RaycastNonAlloc(ray, _raycastHits, _camera.farClipPlane, _dropMask);
+
+            RaycastHit closestHit = default;
+            bool found = false;
+            float closestDistance = float.MaxValue;
+
+            for (int i = 0; i < hitCount; i++)
             {
-                new(cardPosition.x + halfCardSize.x, cardPosition.y, cardPosition.z - halfCardSize.y),
-                new(cardPosition.x + halfCardSize.x, cardPosition.y, cardPosition.z + halfCardSize.y),
-                new(cardPosition.x - halfCardSize.x, cardPosition.y, cardPosition.z - halfCardSize.y),
-                new(cardPosition.x - halfCardSize.x, cardPosition.y, cardPosition.z + halfCardSize.y)
-            };
-            int cardHitIndex = 0;
-            Array.Clear(_cardHits, 0, _cardHits.Length);
+                RaycastHit hit = _raycastHits[i];
 
-            // We launch the four rays.
-            for (int i = 0; i < cardConner.Length; ++i)
-            {
-                Ray ray = new(cardConner[i], Vector3.down);
+                if (hit.transform == null)
+                    continue;
 
-                int hits = Physics.RaycastNonAlloc(ray, _raycastHits, _camera.farClipPlane, _raycastMask);
-                if (hits > 0)
+                if (hit.transform.IsChildOf(_currentDragTransform))
+                    continue;
+
+                IDroppable droppable = hit.collider.GetComponentInParent<IDroppable>();
+                if (droppable == null)
+                    continue;
+
+                if (hit.distance < closestDistance)
                 {
-                    // We order the impacts by distance from the origin of the ray.
-                    Array.Sort(_raycastHits, (x, y) => x.transform != null ? x.distance.CompareTo(y.distance) : -1);
-
-                    // We are only interested in the closest one.
-                    _cardHits[cardHitIndex++] = _raycastHits[0];
+                    closestDistance = hit.distance;
+                    closestHit = hit;
+                    found = true;
                 }
             }
 
-            if (cardHitIndex > 0)
-            {
-                // We are looking for the nearest possible IDrop.
-                Array.Sort(_cardHits, (x, y) => x.transform != null ? x.distance.CompareTo(y.distance) : -1);
+            if (!found)
+                return null;
 
-                if (_cardHits[0].transform != null)
-                    droppable = _cardHits[0].transform.GetComponent<IDroppable>();
-            }
-
-            return droppable;
+            return closestHit.collider.GetComponentInParent<IDroppable>();
         }
 
         /// <summary>Detects an IDrag object under the mouse pointer.</summary>
@@ -272,6 +276,18 @@ namespace GameUtils
 
             //
             return _camera.ScreenToWorldPoint(mousePosition);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (_currentDragTransform == null || _camera == null)
+                return;
+
+            Vector3 direction = _camera.transform.forward.normalized;
+            Vector3 origin = _currentDragTransform.position - direction * 0.05f;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawRay(origin, direction * 5f);
         }
 
         //
