@@ -7,6 +7,8 @@
 - Added `StateMB<T>.InjectStateMachine(SingleStateMachineMB<T>)` overload to let states bind to single-state machines.
 - Updated `Runtime/States/README.md` with usage and transition behavior for `SingleStateMachineMB<T>`.
 - Rewrote and translated `Runtime/States/README.md` in English with a detailed implementation guide for both `BaseStateMachine` and `StateMachineMB<T>` workflows.
+- Added `Runtime/DragAndDrop/README.md` with setup and usage documentation for `DragAndDropManager`, `CardDrag`, `CardTilter`, `IDraggable`, and `IDroppable`.
+- Translated `Runtime/DragAndDrop/README.md` to English.
 
 
 ## 3.4.2
