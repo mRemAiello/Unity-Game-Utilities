@@ -66,7 +66,10 @@ namespace GameUtils
         {
             if (droppable is { IsDroppable: true } && droppable.AcceptDrop(this) == true)
             {
-                transform.DOMoveY(position.y, _dropDuration).From(transform.position.y).SetEase(_dropEase).SetTarget(this);
+                Tween tween = transform.DOMoveY(position.y, _dropDuration).From(transform.position.y);
+                tween.SetEase(_dropEase);
+                tween.OnComplete(() => { droppable.OnDrop(this); });
+                tween.SetTarget(this);
             }
             else
             {
@@ -75,10 +78,7 @@ namespace GameUtils
                 //
                 Tween tween = transform.DOMove(_dragOriginPosition, _invalidDropDuration);
                 tween.SetEase(_invalidDropEase);
-                tween.OnComplete(() =>
-                {
-                    _isDraggable = true;
-                });
+                tween.OnComplete(() => { _isDraggable = true; });
                 tween.SetTarget(this);
             }
 
