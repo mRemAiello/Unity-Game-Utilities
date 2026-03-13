@@ -18,6 +18,9 @@ namespace GameUtils
         [SerializeField, Group("Settings")] private LayerMask _dropMask;
         [SerializeField, Group("Settings")] private bool _hideCursor;
         [SerializeField, Group("Settings")] private int _hitsCount = 5;
+
+        //
+        [SerializeField, Group("Cards")] private Vector2 _cardSize;
         [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
         [SerializeField, Range(0.0f, 10.0f), Group("Cards")] private float _height = 1.0f;
 
@@ -30,6 +33,7 @@ namespace GameUtils
         [SerializeField, ReadOnly, Group("Debug")] private Vector2 _mousePosition;
         [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
         private RaycastHit[] _raycastHits;
+        private readonly RaycastHit[] _cardHits = new RaycastHit[5];
         private Ray _mouseRay;
 
         //
@@ -210,42 +214,70 @@ namespace GameUtils
             if (_currentDragTransform == null || _camera == null)
                 return null;
 
+            IDroppable bestDroppable = null;
+            float bestDistance = float.MaxValue;
+
+            Vector3[] corners = GetCardCorners();
             Vector3 direction = _camera.transform.forward.normalized;
-            Vector3 origin = _currentDragTransform.position - direction * 0.05f;
 
-            Ray ray = new Ray(origin, direction);
-            int hitCount = Physics.RaycastNonAlloc(ray, _raycastHits, _camera.farClipPlane, _dropMask);
+            int cardHitIndex = 0;
+            Array.Clear(_cardHits, 0, _cardHits.Length);
 
-            RaycastHit closestHit = default;
-            bool found = false;
-            float closestDistance = float.MaxValue;
-
-            for (int i = 0; i < hitCount; i++)
+            for (int i = 0; i < corners.Length; ++i)
             {
-                RaycastHit hit = _raycastHits[i];
+                Ray ray = new(corners[i], direction);
+                int hits = Physics.RaycastNonAlloc(ray, _raycastHits, _camera.farClipPlane, _dropMask);
 
-                if (hit.transform == null)
-                    continue;
+                //
+                RaycastHit closestValidHit = default;
+                bool foundValidHit = false;
+                float closestDistance = float.MaxValue;
 
-                if (hit.transform.IsChildOf(_currentDragTransform))
-                    continue;
-
-                IDroppable droppable = hit.collider.GetComponentInParent<IDroppable>();
-                if (droppable == null)
-                    continue;
-
-                if (hit.distance < closestDistance)
+                //
+                for (int j = 0; j < hits; j++)
                 {
-                    closestDistance = hit.distance;
-                    closestHit = hit;
-                    found = true;
+                    RaycastHit hit = _raycastHits[j];
+
+                    if (hit.collider == null)
+                        continue;
+
+                    // 
+                    if (hit.transform != null && hit.transform.IsChildOf(_currentDragTransform))
+                        continue;
+
+                    IDroppable droppable = hit.collider.GetComponentInParent<IDroppable>();
+                    if (droppable == null)
+                        continue;
+
+                    if (hit.distance < closestDistance)
+                    {
+                        closestDistance = hit.distance;
+                        closestValidHit = hit;
+                        foundValidHit = true;
+                    }
+                }
+
+                //
+                if (!foundValidHit)
+                    continue;
+
+                //
+                if (cardHitIndex < _cardHits.Length)
+                {
+                    _cardHits[cardHitIndex++] = closestValidHit;
+                }
+
+                //
+                IDroppable candidate = closestValidHit.collider.GetComponentInParent<IDroppable>();
+                if (candidate != null && closestValidHit.distance < bestDistance)
+                {
+                    bestDistance = closestValidHit.distance;
+                    bestDroppable = candidate;
                 }
             }
 
-            if (!found)
-                return null;
-
-            return closestHit.collider.GetComponentInParent<IDroppable>();
+            //
+            return bestDroppable;
         }
 
         /// <summary>Detects an IDrag object under the mouse pointer.</summary>
@@ -268,6 +300,26 @@ namespace GameUtils
             return draggable;
         }
 
+        private Vector3[] GetCardCorners()
+        {
+            if (_currentDragTransform == null)
+                return null;
+
+            Vector3 center = _currentDragTransform.position;
+            Vector2 halfSize = _cardSize * 0.5f;
+            Vector3 right = _camera.transform.right;
+            Vector3 up = _camera.transform.up;
+
+            var corners = new Vector3[5];
+            corners[0] = center;
+            corners[1] = center + right * halfSize.x - up * halfSize.y;
+            corners[2] = center + right * halfSize.x + up * halfSize.y;
+            corners[3] = center - right * halfSize.x - up * halfSize.y;
+            corners[4] = center - right * halfSize.x + up * halfSize.y;
+
+            return corners;
+        }
+
         private Vector3 MousePositionToWorldPoint()
         {
             Vector3 mousePosition = _mousePosition;
@@ -283,11 +335,18 @@ namespace GameUtils
             if (_currentDragTransform == null || _camera == null)
                 return;
 
+            // Draw corners
             Vector3 direction = _camera.transform.forward.normalized;
-            Vector3 origin = _currentDragTransform.position - direction * 0.05f;
+            var corners = GetCardCorners();
+            foreach (Vector3 corner in corners)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(corner, 0.2f);
 
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(origin, direction * 5f);
+                // Draw ray
+                Ray ray = new(corner, direction);
+                Gizmos.DrawRay(ray);
+            }
         }
 
         //
