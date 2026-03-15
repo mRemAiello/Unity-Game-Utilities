@@ -31,9 +31,6 @@ namespace GameUtils
         [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _projSpeedCurve;
 
         //
-        private IPoolable _pool;
-
-        //
         public Vector3 Target => _target;
 
         //
@@ -42,11 +39,10 @@ namespace GameUtils
             _trajectoryStartPoint = transform.position;
         }
 
-        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null)
+        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight)
         {
             _target = target;
             _maxMoveSpeed = maxMoveSpeed;
-            _pool = pool;
 
             //
             float xDistanceToTarget = _target.x - transform.position.x;
@@ -66,18 +62,15 @@ namespace GameUtils
         void Update()
         {
             UpdateProjectilePosition();
-            if (Vector3.Distance(transform.position, _target) < _thresholdToDestroy)
+
+            //
+            if (!enabled)
+                return;
+
+            //
+            if (Vector3.Distance(transform.position, _target) <= _thresholdToDestroy)
             {
-                _onHitEvent?.Invoke();
-                enabled = false;
-                if (_pool != null)
-                {
-                    _pool.ReturnToPool();
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                }
+                ReachTarget();
             }
         }
 
@@ -160,31 +153,47 @@ namespace GameUtils
         {
             if (_trajectoryRange.x != 0)
             {
-                //
                 float nextX = transform.position.x + _moveSpeed * Time.deltaTime;
                 float nextXNormalized = (nextX - _trajectoryStartPoint.x) / _trajectoryRange.x;
+
+                // Progress clamp
+                nextXNormalized = Mathf.Clamp01(nextXNormalized);
+
                 float nextYNormalized = _trajectoryCurve.Evaluate(nextXNormalized);
                 float nextYCorrectionNormalized = _axisCorrectCurve.Evaluate(nextXNormalized);
                 float nextYCorrectionAbsolute = nextYCorrectionNormalized * _trajectoryRange.y;
+
                 _nextYTrajectoryPosition = nextYNormalized * _trajectoryMaxRelativeHeight;
                 _nextPositionYCorrectionAbsolute = nextYCorrectionAbsolute;
+
+                float nextXClamped = _trajectoryStartPoint.x + (_trajectoryRange.x * nextXNormalized);
                 float nextY = _trajectoryStartPoint.y + _nextYTrajectoryPosition + _nextPositionYCorrectionAbsolute;
 
-                //
-                Vector3 newPos = new(nextX, nextY, 0);
-                CalculateNextProjectileSpeed(nextXNormalized);
+                Vector3 newPos = new(nextXClamped, nextY, 0);
 
-                //
                 _projectileMoveDir = newPos - transform.position;
                 transform.position = newPos;
+
+                CalculateNextProjectileSpeed(nextXNormalized);
+
+                if (nextXNormalized >= 1f)
+                {
+                    ReachTarget();
+                }
             }
             else
             {
-                // Fallback to linear movement when there's no horizontal range.
-                _nextYTrajectoryPosition = 0f;
-                _nextPositionYCorrectionAbsolute = 0f;
                 Vector3 dir = (_target - transform.position).normalized;
                 Vector3 newPos = transform.position + dir * (_moveSpeed * Time.deltaTime);
+
+                // Fix overshoot
+                if (Vector3.Dot(_target - transform.position, _target - newPos) <= 0f)
+                {
+                    transform.position = _target;
+                    ReachTarget();
+                    return;
+                }
+
                 _projectileMoveDir = newPos - transform.position;
                 transform.position = newPos;
             }
@@ -196,7 +205,20 @@ namespace GameUtils
             _moveSpeed = nextMoveSpeedNormalized * _maxMoveSpeed;
         }
 
+        private void ReachTarget()
+        {
+            transform.position = _target;
+
+            //
+            _onHitEvent?.Invoke();
+            OnReachTarget();
+
+            //
+            enabled = false;
+        }
+
         //
+        public virtual void OnReachTarget() { }
         public Vector3 GetProjectileMoveDir() => _projectileMoveDir;
         public float GetNextYTrajectoryPosition() => _nextYTrajectoryPosition;
         public float GetNextPositionYCorrectionAbsolute() => _nextPositionYCorrectionAbsolute;

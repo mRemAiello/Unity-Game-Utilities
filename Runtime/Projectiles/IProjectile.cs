@@ -12,7 +12,7 @@ namespace GameUtils
         public float GetNextPositionXCorrectionAbsolute();
 
         //
-        void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight, IPoolable pool = null);
+        void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight);
         void InitAnimationCurves(AnimationCurve trajectoryCurve, AnimationCurve axisCorrectCurve, AnimationCurve projSpeedCurve);
     }
 }
