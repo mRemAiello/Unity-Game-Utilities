@@ -23,28 +23,7 @@ namespace GameUtils
         public bool IsVital => _isVital;
         public AttributeClampType ClampType => _clampType;
 
-        /// <summary>
-        /// Computes the current value for a runtime attribute, applying modifiers and clamping.
-        /// </summary>
-        public virtual float ComputeCurrentValue(ClassData classData, float baseValue, IReadOnlyList<Modifier> modifiers)
-        {
-            // Allow derived classes to react to class data while keeping base behavior unchanged.
-            var value = ApplyModifiers(baseValue, modifiers);
-            value = Mathf.Clamp(value, _minValue, _maxValue);
-            return ClampAttributeValue(value, _clampType);
-        }
-
-        /// <summary>
-        /// Computes the current maximum value for a runtime vital attribute.
-        /// </summary>
-        public virtual float ComputeCurrentMaxValue(ClassData classData, float baseValue, IReadOnlyList<Modifier> modifiers)
-        {
-            // Allow derived classes to react to class data while keeping base behavior unchanged.
-            var value = ApplyModifiers(baseValue, modifiers);
-            value = Mathf.Clamp(value, _minValue, _maxValue);
-            return ClampAttributeValue(value, _clampType);
-        }
-
+        //
         protected virtual float ApplyModifiers(float value, IReadOnlyList<Modifier> modifiers)
         {
             if (modifiers == null || modifiers.Count == 0)
@@ -74,6 +53,28 @@ namespace GameUtils
                 AttributeClampType.Integer => Mathf.RoundToInt(value),
                 _ => value,
             };
+        }
+
+        /// <summary>
+        /// Computes the current value for a runtime attribute, applying modifiers and clamping.
+        /// </summary>
+        public virtual float ComputeCurrentValue(ClassData classData, float baseValue, IReadOnlyList<Modifier> modifiers)
+        {
+            // Allow derived classes to react to class data while keeping base behavior unchanged.
+            var value = ApplyModifiers(baseValue, modifiers);
+            value = Mathf.Clamp(value, _minValue, _maxValue);
+            return ClampAttributeValue(value, _clampType);
+        }
+
+        /// <summary>
+        /// Computes the current maximum value for a runtime vital attribute.
+        /// </summary>
+        public virtual float ComputeCurrentMaxValue(ClassData classData, float baseValue, IReadOnlyList<Modifier> modifiers)
+        {
+            // Allow derived classes to react to class data while keeping base behavior unchanged.
+            var value = ApplyModifiers(baseValue, modifiers);
+            value = Mathf.Clamp(value, _minValue, _maxValue);
+            return ClampAttributeValue(value, _clampType);
         }
     }
 }

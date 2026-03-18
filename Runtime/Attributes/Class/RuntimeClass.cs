@@ -224,5 +224,95 @@ namespace GameUtils
 
             return null;
         }
+
+        public RuntimeVital GetVital(string attributeId)
+        {
+            var attribute = GetAttribute(attributeId);
+            if (attribute is RuntimeVital vital)
+                return vital;
+
+            return null;
+        }
+
+        public RuntimeVital GetVital(AttributeData attributeData)
+        {
+            var attribute = GetAttribute(attributeData);
+            if (attribute is RuntimeVital vital)
+                return vital;
+
+            return null;
+        }
+
+        public void IncreaseValue(AttributeData attributeData, float amount)
+        {
+            RuntimeVital vital = GetVital(attributeData);
+            if (vital != null && amount >= 0)
+            {
+                vital.SetCurrentValue(vital.CurrentValue + amount);
+            }
+        }
+
+        public void DecreaseValue(AttributeData attributeData, float amount)
+        {
+            RuntimeVital vital = GetVital(attributeData);
+            if (vital != null && amount >= 0)
+            {
+                vital.SetCurrentValue(vital.CurrentValue - amount);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void AddModifier(AttributeData attributeData, Modifier modifier)
+        {
+            if (TryGetAttribute(attributeData, out var attribute))
+            {
+                attribute.AddModifier(modifier);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void AddModifier(string attributeID, Modifier modifier)
+        {
+            if (TryGetAttribute(attributeID, out var attribute))
+            {
+                attribute.AddModifier(modifier);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void RemoveModifier(AttributeData attributeData, Modifier modifier)
+        {
+            if (TryGetAttribute(attributeData, out var attribute))
+            {
+                attribute.RemoveModifier(modifier);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void RemoveModifier(string attributeID, Modifier modifier)
+        {
+            if (TryGetAttribute(attributeID, out var attribute))
+            {
+                attribute.RemoveModifier(modifier);
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void ClearModifiers(AttributeData attributeData)
+        {
+            if (TryGetAttribute(attributeData, out var attribute))
+            {
+                attribute.ClearModifiers();
+            }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void ClearModifiers(string attributeID)
+        {
+            if (TryGetAttribute(attributeID, out var attribute))
+            {
+                attribute.ClearModifiers();
+            }
+        }
     }
 }

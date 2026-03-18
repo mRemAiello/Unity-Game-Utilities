@@ -24,7 +24,7 @@ namespace GameUtils
 
             if (!_targetRuntimeClass.TryGetAttribute(_targetAttributeData, out RuntimeAttribute trackedAttribute))
             {
-                this.LogWarning($"[AttributeTrackerUI] Attribute '{_targetAttributeData.name}' not found.", this);
+                this.LogWarning($"{_targetAttributeData.Name} Attribute '{_targetAttributeData.name}' not found.", this);
                 return;
             }
 
@@ -33,24 +33,21 @@ namespace GameUtils
 
         private void UpdateLabel(RuntimeAttribute trackedAttribute)
         {
-            if (_targetAttributeData.IsVital)
-            {
-                _attributeTextLabel.text = $"{_targetAttributeData.Name}: {trackedAttribute.CurrentValue}/{trackedAttribute.MaxValue}";
-            }
-            else
-            {
-                _attributeTextLabel.text = $"{_targetAttributeData.Name}: {trackedAttribute.CurrentValue}";
-            }
+            _attributeTextLabel.text = $"{_targetAttributeData.Name}: {trackedAttribute.CurrentValue}";
+
+            // If it's a vital attribute, also show the max value.
+            if (_targetAttributeData.IsVital && trackedAttribute is RuntimeVital vitalAttr)
+                _attributeTextLabel.text = $"{_targetAttributeData.Name}: {vitalAttr.CurrentValue}/{vitalAttr.CurrentMaxValue}";
 
             //
-            this.Log($"[AttributeTrackerUI] UI updated -> {_attributeTextLabel.text}", this);
+            this.Log($"{_targetAttributeData.Name} UI updated to {_attributeTextLabel.text}", this);
         }
 
         private bool ValidateReferences()
         {
             if (_targetRuntimeClass == null || _targetAttributeData == null || _attributeTextLabel == null)
             {
-                this.LogWarning("[AttributeTrackerUI] Missing references.", this);
+                this.LogWarning($"Missing references.", this);
                 return false;
             }
 
