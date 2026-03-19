@@ -37,14 +37,16 @@ namespace GameUtils
         }
 
         /// <summary>
-        /// Refreshes the derived max value via <see cref="AttributeData"/> and clamps the current vital value.
+        /// Refreshes both the derived max value and the current vital value via <see cref="AttributeData"/>.
         /// </summary>
         protected override void RefreshCurrentValue()
         {
             base.RefreshCurrentValue();
             // Recompute max value with class context.
             _currentMaxValue = Data.ComputeCurrentMaxValue(ClassData, BaseValue, Modifiers);
-            _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
+            // Also recalculate the current vital value so modifiers are reflected,
+            // consistent with the initialization pattern in the constructor.
+            _currentVitalValue = Mathf.Clamp(base.CurrentValue, MinValue, _currentMaxValue);
         }
 
         // Override to react to changes in the current vital value.
