@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
@@ -12,11 +11,11 @@ namespace GameUtils
     [Serializable]
     public class RuntimeAttribute
     {
-        [SerializeField, ReadOnly] private AttributeData _data;
-        [SerializeField, ReadOnly] private ClassData _classData;
-        [SerializeField, ReadOnly] private float _baseValue;
-        [SerializeField, ReadOnly] private float _currentValue;
-        [SerializeField, ReadOnly] private List<Modifier> _modifiers;
+        protected readonly AttributeData _data;
+        protected readonly ClassData _classData;
+        protected readonly float _baseValue;
+        protected float _currentValue;
+        protected readonly List<Modifier> _modifiers;
 
         /// <summary>
         /// Gets the attribute identifier.
@@ -41,7 +40,7 @@ namespace GameUtils
         /// <summary>
         /// Gets the current value computed by <see cref="AttributeData"/>.
         /// </summary>
-        public virtual float CurrentValue => _currentValue;
+        public virtual float CurrentValue => Data.ClampAttributeValue(_currentValue, Data.ClampType);
 
         /// <summary>
         /// Gets the minimum allowed value.

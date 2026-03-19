@@ -9,18 +9,20 @@ namespace GameUtils
     /// Scriptable definition for an attribute, including value limits and clamping rules.
     /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute")]
-    [DeclareBoxGroup("attribute", Title = "Attribute")]
+    [DeclareBoxGroup("Attribute")]
     public class AttributeData : ItemVisualData
     {
-        [SerializeField, Group("attribute")] private float _minValue = 0;
-        [SerializeField, Group("attribute")] private float _maxValue = 99;
-        [SerializeField, Group("attribute")] private bool _isVital;
-        [SerializeField, Group("attribute")] private AttributeClampType _clampType;
+        [SerializeField, Group("Attribute")] private float _minValue = 0;
+        [SerializeField, Group("Attribute")] private float _maxValue = 99;
+        [SerializeField, Group("Attribute")] private bool _isVital;
+        [SerializeField, Group("Attribute"), ShowIf("_isVital")] private bool _refreshCurrentValueOnChange = false;
+        [SerializeField, Group("Attribute")] private AttributeClampType _clampType;
 
         // Inspector-facing configuration values.
         public float MinValue => _minValue;
         public float MaxValue => _maxValue;
         public bool IsVital => _isVital;
+        public bool RefreshCurrentValueOnChange => _refreshCurrentValueOnChange;
         public AttributeClampType ClampType => _clampType;
 
         //
@@ -41,7 +43,7 @@ namespace GameUtils
             return value;
         }
 
-        protected virtual float ClampAttributeValue(float value, AttributeClampType clampType)
+        public virtual float ClampAttributeValue(float value, AttributeClampType clampType)
         {
             // Convert to the desired numeric representation.
             return clampType switch

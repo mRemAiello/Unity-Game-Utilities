@@ -10,28 +10,26 @@ namespace GameUtils
     [Serializable]
     public class RuntimeVital : RuntimeAttribute
     {
-        [SerializeField, ReadOnly] private float _currentVitalValue;
-        [SerializeField, ReadOnly] private float _currentMaxValue;
+        private float _currentMaxValue;
 
         // Expose vital-specific current values.
-        public override float CurrentValue => _currentVitalValue;
         public float CurrentMaxValue => _currentMaxValue;
 
         // Initialize max and current values based on the base attribute definition.
         public RuntimeVital(ClassData classData, AttributeData attributeData, float baseValue) : base(classData, attributeData, baseValue)
         {
-            // Compute the initial max value with class context.
+            // Compute the initial current and max value with class context.
             _currentMaxValue = Data.ComputeCurrentMaxValue(ClassData, BaseValue, Modifiers);
-            _currentVitalValue = Mathf.Clamp(base.CurrentValue, MinValue, _currentMaxValue);
+            _currentValue = _data.ComputeCurrentValue(ClassData, BaseValue, Modifiers);
         }
 
         public void SetCurrentValue(float value)
         {
             // Clamp to min and computed max before notifying.
             float clamped = Mathf.Clamp(value, MinValue, _currentMaxValue);
-            if (!Mathf.Approximately(_currentVitalValue, clamped))
+            if (!Mathf.Approximately(_currentValue, clamped))
             {
-                _currentVitalValue = clamped;
+                _currentValue = clamped;
                 OnCurrentValueChange();
             }
         }
@@ -41,10 +39,17 @@ namespace GameUtils
         /// </summary>
         protected override void RefreshCurrentValue()
         {
-            base.RefreshCurrentValue();
-            // Recompute max value with class context.
+            // Percentage of the current value relative to the old max before refreshing.
+            float percentage = _currentMaxValue > 0 ? _currentValue / _currentMaxValue : 0f;
+
+            // Refresh the max value based on the current class data and modifiers.
             _currentMaxValue = Data.ComputeCurrentMaxValue(ClassData, BaseValue, Modifiers);
-            _currentVitalValue = Mathf.Clamp(_currentVitalValue, MinValue, _currentMaxValue);
+
+            // If configured to refresh the current value, clamp it to the new max while maintaining the same percentage.
+            if (!Data.RefreshCurrentValueOnChange)
+                return;
+
+            _currentValue = Mathf.Clamp(_currentMaxValue * percentage, MinValue, _currentMaxValue);
         }
 
         // Override to react to changes in the current vital value.
