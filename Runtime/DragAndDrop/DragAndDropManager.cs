@@ -21,8 +21,9 @@ namespace GameUtils
 
         //
         [SerializeField, Group("Cards")] private Vector2 _cardSize;
+        [SerializeField, Group("Cards")] private Vector3 _dropOffset = Vector3.zero;
         [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
-        [SerializeField, Range(0.0f, 10.0f), Group("Cards")] private float _height = 1.0f;
+        [SerializeField, Group("Cards")] private float _height = 1.0f;
 
         //
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
@@ -97,7 +98,7 @@ namespace GameUtils
             //
             this.Log($"Start dragging {_currentDrag}");
             draggable.Dragging = true;
-            draggable.OnBeginDrag(new Vector3(_raycastHits[0].point.x, _raycastHits[0].point.y + _height, _raycastHits[0].point.z));
+            draggable.OnBeginDrag(new Vector3(0, _raycastHits[0].point.y, 0), _height);
         }
 
         private void HandlePointerMoved(InputAction.CallbackContext ctx)
@@ -123,9 +124,12 @@ namespace GameUtils
             IDroppable droppable = _currentDropTarget as IDroppable;
             if (_currentDrag is IDraggable draggable)
             {
-                this.Log($"Stop dragging {_currentDrag}, drop on {_currentDropTarget}");
-                draggable.Dragging = false;
-                draggable.OnEndDrag(_raycastHits[0].point, droppable);
+                if (_currentDropTarget != null)
+                {
+                    this.Log($"Stop dragging {_currentDrag}, drop on {_currentDropTarget}");
+                    draggable.Dragging = false;
+                    draggable.OnEndDrag(_currentDropTarget.transform.position + _dropOffset, droppable);
+                }
             }
 
             //
@@ -174,11 +178,12 @@ namespace GameUtils
             // Calculate offset
             Vector3 mouseWorldPosition = MousePositionToWorldPoint();
             Vector3 offset = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
+            offset.z = 0;
 
             // Drag the card
             if (_currentDrag is IDraggable draggable)
             {
-                draggable.OnDrag(offset, droppable);
+                draggable.OnDrag(offset, _height, droppable);
             }
 
             //

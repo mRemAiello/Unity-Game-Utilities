@@ -4,23 +4,22 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("references", Title = "References")]
-    [DeclareBoxGroup("animations", Title = "Animations")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("References")]
+    [DeclareBoxGroup("Animations")]
+    [DeclareBoxGroup("Debug")]
     public class CardDrag : MonoBehaviour, IDraggable, ILoggable
     {
-        //
-        [SerializeField, Group("animations")] private Ease _riseEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("animations")] private float _riseDuration = 0.2f;
-        [SerializeField, Group("animations")] private Ease _dropEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("animations")] private float _dropDuration = 0.2f;
-        [SerializeField, Group("animations")] private Ease _invalidDropEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("animations")] private float _invalidDropDuration = 0.2f;
+        [SerializeField, Group("Animations")] private Ease _riseEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _riseDuration = 0.2f;
+        [SerializeField, Group("Animations")] private Ease _dropEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _dropDuration = 0.2f;
+        [SerializeField, Group("Animations")] private Ease _invalidDropEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _invalidDropDuration = 0.2f;
 
         //
-        [SerializeField, Group("debug")] private bool _logEnabled = false;
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _dragOriginPosition;
-        [SerializeField, Group("debug"), ReadOnly] protected bool _isDraggable = true;
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _dragOriginPosition;
+        [SerializeField, Group("Debug"), ReadOnly] protected bool _isDraggable = true;
 
         //
         public bool LogEnabled => _logEnabled;
@@ -33,7 +32,7 @@ namespace GameUtils
             _dragOriginPosition = transform.position;
         }
 
-        public void OnBeginDrag(Vector3 position)
+        public void OnBeginDrag(Vector3 position, float height)
         {
             _dragOriginPosition = transform.position;
 
@@ -53,10 +52,10 @@ namespace GameUtils
             OnPostBeginDrag(position);
         }
 
-        public void OnDrag(Vector3 deltaPosition, IDroppable droppable)
+        public void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
         {
-            deltaPosition.z = 0;
             transform.position += deltaPosition;
+            transform.position = new Vector3(transform.position.x, transform.position.y, height);
 
             //
             OnPostDrag(deltaPosition, droppable);
@@ -66,7 +65,10 @@ namespace GameUtils
         {
             if (droppable is { IsDroppable: true } && droppable.AcceptDrop(this) == true)
             {
-                Tween tween = transform.DOMoveY(position.y, _dropDuration).From(transform.position.y);
+                this.Log($"Dropping on {position}");
+
+                // Animate drop
+                Tween tween = transform.DOMove(position, _dropDuration).From(transform.position);
                 tween.SetEase(_dropEase);
                 tween.OnComplete(() => { droppable.OnDrop(this); });
                 tween.SetTarget(this);
