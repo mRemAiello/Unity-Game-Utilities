@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
@@ -11,11 +12,11 @@ namespace GameUtils
     [Serializable]
     public class RuntimeAttribute
     {
-        protected readonly AttributeData _data;
-        protected readonly ClassData _classData;
-        protected readonly float _baseValue;
-        protected float _currentValue;
-        protected readonly List<Modifier> _modifiers;
+        [SerializeField, ReadOnly] protected AttributeData _data;
+        [SerializeField, ReadOnly] protected ClassData _classData;
+        [SerializeField, ReadOnly] protected float _baseValue;
+        [SerializeField, ReadOnly] protected float _currentValue;
+        [SerializeField, ReadOnly] protected List<Modifier> _modifiers;
 
         /// <summary>
         /// Gets the attribute identifier.
