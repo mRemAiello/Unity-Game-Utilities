@@ -89,8 +89,8 @@ namespace GameUtils
         }
 
         //
-        public void OnPointerEnter(Vector3 position) { }
-        public void OnPointerExit(Vector3 position) { }
+        public virtual void OnPointerEnter(Vector3 position) { }
+        public virtual void OnPointerExit(Vector3 position) { }
 
         //
         protected virtual void OnPostBeginDrag(Vector3 position) { }
