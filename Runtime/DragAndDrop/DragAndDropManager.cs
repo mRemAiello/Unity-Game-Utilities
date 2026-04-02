@@ -22,7 +22,6 @@ namespace GameUtils
         //
         [SerializeField, Group("Cards")] private Vector2 _cardSize;
         [SerializeField, Group("Cards")] private Vector3 _dropOffset = Vector3.zero;
-        [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
         [SerializeField, Group("Cards")] private float _height = 1.0f;
 
         //
@@ -32,7 +31,6 @@ namespace GameUtils
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDropTarget;
         [SerializeField, Group("Debug"), ReadOnly] private Transform _currentDragTransform;
         [SerializeField, ReadOnly, Group("Debug")] private Vector2 _mousePosition;
-        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
         private RaycastHit[] _raycastHits;
         private readonly RaycastHit[] _cardHits = new RaycastHit[5];
         private Ray _mouseRay;
@@ -89,7 +87,6 @@ namespace GameUtils
             //
             _currentDrag = _hoveredDraggable;
             _currentDragTransform = _currentDrag.transform;
-            _oldMouseWorldPosition = MousePositionToWorldPoint();
 
             //
             Cursor.visible = false;
@@ -176,22 +173,18 @@ namespace GameUtils
             _currentDropTarget = droppable as MonoBehaviour;
 
             // Calculate offset
-            Vector3 mouseWorldPosition = MousePositionToWorldPoint();
-            Vector3 offset = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
-            offset.z = 0;
+            Vector3 position = MousePositionToWorldPoint();
+            position.z = 0;
 
             // Drag the card
             if (_currentDrag is IDraggable draggable)
             {
-                draggable.OnDrag(offset, _height, droppable);
+                draggable.OnDrag(position, _height, droppable);
             }
-
-            //
-            _oldMouseWorldPosition = mouseWorldPosition;
         }
 
         /// <summary>
-        /// Returns the Transfrom of the object closest to the origin
+        /// Returns the Transform of the object closest to the origin
         /// of the ray.
         /// </summary>
         /// <returns>Transform or null if there is no impact.</returns>

@@ -23,7 +23,7 @@ namespace GameUtils
 
         //
         public bool LogEnabled => _logEnabled;
-        public bool IsDraggable => _isDraggable;
+        public virtual bool IsDraggable => _isDraggable;
         public bool Dragging { get; set; }
 
         //
@@ -52,13 +52,12 @@ namespace GameUtils
             OnPostBeginDrag(position);
         }
 
-        public void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
+        public void OnDrag(Vector3 position, float height, IDroppable droppable)
         {
-            transform.position += deltaPosition;
-            transform.position = new Vector3(transform.position.x, transform.position.y, height);
+            transform.position = new Vector3(position.x, position.y, height);
 
             //
-            OnPostDrag(deltaPosition, droppable);
+            OnPostDrag(position, droppable);
         }
 
         public void OnEndDrag(Vector3 position, IDroppable droppable)
@@ -94,7 +93,7 @@ namespace GameUtils
 
         //
         protected virtual void OnPostBeginDrag(Vector3 position) { }
-        protected virtual void OnPostDrag(Vector3 deltaPosition, IDroppable droppable) { }
+        protected virtual void OnPostDrag(Vector3 position, IDroppable droppable) { }
         protected virtual void OnPostEndDrag(Vector3 position, IDroppable droppable) { }
     }
 }
