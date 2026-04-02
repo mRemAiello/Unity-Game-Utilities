@@ -39,7 +39,7 @@ namespace GameUtils
             _trajectoryStartPoint = transform.position;
         }
 
-        public void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight)
+        public virtual void InitProjectile(Vector3 target, float maxMoveSpeed, float trajectoryMaxHeight)
         {
             _target = target;
             _maxMoveSpeed = maxMoveSpeed;
@@ -52,7 +52,7 @@ namespace GameUtils
             _projectileVisual.SetTarget(_target);
         }
 
-        public void InitAnimationCurves(AnimationCurve trajectoryCurve, AnimationCurve axisCorrectCurve, AnimationCurve projSpeedCurve)
+        public virtual void InitAnimationCurves(AnimationCurve trajectoryCurve, AnimationCurve axisCorrectCurve, AnimationCurve projSpeedCurve)
         {
             _trajectoryCurve = trajectoryCurve;
             _axisCorrectCurve = axisCorrectCurve;
