@@ -7,17 +7,17 @@ namespace GameUtils
     /// <summary>
     /// MonoBehaviour that instantiates and manages runtime attributes for a class.
     /// </summary>
-    [DeclareBoxGroup("class", Title = "Class")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Class")]
+    [DeclareBoxGroup("Debug")]
     public class RuntimeClass : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("class")] protected bool _startWithClass = true;
-        [SerializeField, Group("class"), ShowIf(nameof(_startWithClass), true), ShowProperties] protected ClassData _classData;
-        [SerializeField, Group("class")] protected bool _refreshClassOnUpdate = false;
+        [SerializeField, Group("Class")] protected bool _startWithClass = true;
+        [SerializeField, Group("Class"), ShowIf(nameof(_startWithClass), true), ShowProperties] protected ClassData _classData;
+        [SerializeField, Group("Class")] protected bool _refreshClassOnUpdate = false;
 
         // Debugging/diagnostic settings.
-        [SerializeField, Group("debug")] private bool _logEnabled = true;
-        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("debug")] protected List<RuntimeAttribute> _attributes;
+        [SerializeField, Group("Debug")] private bool _logEnabled = true;
+        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("Debug")] protected List<RuntimeAttribute> _attributes;
 
         // Public accessors.
         public ClassData ClassData => _classData;

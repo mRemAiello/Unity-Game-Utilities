@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("internal", Title = "Internal")]
+    [DeclareBoxGroup("Internal")]
     public abstract class ItemIdentifierData : ScriptableObject
     {
-        [SerializeField, Group("internal"), ReadOnly] private string _id = "";
+        [SerializeField, Group("Internal"), ReadOnly] private string _id = "";
 
         //
         private void OnValidate()

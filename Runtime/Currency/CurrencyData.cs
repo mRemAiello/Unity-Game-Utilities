@@ -5,13 +5,13 @@ using UnityEngine;
 namespace GameUtils
 {
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.CURRENCY_NAME + "Currency")]
-    [DeclareBoxGroup("currency", Title = "Currency")]
+    [DeclareBoxGroup("Currency")]
     public class CurrencyData : ItemVisualData
     {
-        [SerializeField, Group("currency")] private CurrencyType _currencyType;
-        [SerializeField, Group("currency")] private int _maxAmount;
-        [SerializeField, Group("currency")] private bool _isConvertible;
-        [SerializeField, Group("currency"), ShowIf(nameof(_isConvertible), true)] private List<CurrencyConversionRate > _currencyConversions;
+        [SerializeField, Group("Currency")] private CurrencyType _currencyType;
+        [SerializeField, Group("Currency")] private int _maxAmount;
+        [SerializeField, Group("Currency")] private bool _isConvertible;
+        [SerializeField, Group("Currency"), ShowIf(nameof(_isConvertible), true)] private List<CurrencyConversionRate > _currencyConversions;
 
         //
         public CurrencyType CurrencyType => _currencyType;

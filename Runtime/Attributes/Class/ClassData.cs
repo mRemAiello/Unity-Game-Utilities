@@ -12,10 +12,10 @@ namespace GameUtils
     /// Defines a class loadout by pairing attribute data with starting values.
     /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
-    [DeclareBoxGroup("class", Title = "Class")]
+    [DeclareBoxGroup("Class")]
     public class ClassData : ItemVisualData
     {
-        [SerializeField, Group("class"), TableList] private List<AttributeValuePair> _attributes;
+        [SerializeField, Group("Class"), TableList] private List<AttributeValuePair> _attributes;
 
         /// <summary>
         /// Gets the attribute list used by runtime class instances.

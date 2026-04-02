@@ -1,6 +1,7 @@
 ## 3.4.4
 
 - Simplified Drag and Drop.
+- Simplified DeclareBoxGroup.
 
 ## 3.4.3
 

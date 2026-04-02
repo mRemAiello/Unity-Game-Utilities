@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("events", Title = "Events")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("Events")]
     [DefaultExecutionOrder(-100)]
     public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>, ISaveable
     {
-        [SerializeField, Group("events"), Required] private CurrencyChangeEvent _onChangeEvent;
-        [SerializeField, ReadOnly, HideInEditMode, Group("debug"), ShowProperties] private List<CurrencyData> _currencies = new();
-        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
+        [SerializeField, Group("Events"), Required] private CurrencyChangeEvent _onChangeEvent;
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug"), ShowProperties] private List<CurrencyData> _currencies = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
 
         //
         public string SaveContext => "Currency";

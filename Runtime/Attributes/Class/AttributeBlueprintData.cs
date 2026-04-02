@@ -11,10 +11,10 @@ namespace GameUtils
     /// Defines an ordered attribute blueprint that can be reused by ClassData assets.
     /// </summary>
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute Blueprint")]
-    [DeclareBoxGroup("blueprint", Title = "Attribute Blueprint")]
+    [DeclareBoxGroup("Blueprint")]
     public class AttributeBlueprintData : ItemIdentifierData
     {
-        [SerializeField, Group("blueprint"), TableList] private List<AttributeData> _attributes;
+        [SerializeField, Group("Blueprint"), TableList] private List<AttributeData> _attributes;
 
         /// <summary>
         /// Gets the ordered attribute list used by this blueprint.

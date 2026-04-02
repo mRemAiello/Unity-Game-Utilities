@@ -7,17 +7,17 @@ using UnityEngine.UI;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("currency", Title = "Currency")]
-    [DeclareBoxGroup("events", Title = "Events")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Currency")]
+    [DeclareBoxGroup("Events")]
+    [DeclareBoxGroup("Debug")]
     public class CurrencyUITracker : MonoBehaviour, ILoggable
     {
-        [SerializeField, Required, Group("currency")] private CurrencyData _currencyData;
-        [SerializeField, Required, Group("currency")] private TextMeshProUGUI _currencyText;
-        [SerializeField, Required, Group("currency")] private Image _currencyIcon;
-        [SerializeField, Group("currency")] private Sprite _fallbackIcon;
-        [SerializeField, Group("events")] private CurrencyChangeEvent _onChangeEvent;
-        [SerializeField, Group("events")] private bool _logEnabled = true;
+        [SerializeField, Required, Group("Currency")] private CurrencyData _currencyData;
+        [SerializeField, Required, Group("Currency")] private TextMeshProUGUI _currencyText;
+        [SerializeField, Required, Group("Currency")] private Image _currencyIcon;
+        [SerializeField, Group("Currency")] private Sprite _fallbackIcon;
+        [SerializeField, Group("Events")] private CurrencyChangeEvent _onChangeEvent;
+        [SerializeField, Group("Events")] private bool _logEnabled = true;
 
         //
         public bool LogEnabled => _logEnabled;

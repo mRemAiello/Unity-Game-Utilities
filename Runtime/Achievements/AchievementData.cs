@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("graphics", Title = "Graphics")]
-    [DeclareBoxGroup("progress", Title = "Progress")]
+    [DeclareBoxGroup("Graphics")]
+    [DeclareBoxGroup("Progress")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.ACHIEVEMENT_NAME + "Achievement")]
     public class AchievementData : ItemVisualData
     {
@@ -18,13 +18,13 @@ namespace GameUtils
         [SerializeField, Group("internal")] private string _appGalleryId;
 
         //
-        [SerializeField, Group("graphics")] private Sprite _uncompletedIcon;
-        [SerializeField, Group("graphics")] private Sprite _completedIcon;
+        [SerializeField, Group("Graphics")] private Sprite _uncompletedIcon;
+        [SerializeField, Group("Graphics")] private Sprite _completedIcon;
 
         //
-        [SerializeField, Group("progress")] private AchievementType _type;
-        [SerializeField, ShowIf(nameof(_type), AchievementType.Simple), Group("progress")] private AchievementCondition _condition;
-        [SerializeField, Group("progress")] private int _targetValue;
+        [SerializeField, Group("Progress")] private AchievementType _type;
+        [SerializeField, ShowIf(nameof(_type), AchievementType.Simple), Group("Progress")] private AchievementCondition _condition;
+        [SerializeField, Group("Progress")] private int _targetValue;
 
         //
         public string EventName => _eventName;

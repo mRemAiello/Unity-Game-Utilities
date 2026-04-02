@@ -5,12 +5,12 @@ using UnityEngine.Localization;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("localization", Title = "Localization")]
+    [DeclareBoxGroup("Localization")]
     public abstract class ItemLocalizedData : ItemTagsData
     {
-        [SerializeField, Group("internal")] private string _internalItemName = "";
-        [SerializeField, Group("localization")] private LocalizedString _itemName = null;
-        [SerializeField, Group("localization")] private LocalizedString _itemDescription = null;
+        [SerializeField, Group("Internal")] private string _internalItemName = "";
+        [SerializeField, Group("Localization")] private LocalizedString _itemName = null;
+        [SerializeField, Group("Localization")] private LocalizedString _itemDescription = null;
 
         //
         private string SafeLocalizedString(LocalizedString localizedString)

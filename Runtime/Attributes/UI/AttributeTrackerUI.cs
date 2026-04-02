@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("references", Title = "References")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("References")]
     public class AttributeTrackerUI : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("references")] private RuntimeClass _targetRuntimeClass;
-        [SerializeField, Group("references")] private AttributeData _targetAttributeData;
-        [SerializeField, Group("references")] private TextMeshProUGUI _attributeTextLabel;
-        [SerializeField, Group("debug")] private bool _logEnabled;
+        [SerializeField, Group("References")] private RuntimeClass _targetRuntimeClass;
+        [SerializeField, Group("References")] private AttributeData _targetAttributeData;
+        [SerializeField, Group("References")] private TextMeshProUGUI _attributeTextLabel;
+        [SerializeField, Group("Debug")] private bool _logEnabled;
 
         //
         public bool LogEnabled => _logEnabled;

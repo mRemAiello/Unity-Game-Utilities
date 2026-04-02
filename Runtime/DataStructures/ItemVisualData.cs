@@ -7,12 +7,12 @@ using UnityEngine.AddressableAssets;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("graphics", Title = "Graphics")]
+    [DeclareBoxGroup("Graphics")]
     public abstract class ItemVisualData : ItemLocalizedData
     {
-        [SerializeField, Group("graphics")] private AssetReferenceSprite _itemIcon = null;
-        [SerializeField, Group("graphics")] private Color _itemColor = Color.white;
-        [SerializeReference, Group("features")] private List<ItemFeatureData> _itemFeature = null;
+        [SerializeField, Group("Graphics")] private AssetReferenceSprite _itemIcon = null;
+        [SerializeField, Group("Graphics")] private Color _itemColor = Color.white;
+        [SerializeReference, Group("Features")] private List<ItemFeatureData> _itemFeature = null;
 
         //
         public AssetReferenceSprite AssetReferenceIcon => _itemIcon;

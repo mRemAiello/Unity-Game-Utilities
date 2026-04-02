@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("features", Title = "Features")]
+    [DeclareBoxGroup("Features")]
     public class ItemTagsData : ItemIdentifierData, ITaggable
     {
-        [SerializeField, Group("features")] private List<GameTag> _tags = new();
+        [SerializeField, Group("Features")] private List<GameTag> _tags = new();
 
         //
         public IReadOnlyList<GameTag> Tags => _tags;

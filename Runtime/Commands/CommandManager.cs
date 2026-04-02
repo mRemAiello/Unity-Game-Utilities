@@ -6,17 +6,17 @@ namespace GameUtils
 {
     // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Debug")]
     public class CommandManager : Singleton<CommandManager>, ILoggable
     {
         [SerializeField] private bool _logEnabled = false;
         [SerializeField] private int _maxCommandsInLogList = 20;
 
         //
-        [SerializeField, ReadOnly, Group("debug")] private bool _playingQueue = false;
-        [SerializeField, ReadOnly, Group("debug")] private Command _currentCommand = null;
-        [SerializeField, ReadOnly, Group("debug")] private List<CommandInputPair> _commandQueue = new();
-        [SerializeField, ReadOnly, Group("debug")] private List<string> _commandList = new();
+        [SerializeField, ReadOnly, Group("Debug")] private bool _playingQueue = false;
+        [SerializeField, ReadOnly, Group("Debug")] private Command _currentCommand = null;
+        [SerializeField, ReadOnly, Group("Debug")] private List<CommandInputPair> _commandQueue = new();
+        [SerializeField, ReadOnly, Group("Debug")] private List<string> _commandList = new();
 
         //
         public bool IsCommandPlaying => _playingQueue;
