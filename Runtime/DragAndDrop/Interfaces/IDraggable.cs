@@ -27,11 +27,11 @@ namespace GameUtils
         public void OnBeginDrag(Vector3 position, float height);
 
         /// <summary> A drag is in progress. </summary>
-        /// <param name="position"> Mouse position. </param>
+        /// <param name="deltaPosition"> Mouse offset position. </param>
         /// <param name="height">Height to maintain while dragging.</param>
         /// <param name="droppable">
         /// Object on which a drop may be made, or null. </param>
-        public void OnDrag(Vector3 position, float height, IDroppable droppable);
+        public void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable);
 
         /// <summary> The drag operation is completed. </summary>
         /// <param name="position">Mouse position.</param>

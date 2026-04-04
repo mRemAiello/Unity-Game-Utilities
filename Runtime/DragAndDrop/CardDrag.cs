@@ -52,12 +52,13 @@ namespace GameUtils
             OnPostBeginDrag(position);
         }
 
-        public void OnDrag(Vector3 position, float height, IDroppable droppable)
+        public void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
         {
-            transform.position = new Vector3(position.x, position.y, height);
+            transform.position += deltaPosition;
+            transform.position = new Vector3(transform.position.x, transform.position.y, height);
 
             //
-            OnPostDrag(position, droppable);
+            OnPostDrag(deltaPosition, droppable);
         }
 
         public void OnEndDrag(Vector3 position, IDroppable droppable)
@@ -93,7 +94,7 @@ namespace GameUtils
 
         //
         protected virtual void OnPostBeginDrag(Vector3 position) { }
-        protected virtual void OnPostDrag(Vector3 position, IDroppable droppable) { }
+        protected virtual void OnPostDrag(Vector3 deltaPosition, IDroppable droppable) { }
         protected virtual void OnPostEndDrag(Vector3 position, IDroppable droppable) { }
     }
 }
