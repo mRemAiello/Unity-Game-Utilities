@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("status-effect", Title = "StatusEffect")]
+    [DeclareBoxGroup("StatusEffect")]
     public abstract class StatusEffectData : ItemVisualData
     {
-        [SerializeField, Group("status-effect")] private bool _isVisible = true;
-        [SerializeField, Group("status-effect")] private int _order = 0;
-        [SerializeField, Group("status-effect")] private StatusEffectStackType _stackType;
-        [ShowIf(nameof(_stackType), StatusEffectStackType.Duration), SerializeField, Group("status-effect")] private int _maxDuration;
+        [SerializeField, Group("StatusEffect")] private bool _isVisible = true;
+        [SerializeField, Group("StatusEffect")] private int _order = 0;
+        [SerializeField, Group("StatusEffect")] private StatusEffectStackType _stackType;
+        [ShowIf(nameof(_stackType), StatusEffectStackType.Duration), SerializeField, Group("StatusEffect")] private int _maxDuration;
 
         //
         public int Order => _order;

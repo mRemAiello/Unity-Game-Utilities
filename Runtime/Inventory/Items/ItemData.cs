@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("item", Title = "Item")]
+    [DeclareBoxGroup("Item")]
     [CreateAssetMenu(menuName = GameUtilsMenuConstants.INVENTORY_NAME + "Item Data")]
     public class ItemData : ItemVisualData
     {
-        [SerializeField, Group("item")] private ItemType _itemType;
-        [SerializeField, Group("item")] private Rarity _rarity;
-        [SerializeField, Group("item"), Min(1)] private int _maxStackSize = 1;
-        [SerializeField, Group("item"), Min(0)] private int _baseValue;
-        [SerializeField, Group("item")] private bool _isUnique;
-        [SerializeField, Group("item")] private EquipmentSlot _equipmentSlot;
+        [SerializeField, Group("Item")] private ItemType _itemType;
+        [SerializeField, Group("Item")] private Rarity _rarity;
+        [SerializeField, Group("Item"), Min(1)] private int _maxStackSize = 1;
+        [SerializeField, Group("Item"), Min(0)] private int _baseValue;
+        [SerializeField, Group("Item")] private bool _isUnique;
+        [SerializeField, Group("Item")] private EquipmentSlot _equipmentSlot;
 
         //
         public ItemType ItemType => _itemType;

@@ -3,33 +3,33 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("pitch", Title = "Pitch")]
-    [DeclareBoxGroup("roll", Title = "Roll")]
-    [DeclareBoxGroup("misc", Title = "Misc")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Pitch")]
+    [DeclareBoxGroup("Roll")]
+    [DeclareBoxGroup("Misc")]
+    [DeclareBoxGroup("Debug")]
     public class CardTilter : MonoBehaviour
     {
-        [SerializeField, Group("pitch")] private float pitchForce = 10.0f;
-        [SerializeField, Group("pitch")] private float pitchMinAngle = -25.0f;
-        [SerializeField, Group("pitch")] private float pitchMaxAngle = 25.0f;
-        [SerializeField, Group("roll")] private float rollForce = 10.0f;
-        [SerializeField, Group("roll")] private float rollMinAngle = -25.0f;
-        [SerializeField, Group("roll")] private float rollMaxAngle = 25.0f;
-        [SerializeField, Group("misc")] private float restTime = 1.0f;
+        [SerializeField, Group("Pitch")] private float pitchForce = 10.0f;
+        [SerializeField, Group("Pitch")] private float pitchMinAngle = -25.0f;
+        [SerializeField, Group("Pitch")] private float pitchMaxAngle = 25.0f;
+        [SerializeField, Group("Roll")] private float rollForce = 10.0f;
+        [SerializeField, Group("Roll")] private float rollMinAngle = -25.0f;
+        [SerializeField, Group("Roll")] private float rollMaxAngle = 25.0f;
+        [SerializeField, Group("Misc")] private float restTime = 1.0f;
 
         // Pitch angle and velocity.
-        [SerializeField, Group("debug"), ReadOnly] private float _pitchAngle;
-        [SerializeField, Group("debug"), ReadOnly] private float _pitchVelocity;
+        [SerializeField, Group("Debug"), ReadOnly] private float _pitchAngle;
+        [SerializeField, Group("Debug"), ReadOnly] private float _pitchVelocity;
 
         // Roll angle and velocity.
-        [SerializeField, Group("debug"), ReadOnly] private float _rollAngle;
-        [SerializeField, Group("debug"), ReadOnly] private float _rollVelocity;
+        [SerializeField, Group("Debug"), ReadOnly] private float _rollAngle;
+        [SerializeField, Group("Debug"), ReadOnly] private float _rollVelocity;
 
         // To calculate the velocity vector.
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _oldPosition;
+        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldPosition;
 
         // The original rotation
-        [SerializeField, Group("debug"), ReadOnly] private Vector3 _originalAngles;
+        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _originalAngles;
 
         //
         private void Awake()

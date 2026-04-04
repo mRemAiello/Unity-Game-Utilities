@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Debug")]
     public abstract class GameEventAssetBase : ItemIdentifierData, ILoggable
     {
-        [SerializeField, Group("debug")] private bool _logEnabled = false;
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
 
         //
         public bool LogEnabled => _logEnabled;

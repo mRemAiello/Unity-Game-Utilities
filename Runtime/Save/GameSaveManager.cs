@@ -8,19 +8,19 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("save", Title = "Save")]
-    [DeclareBoxGroup("events", Title = "Events")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("Save")]
+    [DeclareBoxGroup("Events")]
     // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
-        [SerializeField, Group("save")] private bool _logEnabled = true;
-        [SerializeField, Group("save")] private bool _loadOnEnable = false;
-        [SerializeField, Group("save")] private int _minSaveSlot = 0;
-        [SerializeField, Group("save")] private int _maxSaveSlot = 5;
-        [SerializeField, ReadOnly, Group("debug")] private int _currentSaveSlot;
-        [SerializeField, ReadOnly, Group("debug")] private SerializedDictionary<string, string> _dict;
+        [SerializeField, Group("Save")] private bool _logEnabled = true;
+        [SerializeField, Group("Save")] private bool _loadOnEnable = false;
+        [SerializeField, Group("Save")] private int _minSaveSlot = 0;
+        [SerializeField, Group("Save")] private int _maxSaveSlot = 5;
+        [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
+        [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
 
         public bool LogEnabled => _logEnabled;
 

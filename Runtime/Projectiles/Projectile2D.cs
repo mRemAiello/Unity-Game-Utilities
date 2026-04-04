@@ -1,34 +1,33 @@
-using System;
 using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("projectile", Title = "Projectile")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("events", Title = "Events")]
+    [DeclareBoxGroup("Projectile")]
+    [DeclareBoxGroup("Events")]
+    [DeclareBoxGroup("Debug")]
     public class Projectile2D : MonoBehaviour, IProjectile
     {
-        [SerializeField, Group("projectile")] protected float _thresholdToDestroy = 1f;
-        [SerializeField, Group("projectile")] protected ProjectileVisual2D _projectileVisual;
+        [SerializeField, Group("Projectile")] protected float _thresholdToDestroy = 1f;
+        [SerializeField, Group("Projectile")] protected ProjectileVisual2D _projectileVisual;
 
-        [SerializeField, Group("events")] protected VoidEventAsset _onHitEvent;
+        [SerializeField, Group("Events")] protected VoidEventAsset _onHitEvent;
 
         //
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _target;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _moveSpeed;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _maxMoveSpeed;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryStartPoint;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryRange;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _trajectoryMaxRelativeHeight;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected Vector3 _projectileMoveDir;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextYTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextXTrajectoryPosition;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextPositionYCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected float _nextPositionXCorrectionAbsolute;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _trajectoryCurve;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _axisCorrectCurve;
-        [SerializeField, Group("debug"), ReadOnly, HideInEditMode] protected AnimationCurve _projSpeedCurve;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected Vector3 _target;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _moveSpeed;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _maxMoveSpeed;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryStartPoint;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected Vector3 _trajectoryRange;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _trajectoryMaxRelativeHeight;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected Vector3 _projectileMoveDir;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _nextYTrajectoryPosition;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _nextXTrajectoryPosition;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _nextPositionYCorrectionAbsolute;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected float _nextPositionXCorrectionAbsolute;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected AnimationCurve _trajectoryCurve;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected AnimationCurve _axisCorrectCurve;
+        [SerializeField, Group("Debug"), ReadOnly, HideInEditMode] protected AnimationCurve _projSpeedCurve;
 
         //
         public Vector3 Target => _target;

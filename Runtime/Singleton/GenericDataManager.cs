@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Debug")]
     // Ensures data manager singletons initialize much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
     public abstract class GenericDataManager<T1, T2> : MonoBehaviour, ILoggable where T1 : GenericDataManager<T1, T2> where T2 : ItemIdentifierData
     {
-        [SerializeField, Group("debug")] private bool _logEnabled = true;
-        [SerializeField, Group("debug")] private string _dataFolderPath = "Assets/";
-        [SerializeField, Group("debug"), ReadOnly, TableList] private List<T2> _dataList = new();
+        [SerializeField, Group("Debug")] private bool _logEnabled = true;
+        [SerializeField, Group("Debug")] private string _dataFolderPath = "Assets/";
+        [SerializeField, Group("Debug"), ReadOnly, TableList] private List<T2> _dataList = new();
 
         //
         public bool LogEnabled => _logEnabled;

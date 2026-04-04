@@ -3,24 +3,24 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("projectile", Title = "Projectile")]
-    [DeclareBoxGroup("curves", Title = "Curves")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
+    [DeclareBoxGroup("Projectile")]
+    [DeclareBoxGroup("Curves")]
+    [DeclareBoxGroup("Debug")]
     public class Shooter : MonoBehaviour
     {
-        [SerializeField, Group("projectile")] private GameObject _projPrefab;
-        [SerializeField, Group("projectile")] private Transform _target;
-        [SerializeField, Group("projectile")] private float _shootRate;
-        [SerializeField, Group("projectile")] private float _projMaxMoveSpeed;
-        [SerializeField, Group("projectile")] private float _projMaxHeight;
+        [SerializeField, Group("Projectile")] private GameObject _projPrefab;
+        [SerializeField, Group("Projectile")] private Transform _target;
+        [SerializeField, Group("Projectile")] private float _shootRate;
+        [SerializeField, Group("Projectile")] private float _projMaxMoveSpeed;
+        [SerializeField, Group("Projectile")] private float _projMaxHeight;
 
         //
-        [SerializeField, Group("curves")] private AnimationCurve _projSpeedCurve;
-        [SerializeField, Group("curves")] private AnimationCurve _trajectoryCurve;
-        [SerializeField, Group("curves")] private AnimationCurve _axisCorrectionCurve;
+        [SerializeField, Group("Curves")] private AnimationCurve _projSpeedCurve;
+        [SerializeField, Group("Curves")] private AnimationCurve _trajectoryCurve;
+        [SerializeField, Group("Curves")] private AnimationCurve _axisCorrectionCurve;
 
         //
-        [SerializeField, Group("debug"), ReadOnly] private float _shootTimer;
+        [SerializeField, Group("Debug"), ReadOnly] private float _shootTimer;
 
         //
         void Update()

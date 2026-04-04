@@ -6,18 +6,18 @@ using UnityEngine.Events;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("references", Title = "References")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("animations", Title = "Animations")]
+    [DeclareBoxGroup("References")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("Animations")]
     public abstract class ModalWindowBase : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("references")] private TextMeshProUGUI _headerText;
-        [SerializeField, Group("references")] private TextMeshProUGUI _questionText;
-        [SerializeField, Group("references")] private Transform _buttonsRoot;
-        [SerializeField, Group("animations")] private Animator _animator;
-        [SerializeField, Group("debug")] private bool _logEnabled = false;
-        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] protected List<ModalWindowButton> _buttons = new();
-        [SerializeField, ReadOnly, HideInEditMode, Group("debug")] private bool _ignorable;
+        [SerializeField, Group("References")] private TextMeshProUGUI _headerText;
+        [SerializeField, Group("References")] private TextMeshProUGUI _questionText;
+        [SerializeField, Group("References")] private Transform _buttonsRoot;
+        [SerializeField, Group("Animations")] private Animator _animator;
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] protected List<ModalWindowButton> _buttons = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] private bool _ignorable;
 
         //
         public virtual bool Ignorable

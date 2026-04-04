@@ -5,20 +5,20 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("events", Title = "Events")]
-    [DeclareBoxGroup("settings", Title = "Settings")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("Events")]
+    [DeclareBoxGroup("Settings")]
     public class RuntimeInventory : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("settings")] private string _inventoryID;
-        [SerializeField, Min(0), Group("settings")] private int _capacity = 20;
-        [SerializeField, Group("settings")] private bool _allowAutoStacking = true;
-        [SerializeField, Group("settings")] private bool _allowOverflow;
-        [SerializeField, Group("events")] private InventoryItemEvent _onItemAddedEvent;
-        [SerializeField, Group("events")] private InventoryItemEvent _onItemRemovedEvent;
-        [SerializeField, Group("events")] private InventorySlotSwapEvent _onSlotsSwappedEvent;
-        [SerializeField, Group("debug")] private bool _logEnabled = true;
-        [SerializeField, Group("debug"), ReadOnly] private List<InventorySlot> _slots = new();
+        [SerializeField, Group("Settings")] private string _inventoryID;
+        [SerializeField, Min(0), Group("Settings")] private int _capacity = 20;
+        [SerializeField, Group("Settings")] private bool _allowAutoStacking = true;
+        [SerializeField, Group("Settings")] private bool _allowOverflow;
+        [SerializeField, Group("Events")] private InventoryItemEvent _onItemAddedEvent;
+        [SerializeField, Group("Events")] private InventoryItemEvent _onItemRemovedEvent;
+        [SerializeField, Group("Events")] private InventorySlotSwapEvent _onSlotsSwappedEvent;
+        [SerializeField, Group("Debug")] private bool _logEnabled = true;
+        [SerializeField, Group("Debug"), ReadOnly] private List<InventorySlot> _slots = new();
 
         //
         public bool LogEnabled => _logEnabled;

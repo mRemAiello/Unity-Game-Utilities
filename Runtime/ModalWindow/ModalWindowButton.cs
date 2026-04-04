@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 namespace GameUtils
 {
-    [DeclareBoxGroup("references", Title = "References")]
-    [DeclareBoxGroup("debug", Title = "Debug")]
-    [DeclareBoxGroup("events", Title = "Events")]
+    [DeclareBoxGroup("References")]
+    [DeclareBoxGroup("Debug")]
+    [DeclareBoxGroup("Events")]
     public class ModalWindowButton : MonoBehaviour
     {
-        [SerializeField, Group("references")] private TextMeshProUGUI _text;
-        [SerializeField, Group("references")] private Button _button;
-        [SerializeField, Group("debug")] private ModalWindowButtonEventAsset _onClickEvent;
-        [SerializeField, Group("debug"), ReadOnly] private UnityAction _onButtonClicked;
+        [SerializeField, Group("References")] private TextMeshProUGUI _text;
+        [SerializeField, Group("References")] private Button _button;
+        [SerializeField, Group("Debug")] private ModalWindowButtonEventAsset _onClickEvent;
+        [SerializeField, Group("Debug"), ReadOnly] private UnityAction _onButtonClicked;
 
         //
         public void Init(string text, UnityAction onButtonClicked)
