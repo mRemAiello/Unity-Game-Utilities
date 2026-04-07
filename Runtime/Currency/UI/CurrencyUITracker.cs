@@ -15,7 +15,7 @@ namespace GameUtils
         [SerializeField, Required, Group("Currency")] private CurrencyData _currencyData;
         [SerializeField, Required, Group("Currency")] private TextMeshProUGUI _currencyText;
         [SerializeField, Required, Group("Currency")] private Image _currencyIcon;
-        [SerializeField, Group("Currency")] private Sprite _fallbackIcon;
+        [SerializeField, Group("Currency"), PreviewObject] private Sprite _fallbackIcon;
         [SerializeField, Group("Events")] private CurrencyChangeEvent _onChangeEvent;
         [SerializeField, Group("Events")] private bool _logEnabled = true;
 
