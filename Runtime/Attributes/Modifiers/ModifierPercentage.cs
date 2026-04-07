@@ -25,5 +25,12 @@ namespace GameUtils
         /// Applies a percentage delta to the incoming value.
         /// </summary>
         public override float ApplyModifier(float value) => value * (1 + (Amount / 100));
+
+        //
+        public override string ToString()
+        {
+            string sign = Amount >= 0 ? "+" : "-";
+            return $"{sign}{Amount}%, Source: {Source}, Duration: {Duration}s, Permanent: {IsPermanent}";
+        }
     }
 }

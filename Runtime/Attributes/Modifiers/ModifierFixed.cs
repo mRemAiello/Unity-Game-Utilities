@@ -25,5 +25,12 @@ namespace GameUtils
         /// Applies a fixed delta to the incoming value.
         /// </summary>
         public override float ApplyModifier(float value) => value + Amount;
+
+        //
+        public override string ToString()
+        {
+            string sign = Amount >= 0 ? "+" : "-";
+            return $"{sign}{Amount}, Source: {Source}, Duration: {Duration}s, Permanent: {IsPermanent}";
+        }
     }
 }

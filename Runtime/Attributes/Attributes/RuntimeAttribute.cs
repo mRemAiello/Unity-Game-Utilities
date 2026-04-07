@@ -24,6 +24,16 @@ namespace GameUtils
         public string ID => _data.ID;
 
         /// <summary>
+        /// Gets the attribute name.
+        /// </summary>
+        public string Name => _data.Name;
+
+        /// <summary>
+        /// Gets whether this attribute is a vital (has min/max and can be clamped).
+        /// </summary>
+        public bool IsVital => _data.IsVital;
+
+        /// <summary>
         /// Gets the class data that owns this runtime attribute, when available.
         /// </summary>
         public ClassData ClassData => _classData;
