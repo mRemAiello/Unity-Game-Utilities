@@ -1,3 +1,7 @@
+## 3.4.5
+
+- Improved documentation for Attributes.
+
 ## 3.4.4
 
 - Simplified Drag and Drop.
