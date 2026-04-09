@@ -9,16 +9,16 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public class CardDrag : MonoBehaviour, IDraggable, ILoggable
     {
-        [SerializeField, Group("Animations")] private Ease _riseEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _riseDuration = 0.2f;
-        [SerializeField, Group("Animations")] private Ease _dropEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _dropDuration = 0.2f;
-        [SerializeField, Group("Animations")] private Ease _invalidDropEase = Ease.Linear;
-        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] private float _invalidDropDuration = 0.2f;
+        [SerializeField, Group("Animations")] protected Ease _riseEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] protected float _riseDuration = 0.2f;
+        [SerializeField, Group("Animations")] protected Ease _dropEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] protected float _dropDuration = 0.2f;
+        [SerializeField, Group("Animations")] protected Ease _invalidDropEase = Ease.Linear;
+        [SerializeField, Range(0.0f, 5.0f), Group("Animations")] protected float _invalidDropDuration = 0.2f;
 
         //
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
-        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _dragOriginPosition;
+        [SerializeField, Group("Debug"), ReadOnly] protected Vector3 _dragOriginPosition;
         [SerializeField, Group("Debug"), ReadOnly] protected bool _isDraggable = true;
 
         //
@@ -32,7 +32,7 @@ namespace GameUtils
             _dragOriginPosition = transform.position;
         }
 
-        public void OnBeginDrag(Vector3 position, float height)
+        public virtual void OnBeginDrag(Vector3 position, float height)
         {
             _dragOriginPosition = transform.position;
 
@@ -52,7 +52,7 @@ namespace GameUtils
             OnPostBeginDrag(position);
         }
 
-        public void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
+        public virtual void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
         {
             transform.position += deltaPosition;
             transform.position = new Vector3(transform.position.x, transform.position.y, height);
@@ -61,7 +61,7 @@ namespace GameUtils
             OnPostDrag(deltaPosition, droppable);
         }
 
-        public void OnEndDrag(Vector3 position, IDroppable droppable)
+        public virtual void OnEndDrag(Vector3 position, IDroppable droppable)
         {
             if (droppable is { IsDroppable: true } && droppable.AcceptDrop(this) == true)
             {
