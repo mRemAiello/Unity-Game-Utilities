@@ -104,7 +104,7 @@ namespace GameUtils
         /// <summary>
         /// Gets all modifiers created by the specified source.
         /// </summary>
-        public List<Modifier> GetModifiersBySource(object source)
+        public IReadOnlyList<Modifier> GetModifiersBySource(object source)
         {
             return _modifiers.Where(m => m.Source == source).ToList();
         }

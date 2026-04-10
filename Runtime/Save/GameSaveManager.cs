@@ -247,7 +247,7 @@ namespace GameUtils
         public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
         public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
         protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
-        public List<string> GetKeys() => _dict.Keys.ToList();
+        public IReadOnlyList<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
     }
 }
