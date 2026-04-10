@@ -130,6 +130,12 @@ namespace GameUtils
                     draggable.Dragging = false;
                     draggable.OnEndDrag(_currentDropTarget.transform.position + _dropOffset, droppable);
                 }
+                else
+                {
+                    this.Log($"Stop dragging {_currentDrag}, no drop target");
+                    draggable.Dragging = false;
+                    draggable.OnEndDrag(MousePositionToWorldPoint(), null);
+                }
             }
 
             //

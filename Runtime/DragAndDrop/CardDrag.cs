@@ -65,27 +65,40 @@ namespace GameUtils
         {
             if (droppable is { IsDroppable: true } && droppable.AcceptDrop(this) == true)
             {
-                this.Log($"Dropping on {position}");
-
-                // Animate drop
-                Tween tween = transform.DOMove(position, _dropDuration).From(transform.position);
-                tween.SetEase(_dropEase);
-                tween.OnComplete(() => { droppable.OnDrop(this); });
-                tween.SetTarget(this);
+                OnValidDrop(position, droppable);
             }
             else
             {
-                _isDraggable = false;
-
-                //
-                Tween tween = transform.DOMove(_dragOriginPosition, _invalidDropDuration);
-                tween.SetEase(_invalidDropEase);
-                tween.OnComplete(() => { _isDraggable = true; });
-                tween.SetTarget(this);
+                OnInvalidDrop(position);
             }
 
             //
             OnPostEndDrag(position, droppable);
+        }
+
+        protected virtual void OnValidDrop(Vector3 position, IDroppable droppable)
+        {
+            this.Log($"Dropping on {position}");
+
+            // Animate drop
+            Tween tween = transform.DOMove(position, _dropDuration).From(transform.position);
+            tween.SetEase(_dropEase);
+            tween.OnComplete(() => { droppable.OnDrop(this); });
+            tween.SetTarget(this);
+        }
+
+        protected virtual void OnInvalidDrop(Vector3 position)
+        {
+            this.Log($"Invalid drop on {position}");
+
+            //
+            _isDraggable = false;
+
+            //
+            Tween tween = transform.DOMove(_dragOriginPosition, _invalidDropDuration);
+            tween.SetEase(_invalidDropEase);
+            tween.OnComplete(() => { _isDraggable = true; });
+            tween.SetTarget(this);
         }
 
         //
