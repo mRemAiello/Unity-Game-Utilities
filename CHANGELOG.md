@@ -1,5 +1,6 @@
 ## 3.4.5
 
+- Added a script to check if there are duplicate ScriptableObject IDs in the project and log warnings with asset paths.
 - Improved documentation for Attributes.
 
 ## 3.4.4
