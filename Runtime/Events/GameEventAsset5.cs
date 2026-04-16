@@ -16,13 +16,13 @@ namespace GameUtils
         [NonSerialized] protected T5 _currentValue5;
         protected Action<T1, T2, T3, T4, T5> _onInvoked;
 
-        [ShowInInspector, Group("debug"), ReadOnly] public T1 CurrentValue => _currentValue;
-        [ShowInInspector, Group("debug"), ReadOnly] public T2 CurrentValue2 => _currentValue2;
-        [ShowInInspector, Group("debug"), ReadOnly] public T3 CurrentValue3 => _currentValue3;
-        [ShowInInspector, Group("debug"), ReadOnly] public T4 CurrentValue4 => _currentValue4;
-        [ShowInInspector, Group("debug"), ReadOnly] public T5 CurrentValue5 => _currentValue5;
-        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
-        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<(T1, T2, T3, T4, T5)> CallHistory => _callHistory;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T1 CurrentValue => _currentValue;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T2 CurrentValue2 => _currentValue2;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T3 CurrentValue3 => _currentValue3;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T4 CurrentValue4 => _currentValue4;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T5 CurrentValue5 => _currentValue5;
+        [ShowInInspector, Group("Debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
+        [ShowInInspector, Group("Debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<(T1, T2, T3, T4, T5)> CallHistory => _callHistory;
 
         [Button(ButtonSizes.Medium)]
         public override void ResetData()

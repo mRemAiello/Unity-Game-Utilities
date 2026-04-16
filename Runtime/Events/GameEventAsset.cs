@@ -13,9 +13,9 @@ namespace GameUtils
         protected Action<T> _onInvoked;
 
         //
-        [ShowInInspector, Group("debug"), ReadOnly] public T CurrentValue => _currentValue;
-        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
-        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<T> CallHistory => _callHistory;
+        [ShowInInspector, Group("Debug"), ReadOnly] public T CurrentValue => _currentValue;
+        [ShowInInspector, Group("Debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
+        [ShowInInspector, Group("Debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<T> CallHistory => _callHistory;
 
         //
         [Button(ButtonSizes.Medium)]

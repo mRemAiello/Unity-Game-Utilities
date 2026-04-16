@@ -13,7 +13,7 @@ namespace GameUtils
         protected Action _onInvoked;
 
         //
-        [ShowInInspector, Group("debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
+        [ShowInInspector, Group("Debug"), TableList(AlwaysExpanded = true), ReadOnly] public List<EventTuple> RuntimeListeners => _runtimeListeners;
 
         //
         public override void ResetData()

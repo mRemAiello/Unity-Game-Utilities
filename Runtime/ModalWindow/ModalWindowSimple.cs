@@ -7,7 +7,7 @@ namespace GameUtils
 {
     public class ModalWindowSimple : ModalWindowBase
     {
-        [SerializeField, ReadOnly, Group("debug")] private bool _visible;
+        [SerializeField, ReadOnly, Group("Debug")] private bool _visible;
 
         //
         public override bool Visible
