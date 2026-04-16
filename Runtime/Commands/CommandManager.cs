@@ -7,9 +7,8 @@ namespace GameUtils
     // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
     [DeclareBoxGroup("Debug")]
-    public class CommandManager : Singleton<CommandManager>, ILoggable
+    public class CommandManager : Singleton<CommandManager>
     {
-        [SerializeField] private bool _logEnabled = false;
         [SerializeField] private int _maxCommandsInLogList = 20;
 
         //
@@ -21,7 +20,6 @@ namespace GameUtils
         //
         public bool IsCommandPlaying => _playingQueue;
         public Command CurrentCommand => _currentCommand;
-        public bool LogEnabled => _logEnabled;
 
         protected override void OnPostAwake()
         {

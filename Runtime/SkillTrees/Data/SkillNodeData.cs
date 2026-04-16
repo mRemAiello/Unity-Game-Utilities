@@ -1,22 +1,38 @@
+using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("Skill")]
     public abstract class SkillNodeData : ItemVisualData
     {
-        /*public virtual bool CanUnlock(ISkillContext context)
+        [SerializeField, Group("Skill")] private int _cost = 1;
+        [SerializeField, Group("Skill")] private List<SkillNodeData> _prerequisites = new();
+        [SerializeField, Group("Skill")] private List<SkillEffectData> _effects = new();
+
+        //
+        public int Cost => _cost;
+        public IReadOnlyList<SkillNodeData> Prerequisites => _prerequisites;
+        public IReadOnlyList<SkillEffectData> Effects => _effects;
+
+        //
+        public virtual bool CanUnlock(ISkillContext context)
         {
-            // Check prerequisites (logica base, override se serve)
-            foreach (var prereq in prerequisites)
+            if (!IsAvailable(context))
+                return false;
+
+            // Check prerequisites
+            foreach (var prereq in _prerequisites)
             {
-                if (!IsSkillUnlocked(context, prereq.id))
+                if (!IsSkillUnlocked(context, prereq.ID))
                     return false;
             }
 
-            // Check currency se disponibile
+            // Check currency
             if (context.TryGet<ISkillPointHandler>(out var points))
             {
-                if (!points.HasEnough(cost))
+                if (!points.HasEnough(_cost))
                     return false;
             }
 
@@ -25,13 +41,13 @@ namespace GameUtils
 
         public virtual bool IsAvailable(ISkillContext context)
         {
-            // Nodo root o almeno un prerequisito sbloccato
-            if (prerequisites == null || prerequisites.Count == 0)
+            // Root node or at least one prerequisite unlocked
+            if (_prerequisites == null || _prerequisites.Count == 0)
                 return true;
 
-            foreach (var prereq in prerequisites)
+            foreach (var prereq in _prerequisites)
             {
-                if (IsSkillUnlocked(context, prereq.id))
+                if (IsSkillUnlocked(context, prereq.ID))
                     return true;
             }
 
@@ -40,7 +56,7 @@ namespace GameUtils
 
         public virtual void OnUnlock(ISkillContext context)
         {
-            foreach (var effect in effects)
+            foreach (var effect in _effects)
             {
                 effect?.Apply(context);
             }
@@ -48,7 +64,7 @@ namespace GameUtils
 
         public virtual void OnLock(ISkillContext context)
         {
-            foreach (var effect in effects)
+            foreach (var effect in _effects)
             {
                 effect?.Remove(context);
             }
@@ -60,6 +76,6 @@ namespace GameUtils
                 return provider.IsUnlocked(skillID);
 
             return false;
-        }*/
+        }
     }
 }

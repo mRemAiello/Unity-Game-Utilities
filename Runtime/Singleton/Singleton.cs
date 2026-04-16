@@ -1,11 +1,17 @@
-﻿using UnityEngine;
+﻿using TriInspector;
+using UnityEngine;
 
 namespace GameUtils
 {
     // Ensures singleton-based MonoBehaviours initialize much earlier than standard scripts.
     [DefaultExecutionOrder(-10000)]
-    public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
+    [DeclareBoxGroup("Debug")]
+    public abstract class Singleton<T> : MonoBehaviour, ILoggable where T : Singleton<T>
     {
+        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+
+        //
+        public bool LogEnabled => _logEnabled;
         public static T Instance { get; protected set; }
         public static bool InstanceExists => Instance != null;
 

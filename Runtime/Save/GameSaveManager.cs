@@ -15,14 +15,11 @@ namespace GameUtils
     [DefaultExecutionOrder(-10000)]
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
-        [SerializeField, Group("Save")] private bool _logEnabled = true;
         [SerializeField, Group("Save")] private bool _loadOnEnable = false;
         [SerializeField, Group("Save")] private int _minSaveSlot = 0;
         [SerializeField, Group("Save")] private int _maxSaveSlot = 5;
         [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
-
-        public bool LogEnabled => _logEnabled;
 
         //
         protected override void OnPostAwake()

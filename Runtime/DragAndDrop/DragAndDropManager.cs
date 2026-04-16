@@ -8,8 +8,7 @@ namespace GameUtils
     [DefaultExecutionOrder(-10000)]
     [DeclareBoxGroup("Settings")]
     [DeclareBoxGroup("Cards")]
-    [DeclareBoxGroup("Debug")]
-    public class DragAndDropManager : Singleton<DragAndDropManager>, ILoggable
+    public class DragAndDropManager : Singleton<DragAndDropManager>
     {
         [SerializeField, Group("Settings")] private InputActionReference _pointerPositionAction;
         [SerializeField, Group("Settings")] private InputActionReference _clickAction;
@@ -26,7 +25,6 @@ namespace GameUtils
         [SerializeField, Group("Cards")] private float _height = 1.0f;
 
         //
-        [SerializeField, Group("Debug")] private bool _logEnabled = false;
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDrag;
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _hoveredDraggable;
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDropTarget;
@@ -36,9 +34,6 @@ namespace GameUtils
         private RaycastHit[] _raycastHits;
         private readonly RaycastHit[] _cardHits = new RaycastHit[5];
         private Ray _mouseRay;
-
-        //
-        public bool LogEnabled => _logEnabled;
 
         //
         private void OnEnable()

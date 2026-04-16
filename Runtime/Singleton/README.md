@@ -1,47 +1,47 @@
 # Singleton
 
-Questa cartella contiene classi utili a implementare il pattern **Singleton** e a gestire database di Scriptable Object.
+This folder contains utility classes for implementing the **Singleton** pattern and managing Scriptable Object databases.
 
 ## `Singleton<T>`
-Classe astratta che garantisce l'esistenza di una singola istanza per tipo. Se un secondo oggetto viene creato, viene distrutto automaticamente in `Awake`.
+Abstract class that guarantees the existence of a single instance per type. If a second object is created, it is automatically destroyed in `Awake`.
 
 ```cs
 public class EventManager : Singleton<EventManager>
 {
-    // Metodi e campi del manager
+    // Manager methods and fields
 }
 ```
 
-`Instance` permette di accedere all'unica istanza, mentre `InstanceExists` indica se è già presente. È possibile sovrascrivere `OnPostAwake` e `OnPostDestroy` per eseguire codice di inizializzazione o pulizia.
+`Instance` provides access to the single instance, while `InstanceExists` indicates whether it is already present. You can override `OnPostAwake` and `OnPostDestroy` to run initialization or cleanup code.
 
 ## `PersistentSingleton<T>`
-Deriva da `Singleton<T>` e aggiunge la persistenza tra le scene tramite `DontDestroyOnLoad`.
+Inherits from `Singleton<T>` and adds persistence across scenes through `DontDestroyOnLoad`.
 
 ```cs
 public class AudioManager : PersistentSingleton<AudioManager>
 {
-    // Rimane attivo anche dopo un cambio scena
+    // Remains active even after a scene change
 }
 ```
 
 ## `GenericDataManager<T1, T2>`
-Manager generico pensato per caricare asset che ereditano da `UniqueID`. `T1` è il tipo del manager stesso mentre `T2` è il tipo di asset gestito.
+Generic manager designed to load assets that inherit from `UniqueID`. `T1` is the type of the manager itself, while `T2` is the type of asset being handled.
 
-All'avvio (in editor) carica automaticamente tutti gli asset trovati nel percorso indicato e li conserva in `Items`.
-Sono disponibili vari metodi per la ricerca:
+At startup (in the editor), it automatically loads all assets found in the specified path and stores them in `Items`.
+Several search methods are available:
 
 - `SearchAssetByID(string id)`
 - `TrySearchAssetByID(string id, out T2 result)`
-- `SearchAsset<T>()` per recuperare il primo asset di un certo tipo
-- `HasAsset<T>()` per verificare la presenza di un asset di tipo `T`
+- `SearchAsset<T>()` to retrieve the first asset of a given type
+- `HasAsset<T>()` to check whether an asset of type `T` exists
 
-Esempio di implementazione:
+Implementation example:
 
 ```cs
 public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>, ISaveable
 {
-    // Gestione personalizzata delle valute
+    // Custom currency management
 }
 ```
 
-Inserisci la sottoclasse in un prefab ed imposta il percorso dove si trovano gli asset da caricare. L'istanza sarà accessibile tramite `CurrencyManager.Instance`.
+Place the subclass in a prefab and set the path where the assets to load are located. The instance will be accessible through `CurrencyManager.Instance`.

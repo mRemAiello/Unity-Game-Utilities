@@ -1,3 +1,7 @@
+## 3.4.6
+
+- Singleton is now ILoggable
+
 ## 3.4.5
 
 - Added a script to check if there are duplicate ScriptableObject IDs in the project and log warnings with asset paths.
@@ -5,7 +9,7 @@
 
 ## 3.4.4
 
-- Simplified Drag and Drop.
+- Improved Drag and Drop.
 - Simplified DeclareBoxGroup.
 
 ## 3.4.3
@@ -18,7 +22,6 @@
 - Rewrote and translated `Runtime/States/README.md` in English with a detailed implementation guide for both `BaseStateMachine` and `StateMachineMB<T>` workflows.
 - Added `Runtime/DragAndDrop/README.md` with setup and usage documentation for `DragAndDropManager`, `CardDrag`, `CardTilter`, `IDraggable`, and `IDroppable`.
 - Translated `Runtime/DragAndDrop/README.md` to English.
-
 
 ## 3.4.2
 

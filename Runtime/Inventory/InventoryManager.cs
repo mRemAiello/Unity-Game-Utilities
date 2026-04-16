@@ -5,14 +5,13 @@ namespace GameUtils
 {
     // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
-    public class InventoryManager : Singleton<InventoryManager>, ILoggable
+    public class InventoryManager : Singleton<InventoryManager>
     {
         [SerializeField] private RuntimeInventory _playerInventory;
         [SerializeField] private List<RuntimeInventory> _registeredInventories = new();
         [SerializeField] private ItemDefinitionManager _itemDatabase;
         [SerializeField] private bool _logEnabled = true;
 
-        public bool LogEnabled => _logEnabled;
         public RuntimeInventory PlayerInventory => _playerInventory;
 
         protected override void OnPostAwake()

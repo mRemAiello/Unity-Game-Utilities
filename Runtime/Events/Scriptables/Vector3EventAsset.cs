@@ -9,7 +9,6 @@ namespace GameUtils
         [Button(ButtonSizes.Medium)]
         public override void Invoke(Vector3 param)
         {
-            // Inoltra l'invocazione all'implementazione base.
             base.Invoke(param);
         }
     }
