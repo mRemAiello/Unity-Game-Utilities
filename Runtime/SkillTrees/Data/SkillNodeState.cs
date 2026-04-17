@@ -4,6 +4,7 @@ namespace GameUtils
     {
         Locked,
         Available,
-        Unlocked
+        Unlocked,
+        Maxed
     }
 }
