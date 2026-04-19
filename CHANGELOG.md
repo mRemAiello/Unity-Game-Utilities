@@ -1,6 +1,12 @@
+## 3.5.0
+
+- Added Skill Tree system with SkillTreeAsset, SkillNodeData, and SkillNodeView.
+- Added README documentation for the Skill Tree system.
+
 ## 3.4.6
 
 - Singleton is now ILoggable
+- Improved Event System
 
 ## 3.4.5
 
