@@ -10,10 +10,11 @@ namespace GameUtils
         [SerializeField] private RuntimeInventory _playerInventory;
         [SerializeField] private List<RuntimeInventory> _registeredInventories = new();
         [SerializeField] private ItemDefinitionManager _itemDatabase;
-        [SerializeField] private bool _logEnabled = true;
 
+        //
         public RuntimeInventory PlayerInventory => _playerInventory;
 
+        //
         protected override void OnPostAwake()
         {
             RegisterRuntimeInventory(_playerInventory);

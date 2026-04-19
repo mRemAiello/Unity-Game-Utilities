@@ -6,15 +6,14 @@ namespace GameUtils
 {
     // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
-    public class TaskManager : Singleton<TaskManager>, ILoggable
+    public class TaskManager : Singleton<TaskManager>
     {
         [SerializeField] private List<ITask> _tasks = new();
-        [SerializeField] private bool _logEnabled = false;
 
         // Get
         public IReadOnlyList<ITask> Tasks => _tasks;
-        public bool LogEnabled => _logEnabled;
 
+        //
         public void Execute(int index, object context, object data)
         {
             var stopwatch = new Stopwatch();

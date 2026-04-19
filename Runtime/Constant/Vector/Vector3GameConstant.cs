@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.CONSTANTS_NAME + "Vector3")]
+    [CreateAssetMenu(menuName = GUConstants.CONSTANTS_NAME + "Vector3")]
     public class Vector3GameConstant : GameConstant
     {
         [SerializeField] private Vector3 _value;

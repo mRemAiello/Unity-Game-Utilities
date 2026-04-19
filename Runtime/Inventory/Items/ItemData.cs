@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("Item")]
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.INVENTORY_NAME + "Item Data")]
+    [CreateAssetMenu(menuName = GUConstants.INVENTORY_NAME + "Item Data")]
     public class ItemData : ItemVisualData
     {
         [SerializeField, Group("Item")] private ItemType _itemType;

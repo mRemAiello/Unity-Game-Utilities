@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.EVENT_NAME + "Void", order = 99)]
+    [CreateAssetMenu(menuName = GUConstants.EVENT_NAME + "Void", order = 99)]
     public class VoidEventAsset : GameEventAssetBase
     {
         //

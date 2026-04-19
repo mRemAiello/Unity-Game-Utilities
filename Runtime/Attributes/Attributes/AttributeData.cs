@@ -8,7 +8,7 @@ namespace GameUtils
     /// <summary>
     /// Scriptable definition for an attribute, including value limits and clamping rules.
     /// </summary>
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute")]
+    [CreateAssetMenu(menuName = GUConstants.ATTRIBUTES_NAME + "Attribute")]
     [DeclareBoxGroup("Attribute")]
     public class AttributeData : ItemVisualData
     {

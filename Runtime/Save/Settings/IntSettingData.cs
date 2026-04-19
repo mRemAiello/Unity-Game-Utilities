@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.SAVE_NAME + "Int")]
+    [CreateAssetMenu(menuName = GUConstants.SAVE_NAME + "Int")]
     public class IntSettingData : BaseSettingData<int>
     {
         [Group("Setting"), SerializeField] protected Vector2Int _valueMinMax = new(0, 1);

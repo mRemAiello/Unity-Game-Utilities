@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.EVENT_NAME + "Components/GameObject")]
+    [CreateAssetMenu(menuName = GUConstants.EVENT_NAME + "Components/GameObject")]
     public class GameObjectEventAsset : GameEventAsset<GameObject>
     {
         [Button(ButtonSizes.Medium)]

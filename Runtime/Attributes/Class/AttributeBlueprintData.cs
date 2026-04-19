@@ -10,7 +10,7 @@ namespace GameUtils
     /// <summary>
     /// Defines an ordered attribute blueprint that can be reused by ClassData assets.
     /// </summary>
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Attribute Blueprint")]
+    [CreateAssetMenu(menuName = GUConstants.ATTRIBUTES_NAME + "Attribute Blueprint")]
     [DeclareBoxGroup("Blueprint")]
     public class AttributeBlueprintData : ItemIdentifierData
     {

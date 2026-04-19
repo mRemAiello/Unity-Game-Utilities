@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("Debug")]
-    public abstract class GameEventAssetBase : ItemIdentifierData, ILoggable
+    public abstract class GameEventAssetBase : ScriptableObject, ILoggable
     {
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
 

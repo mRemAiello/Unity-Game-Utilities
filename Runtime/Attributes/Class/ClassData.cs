@@ -11,7 +11,7 @@ namespace GameUtils
     /// <summary>
     /// Defines a class loadout by pairing attribute data with starting values.
     /// </summary>
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.ATTRIBUTES_NAME + "Class")]
+    [CreateAssetMenu(menuName = GUConstants.ATTRIBUTES_NAME + "Class")]
     [DeclareBoxGroup("Class")]
     public class ClassData : ItemVisualData
     {

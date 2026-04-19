@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    [CreateAssetMenu(menuName = GameUtilsMenuConstants.CURRENCY_NAME + "Currency")]
+    [CreateAssetMenu(menuName = GUConstants.CURRENCY_NAME + "Currency")]
     [DeclareBoxGroup("Currency")]
     public class CurrencyData : ItemVisualData
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [DeclareBoxGroup("Features")]
-    public class ItemTagsData : ItemIdentifierData, ITaggable
+    public abstract class ItemTagsData : ItemIdentifierData, ITaggable
     {
         [SerializeField, Group("Features")] private List<GameTag> _tags = new();
 

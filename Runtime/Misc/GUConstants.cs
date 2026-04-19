@@ -1,9 +1,9 @@
 namespace GameUtils
 {
-    public class GameUtilsMenuConstants
+    public class GUConstants
     {
         public const string PACKAGE_NAME = "Unity Game Utilities";
-        public const string MENU_NAME = "Tools/Game Utils/";
+        public const string MENU_NAME = "Tools/Unity Game Utilities/";
 
         //
         public const string ATTRIBUTES_NAME = PACKAGE_NAME + "/Attributes/";
