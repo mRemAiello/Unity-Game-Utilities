@@ -64,6 +64,9 @@ namespace GameUtils
             if (!node.ArePrerequisitesMet())
                 return false;
 
+            if (node.IsBlockedByExclusiveChoice())
+                return false;
+
             if (!data.CanLevelUp(currentLevel))
                 return false;
 

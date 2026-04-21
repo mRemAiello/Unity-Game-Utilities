@@ -108,7 +108,16 @@ Custom rendering-related helpers and runtime renderer components.
 A typed persistence layer built on top of **Quick Save**. `GameSaveManager` (persistent singleton) exposes `Save<T>` / `Load<T>` / `TryLoad<T>` with a `(context, key)` address scheme and supports multiple save slots via `SetActiveSaveSlot`. Components implement `ISaveable` (a `SaveContext` string plus `Save()` / `Load()` methods) so that `SaveAll()` / `LoadAll()` can serialize the entire scene in one call. The manager auto-creates the save file if missing and maintains a debug key registry.
 
 #### [Singleton](Runtime/Singleton/README.md)
-Base classes for the singleton pattern: `Singleton<T>` ensures a single instance and auto-destroys duplicates; `PersistentSingleton<T>` adds `DontDestroyOnLoad` for cross-scene services. `GenericDataManager<TManager, TAsset>` extends the pattern into a data-loading manager that auto-collects all assets of a given type from a configured path and exposes lookup by ID or concrete type.
+Base classes for the singleton pattern: `Singleton<T>` ensures a single instance and auto-destroys duplicates; `PersistentSingleton<T>` adds `DontDestroyOnLoad` for cross-scene services. 
+
+`GenericDataManager<TManager, TAsset>` extends the pattern into a data-loading manager that auto-collects all assets of a given type from a configured path and exposes lookup by ID or concrete type.
+
+#### [Skill Trees](Runtime/SkillTrees/README.md)
+A data-driven, multi-level skill tree system inspired by Path of Exile 2 and Diablo 4. Define skill nodes as `SkillNodeData` `ScriptableObject` assets — each carries a currency cost, max level, and a list of `SkillEffectData` entries applied on level-up. 
+
+The architecture separates data from runtime: `RuntimeSkillNode` is a MonoBehaviour placed on each UI node and communicates through `ClickSkillEventAsset` / `ChangeSkillStateEventAsset` events. `ISkillContext` acts as a service locator; `ISkillPointHandler` abstracts currency checks and spending; `ISkillStateProvider` tracks which nodes are unlocked and at what level. 
+
+Visual connections between nodes are drawn by `LineSkillTreeLink` (straight) or `CurvedSkillTreeLink` (Catmull-Rom). `BaseSkillContext` provides a ready-made concrete implementation backed by a type-to-object dictionary.
 
 #### [States](Runtime/States/README.md)
 Two complementary state machine patterns. The **pure C# variant** (`BaseStateMachine` + `IState`) uses a stack to push/pop states, suitable for gameplay logic in plain classes. The **MonoBehaviour variant** (`StateMachineMB<T>` + `StateMB<T>`) auto-discovers states as sibling components and integrates with Unity's `Awake`/`Start` lifecycle. Both variants call `OnEnterState`, `OnExitState`, and `OnUpdate` on the active state, and support optional debug logging.

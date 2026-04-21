@@ -13,6 +13,7 @@ namespace GameUtils
     {
         [SerializeField, Required, Group("Data")] private SkillNodeData _data;
         [SerializeField, Group("Data")] private List<RuntimeSkillNode> _prerequisiteNodes = new();
+        [SerializeField, Group("Data")] private List<RuntimeSkillNode> _blockedByNodes = new();
         [SerializeField, Group("Input")] private InputActionReference _levelUpAction;
         [SerializeField, Group("Input")] private InputActionReference _levelDownAction;
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelUpRequest;
@@ -31,6 +32,7 @@ namespace GameUtils
         public SkillNodeState State => _state;
         public int CurrentLevel => _currentLevel;
         public IReadOnlyList<RuntimeSkillNode> PrerequisiteNodes => _prerequisiteNodes;
+        public IReadOnlyList<RuntimeSkillNode> BlockedByNodes => _blockedByNodes;
 
         //
         private void OnEnable()
@@ -82,6 +84,10 @@ namespace GameUtils
                 var state = level >= _data.MaxLevel ? SkillNodeState.Maxed : SkillNodeState.Unlocked;
                 SetState(state, level);
             }
+            else if (IsBlockedByExclusiveChoice())
+            {
+                SetState(SkillNodeState.Blocked, 0);
+            }
             else if (ArePrerequisitesMet())
             {
                 SetState(SkillNodeState.Available, 0);
@@ -90,6 +96,24 @@ namespace GameUtils
             {
                 SetState(SkillNodeState.Locked, 0);
             }
+        }
+
+        /// <summary>
+        /// Returns true if any mutually exclusive sibling node is currently unlocked or maxed,
+        /// making this node an unavailable choice.
+        /// </summary>
+        public bool IsBlockedByExclusiveChoice()
+        {
+            if (_blockedByNodes == null || _blockedByNodes.Count == 0)
+                return false;
+
+            foreach (var blocker in _blockedByNodes)
+            {
+                if (blocker != null && (blocker.State == SkillNodeState.Unlocked || blocker.State == SkillNodeState.Maxed))
+                    return true;
+            }
+
+            return false;
         }
 
         public bool ArePrerequisitesMet()
