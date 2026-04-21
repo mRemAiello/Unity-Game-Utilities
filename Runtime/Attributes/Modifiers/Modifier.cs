@@ -12,18 +12,16 @@ namespace GameUtils
         public object Source;
         public float Amount;
         public float Duration;
-        public ModifierType ModifierType;
         public bool IsPermanent;
 
         /// <summary>
-        /// Creates a modifier with the specified source, amount, duration, type, and permanence.
+        /// Creates a modifier with the specified source, amount, duration, and permanence.
         /// </summary>
-        public Modifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral, bool isPermanent = false)
+        public Modifier(object source, float amount = 0, float duration = 0, bool isPermanent = false)
         {
             Source = source;
             Amount = amount;
             Duration = duration;
-            ModifierType = modifierType;
             IsPermanent = isPermanent;
         }
 

@@ -224,7 +224,7 @@ namespace GameUtils
         private IEnumerable<ISaveable> FindSceneSaveables(bool includeInactive)
         {
             FindObjectsInactive findInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
-            return FindObjectsByType<MonoBehaviour>(findInactive, FindObjectsSortMode.InstanceID).OfType<ISaveable>().Distinct();
+            return FindObjectsByType<MonoBehaviour>(findInactive).OfType<ISaveable>().Distinct();
         }
 
         private string CleanJObjectString(string original)

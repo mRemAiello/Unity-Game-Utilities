@@ -96,9 +96,9 @@ namespace GameUtils
         /// <summary>
         /// Gets the first modifier matching the specified parameters.
         /// </summary>
-        public Modifier GetModifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral)
+        public Modifier GetModifier(object source, float amount = 0, float duration = 0)
         {
-            return _modifiers.FirstOrDefault(m => m.Source == source && Math.Abs(m.Amount - amount) < Mathf.Epsilon && Math.Abs(m.Duration - duration) < Mathf.Epsilon && m.ModifierType == modifierType);
+            return _modifiers.FirstOrDefault(m => m.Source == source && Math.Abs(m.Amount - amount) < Mathf.Epsilon && Math.Abs(m.Duration - duration) < Mathf.Epsilon);
         }
 
         /// <summary>
@@ -112,9 +112,9 @@ namespace GameUtils
         /// <summary>
         /// Returns true if a matching modifier exists.
         /// </summary>
-        public bool HasModifier(object source, float amount = 0, float duration = 0, ModifierType modifierType = ModifierType.Neutral)
+        public bool HasModifier(object source, float amount = 0, float duration = 0)
         {
-            return GetModifier(source, amount, duration, modifierType) != null;
+            return GetModifier(source, amount, duration) != null;
         }
 
         /// <summary>

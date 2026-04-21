@@ -12,7 +12,7 @@ namespace GameUtils
         /// Creates a fixed modifier with the specified amount, duration, and permanence.
         /// </summary>
         public ModifierFixed(object source, float amount = 0, float duration = 0, bool isPermanent = false)
-            : base(source, amount, duration, ModifierType.Neutral, isPermanent)
+            : base(source, amount, duration, isPermanent)
         {
         }
 
@@ -26,7 +26,9 @@ namespace GameUtils
         /// </summary>
         public override float ApplyModifier(float value) => value + Amount;
 
-        //
+        /// <summary>
+        /// Returns a string representation of the modifier.
+        /// </summary>
         public override string ToString()
         {
             string sign = Amount >= 0 ? "+" : "-";
