@@ -19,5 +19,6 @@ namespace GameUtils
         public const string INVENTORY_NAME = PACKAGE_NAME + "/Inventory/";
         public const string QUEST_NAME = PACKAGE_NAME + "/Quests/";
         public const string SAVE_NAME = PACKAGE_NAME + "/Save System/";
+        public const string SKILL_TREE_NAME = PACKAGE_NAME + "/Skill Trees/";
     }
 }

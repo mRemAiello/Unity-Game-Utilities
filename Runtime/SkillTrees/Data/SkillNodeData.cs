@@ -19,8 +19,6 @@ namespace GameUtils
         public IReadOnlyList<SkillEffectData> Effects => _effects;
 
         //
-        public int GetCostForLevel(int level) => _costPerLevel * level;
-
         public virtual bool CanLevelUp(int currentLevel)
         {
             if (currentLevel >= _maxLevel)
@@ -53,6 +51,7 @@ namespace GameUtils
             }
         }
 
-
+        //
+        public int GetCostForLevel(int level) => _costPerLevel * level;
     }
 }
