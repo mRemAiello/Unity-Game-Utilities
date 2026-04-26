@@ -8,7 +8,7 @@ namespace GameUtils
     [DefaultExecutionOrder(-10000)]
     [DeclareBoxGroup("Settings")]
     [DeclareBoxGroup("Cards")]
-    public class DragAndDropManager : Singleton<DragAndDropManager>
+    public class DragDropManager : Singleton<DragDropManager>
     {
         [SerializeField, Group("Settings")] private InputActionReference _pointerPositionAction;
         [SerializeField, Group("Settings")] private InputActionReference _clickAction;
