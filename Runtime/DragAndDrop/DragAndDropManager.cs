@@ -36,6 +36,12 @@ namespace GameUtils
         private Ray _mouseRay;
 
         //
+        public Vector2 CardSize => _cardSize;
+        public float DragSpeed => _dragSpeed;
+        public Vector3 DropOffset => _dropOffset;
+        public float Height => _height;
+
+        //
         private void OnEnable()
         {
             _raycastHits = new RaycastHit[_hitsCount];
