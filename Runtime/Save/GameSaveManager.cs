@@ -1,6 +1,7 @@
 using CI.QuickSave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TriInspector;
@@ -18,8 +19,13 @@ namespace GameUtils
         [SerializeField, Group("Save")] private bool _loadOnEnable = false;
         [SerializeField, Group("Save")] private int _minSaveSlot = 0;
         [SerializeField, Group("Save")] private int _maxSaveSlot = 5;
+        [SerializeField, Group("Save")] private bool _autoSaveEnabled = false;
+        [SerializeField, Group("Save"), ShowIf(nameof(_autoSaveEnabled), true)] private float _saveInterval = 5f;
         [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
+        
+        private Coroutine _autoSaveCoroutine;
+        private bool _isAutoSaveRunning = false;
 
         //
         protected override void OnPostAwake()
@@ -30,6 +36,51 @@ namespace GameUtils
             if (_loadOnEnable)
             {
                 LoadAll();
+            }
+            
+            //
+            if (_autoSaveEnabled)
+            {
+                StartAutoSave();
+            }
+        }
+
+        public void StartAutoSave()
+        {
+            if (_isAutoSaveRunning)
+            {
+                this.LogWarning("Auto save is already running.");
+                return;
+            }
+            
+            _autoSaveCoroutine = StartCoroutine(AutoSaveCoroutine());
+            _isAutoSaveRunning = true;
+            this.Log("Auto save started.");
+        }
+        
+        public void StopAutoSave()
+        {
+            if (!_isAutoSaveRunning)
+            {
+                this.LogWarning("Auto save is not running.");
+                return;
+            }
+            
+            if (_autoSaveCoroutine != null)
+            {
+                StopCoroutine(_autoSaveCoroutine);
+            }
+            _isAutoSaveRunning = false;
+            this.Log("Auto save stopped.");
+        }
+        
+        private IEnumerator AutoSaveCoroutine()
+        {
+            while (_isAutoSaveRunning)
+            {
+                yield return new WaitForSeconds(_saveInterval);
+                SaveAll();
+                this.Log($"Auto save executed at {System.DateTime.Now:HH:mm:ss}");
             }
         }
 
