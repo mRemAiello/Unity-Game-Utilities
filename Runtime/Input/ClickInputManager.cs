@@ -1,16 +1,17 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace GameUtils
 {
-    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
-    // Manages click raycasts using the new Input System.
+    [DeclareBoxGroup("Click")]
     public class ClickInputManager : Singleton<ClickInputManager>
     {
-        [SerializeField] private InputActionReference _pointerPositionAction;
-        [SerializeField] private InputActionReference _clickAction;
-        [SerializeField] private float _raycastDistance = 100f;
+        [SerializeField, Group("Click")] private Camera _mainCamera;
+        [SerializeField, Group("Click")] private InputActionReference _pointerPositionAction;
+        [SerializeField, Group("Click")] private InputActionReference _clickAction;
+        [SerializeField, Group("Click")] private float _raycastDistance = 100f;
 
         // Enables the referenced input actions when the component becomes active.
         private void OnEnable()
@@ -53,14 +54,8 @@ namespace GameUtils
                 return;
             }
 
-            Camera mainCamera = Camera.main;
-            if (mainCamera == null)
-            {
-                return;
-            }
-
             Vector2 pointerPosition = _pointerPositionAction.action.ReadValue<Vector2>();
-            Ray ray = mainCamera.ScreenPointToRay(pointerPosition);
+            Ray ray = _mainCamera.ScreenPointToRay(pointerPosition);
             if (!Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance))
             {
                 return;

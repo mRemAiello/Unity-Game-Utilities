@@ -1,94 +1,126 @@
-# Sistema di Salvataggio
+# Save System
 
-Questo modulo fornisce un layer semplificato sopra la libreria **Quick Save** e
-permette di memorizzare dati tipizzati su slot multipli. Le classi principali
-sono `GameSaveManager` e l'interfaccia `ISaveable`.
+This module provides a simplified layer on top of **Quick Save** to store typed
+data across multiple save slots.
 
-## GameSaveManager
-`GameSaveManager` è un `Singleton` persistente che gestisce i file di salvataggio.
- Le funzioni più utili sono:
+Main components:
+- `GameSaveManager`: persistent singleton responsible for save files and slot management.
+- `ISaveable`: interface for scene components that expose save/load behavior.
+- `BaseSettingData<T>` and `SettingBinder<T, TUI>`: optional helpers to keep setting assets and UI controls in sync.
 
-- `SetActiveSaveSlot(int slot)` per cambiare lo slot corrente.
-- `Save<T>(string context, string key, T value)` e `Load<T>(string context, string key, T defaultValue)` per scrivere e leggere valori generici.
-- `TryLoad<T>(string context, string key, out T result, T defaultValue)` che restituisce `true` solo se il dato è presente.
-- `Exists<T>(string context, string key)` e `RemoveKey<T>(string context, string key)` per verificare ed eliminare singole voci.
-- `Clear()` che rimuove tutte le chiavi dallo slot attivo.
-- `SaveAll()` e `LoadAll()` che invocano automaticamente `Save` e `Load` su tutti i componenti `ISaveable` presenti in scena.
+## Overview
 
-Il manager crea automaticamente il file di salvataggio se assente e mantiene un
-dizionario di debug con tutte le chiavi registrate.
+The save flow is context-based:
+- A **context** groups keys (for example `"PlayerInventory"`, `"Deck"`, `"VideoSettings"`).
+- A **key** identifies one value inside that context (for example `"Money"`, `"Card1"`, `"MasterVolume"`).
+- The active **slot** decides which save file is currently used.
+
+This makes it easy to avoid key collisions and keep save data organized per system.
+
+## GameSaveManager API
+
+`GameSaveManager` is a persistent singleton. It creates the save file automatically if needed
+and keeps a debug dictionary of registered keys.
+
+Common methods:
+- `SetActiveSaveSlot(int slot)`: switch active slot.
+- `Save<T>(string context, string key, T value)`: store a typed value.
+- `Load<T>(string context, string key, T defaultValue)`: load a typed value or fallback.
+- `TryLoad<T>(string context, string key, out T result, T defaultValue)`: load safely and return `true` only if the key exists.
+- `Exists<T>(string context, string key)`: check whether a key is present.
+- `RemoveKey<T>(string context, string key)`: remove a specific key.
+- `Clear()`: clear all keys in the active slot.
+- `SaveAll()` and `LoadAll()`: call `Save()` and `Load()` on every `ISaveable` component found in the scene.
 
 ## ISaveable
-L'interfaccia `ISaveable` espone la proprietà `SaveContext` e i metodi `Save()`
-e `Load()`. Implementandola sui propri componenti è possibile chiamare i metodi
-di `GameSaveManager` sfruttando direttamente la sua istanza Singleton e
-mantenere ordinati i dati sotto un contesto univoco. I metodi di salvataggio
-automatico di `GameSaveManager` richiamano queste funzioni su tutti gli oggetti
-di scena.
+
+`ISaveable` exposes:
+- `string SaveContext { get; }`
+- `void Save()`
+- `void Load()`
+
+Implement it on components that should participate in save/load cycles. This keeps each
+component's data under a stable context and allows `GameSaveManager.SaveAll()` / `LoadAll()`
+to process all saveable scene objects automatically.
 
 ```cs
 public class PlayerInventory : MonoBehaviour, ISaveable
 {
     public string SaveContext => "PlayerInventory";
+
+    public void Save()
+    {
+        GameSaveManager.Instance.Save(this, "Money", 100);
+    }
+
+    public void Load()
+    {
+        int money = GameSaveManager.Instance.Load<int>(this, "Money", 0);
+    }
 }
 ```
 
-## Utilizzo
-1. Inserisci in scena un `GameObject` con `GameSaveManager`.
-2. Implementa `ISaveable` nei componenti che devono salvare dati.
-3. Usa i metodi `Save` e `Load` specificando la chiave desiderata.
+## Quick Start
+
+1. Add a `GameObject` with `GameSaveManager` to your scene.
+2. Implement `ISaveable` on components that need persistence.
+3. Save and load values through the manager using context + key.
 
 ```cs
-// Salvataggio rapido tramite ISaveable
+// Save through ISaveable context
 GameSaveManager.Instance.Save(this, "Money", 100);
 
-// Salvataggio con contesto personalizzato
+// Save with an explicit custom context
 GameSaveManager.Instance.Save("Deck", "Card1", "123x1123");
 
-// Caricamento
+// Load
 int money = GameSaveManager.Instance.Load<int>(this, "Money", 0);
 string card1 = GameSaveManager.Instance.Load<string>("Deck", "Card1", "");
 string card2 = GameSaveManager.Instance.Load<string>("Deck", "Card2", "");
 string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
 ```
 
-## Estensione
-È possibile derivare da `GameSaveManager` per aggiungere funzionalità extra
-(ad esempio crittografia o log personalizzati) sovrascrivendo i metodi di
-salvataggio.
+## Auto Save/Load for Scene Objects
+
+Use `SaveAll()` and `LoadAll()` when you want a centralized save/load pass:
+- Good for checkpoints, scene transitions, profile changes, and quit flows.
+- Ensures all active `ISaveable` components are processed with a single call.
+
+## Extending the Manager
+
+You can derive from `GameSaveManager` to add custom behavior (for example encryption,
+analytics, or extra logging) by overriding save-related methods.
 
 ```cs
 public class EncryptedSaveManager : GameSaveManager
 {
-    protected override void Save<T>(string context, string key, T amount)
+    protected override void Save<T>(string context, string key, T value)
     {
-        // Logica di crittografia prima del salvataggio
-        base.Save(context, key, amount);
+        // Apply custom logic before writing data.
+        base.Save(context, key, value);
     }
 }
 ```
 
-### Aggiornamenti delle impostazioni
+## Settings Data and UI Binding
 
-I binder dell'interfaccia utente possono sottoscriversi all'evento `OnValueChanged`
-esposto da `BaseSettingData<T>` per ricevere notifiche quando il valore cambia.
+UI binders can subscribe to `BaseSettingData<T>.OnValueChanged` to react whenever a value changes.
 
 ```cs
 mySetting.OnValueChanged += value => mySlider.value = value;
 ```
 
-L'evento viene invocato sia quando il valore viene modificato tramite `SetValue`
-sia quando viene caricato con `Load`.
+The event is raised both when:
+- the value changes via `SetValue`, and
+- the value is restored via `Load`.
 
-### Configurare una impostazione con la UI
+### Configure a Setting with UI
 
-1. **Creare uno `SettingData`**
-   - Nel _Project Window_ fare clic destro e selezionare **Create > Game Utils > Settings > [Tipo]**.
-   - Rinominare l'asset e impostare il **Default Value** nell'Inspector.
+1. Create a `SettingData` asset.
+2. Create a binder class deriving from `SettingBinder<T, TUI>`.
+3. Assign references in the Inspector (`Data` and `UI Component`).
 
-2. **Aggiungere il binder alla UI**
-   - Creare uno script che derivi da `SettingBinder<T, TUI>` per il componente di interfaccia che si vuole sincronizzare.
-   - Esempio per collegare uno `Slider` a un `float`:
+Example: bind a `Slider` to a `float` setting.
 
 ```cs
 using UnityEngine.UI;
@@ -106,8 +138,12 @@ public class SliderSettingBinder : SettingBinder<float, Slider>
 }
 ```
 
-3. **Configurare i riferimenti nel Inspector**
-   - Aggiungere il binder al GameObject che contiene il componente UI.
-   - Trascinare l'asset `SettingData` nel campo **Data**.
-   - Assegnare il componente UI corrispondente al campo **UI Component**.
-   - In Play Mode il valore del `SettingData` e della UI rimarranno sincronizzati.
+At runtime, the setting asset and the UI control stay synchronized.
+
+## Best Practices
+
+- Keep `SaveContext` stable over time to avoid migration issues.
+- Use clear key names (`"MasterVolume"` instead of generic names like `"Value1"`).
+- Prefer `TryLoad` when the presence of a key is optional.
+- Group save/load calls by game flow (checkpoint, scene exit, profile switch).
+- Use slot switching intentionally (`SetActiveSaveSlot`) before reading or writing data.

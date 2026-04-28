@@ -1,3 +1,10 @@
+## 3.5.1
+
+- Fixed ClickInputManager variables.
+- Renamed DragAndDropManager to DragDropManager for consistency.
+- Implemented AutoSave into GameSaveDataManager.
+- Added PersistentID.
+
 ## 3.5.0
 
 - Added Skill Tree system with SkillTreeAsset, SkillNodeData, and SkillNodeView.
