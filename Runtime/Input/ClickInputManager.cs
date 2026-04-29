@@ -13,40 +13,44 @@ namespace GameUtils
         [SerializeField, Group("Click")] private InputActionReference _clickAction;
         [SerializeField, Group("Click")] private float _raycastDistance = 100f;
 
+        private IClickable _hoveredClickable;
+
         // Enables the referenced input actions when the component becomes active.
         private void OnEnable()
         {
-            if (_pointerPositionAction != null)
-            {
-                _pointerPositionAction.action.Enable();
-            }
-
-            if (_clickAction != null)
-            {
-                _clickAction.action.Enable();
-            }
+            _pointerPositionAction.action.Enable();
+            _clickAction.action.Enable();
         }
 
         // Disables the referenced input actions when the component becomes inactive.
         private void OnDisable()
         {
-            if (_pointerPositionAction != null)
-            {
-                _pointerPositionAction.action.Disable();
-            }
+            ClearHoveredClickable();
 
-            if (_clickAction != null)
-            {
-                _clickAction.action.Disable();
-            }
+            //
+            _pointerPositionAction.action.Disable();
+            _clickAction.action.Disable();
         }
 
-        // Checks for click input and performs a raycast from the main camera.
+        // Checks hover/click input and performs a raycast from the main camera.
         private void Update()
         {
-            if (_pointerPositionAction == null || _clickAction == null)
+            Vector2 pointerPosition = _pointerPositionAction.action.ReadValue<Vector2>();
+            Ray ray = _mainCamera.ScreenPointToRay(pointerPosition);
+
+            IClickable hitClickable = null;
+            Vector3 hitPoint = default;
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance) && hitInfo.collider.TryGetComponent(out IClickable clickable))
             {
-                return;
+                hitClickable = clickable;
+                hitPoint = hitInfo.point;
+            }
+
+            if (!ReferenceEquals(_hoveredClickable, hitClickable))
+            {
+                _hoveredClickable?.OnMouseExit();
+                _hoveredClickable = hitClickable;
+                _hoveredClickable?.OnMouseEnter(hitPoint);
             }
 
             if (!_clickAction.action.WasPerformedThisFrame())
@@ -54,19 +58,18 @@ namespace GameUtils
                 return;
             }
 
-            Vector2 pointerPosition = _pointerPositionAction.action.ReadValue<Vector2>();
-            Ray ray = _mainCamera.ScreenPointToRay(pointerPosition);
-            if (!Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance))
+            if (hitClickable == null)
             {
                 return;
             }
 
-            if (!hitInfo.collider.TryGetComponent<IClickable>(out var clickable))
-            {
-                return;
-            }
+            hitClickable.OnMouseClick(hitPoint);
+        }
 
-            clickable.OnClick(hitInfo.point);
+        private void ClearHoveredClickable()
+        {
+            _hoveredClickable?.OnMouseExit();
+            _hoveredClickable = null;
         }
     }
 }

@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    // Defines a clickable contract for raycasted objects.
     public interface IClickable
     {
-        // Receives the world hit point from the click raycast.
-        void OnClick(Vector3 hitPoint);
+        void OnMouseEnter(Vector3 mousePosition);
+        void OnMouseExit();
+        void OnMouseClick(Vector3 hitPoint);
     }
 }
