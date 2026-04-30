@@ -1,3 +1,4 @@
+using System;
 using TriInspector;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ namespace GameUtils
         public virtual void OnAwake() => this.Log("OnAwake");
         public virtual void OnStart() => this.Log("OnStart");
         public virtual void OnUpdate() => this.Log("OnUpdate");
-        public virtual void OnEnterState() => this.Log("OnEnterState");
-        public virtual void OnExitState() => this.Log("OnExitState");
+        public virtual void OnEnterState(StateMonoBehaviour<T> prevState) => this.Log($"OnEnterState from {prevState.GetType()}");
+        public virtual void OnExitState(StateMonoBehaviour<T> nextState) => this.Log($"OnExitState from {nextState.GetType()}");        
     }
 }

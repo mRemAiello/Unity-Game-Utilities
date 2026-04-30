@@ -120,6 +120,7 @@ namespace GameUtils
         }
 
         // Activates a state instance, replacing the current one.
+        [Button(ButtonSizes.Medium)]
         public void ChangeState(StateMonoBehaviour<T> state)
         {
             if (state == null)
@@ -128,16 +129,19 @@ namespace GameUtils
             if (!_statesRegister.ContainsKey(state.GetType()))
                 throw new ArgumentException($"State {state} not registered yet.");
 
-            //
+            // Pass the previous state as a parameter to allow for more complex exit logic if needed.
             if (_currentState != null)
             {
-                _currentState.OnExitState();
+                _currentState.OnExitState(state);
             }
 
-            //
+            // Set and enter the new state.
+            var previousState = _currentState;
             _currentState = state;
-            this.Log($"State changed to: {state.GetType()}");
-            _currentState.OnEnterState();
+            _currentState.OnEnterState(previousState);
+
+            // Log the state change for debugging purposes.
+            this.Log($"State changed from {previousState?.GetType()} to {state.GetType()}");
         }
 
         //

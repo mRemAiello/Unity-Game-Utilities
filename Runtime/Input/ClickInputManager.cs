@@ -1,3 +1,4 @@
+using System;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +15,7 @@ namespace GameUtils
         [SerializeField, Group("Click")] private float _raycastDistance = 100f;
 
         private IClickable _hoveredClickable;
+        private RaycastHit[] _raycastHits = new RaycastHit[16];
 
         // Enables the referenced input actions when the component becomes active.
         private void OnEnable()
@@ -38,19 +40,13 @@ namespace GameUtils
             Vector2 pointerPosition = _pointerPositionAction.action.ReadValue<Vector2>();
             Ray ray = _mainCamera.ScreenPointToRay(pointerPosition);
 
-            IClickable hitClickable = null;
-            Vector3 hitPoint = default;
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, _raycastDistance) && hitInfo.collider.TryGetComponent(out IClickable clickable))
-            {
-                hitClickable = clickable;
-                hitPoint = hitInfo.point;
-            }
+            GetTopPriorityClickable(ray, out IClickable hitClickable, out Vector3 hitPoint);
 
             if (!ReferenceEquals(_hoveredClickable, hitClickable))
             {
-                _hoveredClickable?.OnMouseExit();
+                _hoveredClickable?.OnExit();
                 _hoveredClickable = hitClickable;
-                _hoveredClickable?.OnMouseEnter(hitPoint);
+                _hoveredClickable?.OnEnter(hitPoint);
             }
 
             if (!_clickAction.action.WasPerformedThisFrame())
@@ -63,13 +59,50 @@ namespace GameUtils
                 return;
             }
 
-            hitClickable.OnMouseClick(hitPoint);
+            hitClickable.OnClick(hitPoint);
         }
 
         private void ClearHoveredClickable()
         {
-            _hoveredClickable?.OnMouseExit();
+            _hoveredClickable?.OnExit();
             _hoveredClickable = null;
+        }
+
+        private void GetTopPriorityClickable(Ray ray, out IClickable clickable, out Vector3 hitPoint)
+        {
+            clickable = null;
+            hitPoint = default;
+
+            int hitCount = Physics.RaycastNonAlloc(ray, _raycastHits, _raycastDistance);
+            while (hitCount == _raycastHits.Length)
+            {
+                Array.Resize(ref _raycastHits, _raycastHits.Length * 2);
+                hitCount = Physics.RaycastNonAlloc(ray, _raycastHits, _raycastDistance);
+            }
+
+            int highestPriority = int.MinValue;
+            float nearestDistance = float.PositiveInfinity;
+
+            for (int i = 0; i < hitCount; i++)
+            {
+                RaycastHit raycastHit = _raycastHits[i];
+                if (!raycastHit.collider.TryGetComponent(out IClickable candidate))
+                {
+                    continue;
+                }
+
+                bool isHigherPriority = candidate.Priority > highestPriority;
+                bool isSamePriorityButCloser = candidate.Priority == highestPriority && raycastHit.distance < nearestDistance;
+                if (!isHigherPriority && !isSamePriorityButCloser)
+                {
+                    continue;
+                }
+
+                highestPriority = candidate.Priority;
+                nearestDistance = raycastHit.distance;
+                clickable = candidate;
+                hitPoint = raycastHit.point;
+            }
         }
     }
 }

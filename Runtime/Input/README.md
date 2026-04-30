@@ -7,7 +7,7 @@ This folder contains runtime utilities for mouse/tap input. The classes allow yo
 - Handle UI/drag events with callbacks and drag direction.
 
 ## ClickInputManager
-`ClickInputManager` listens to a pointer position and a click action (Input System) and casts a ray from `Camera.main`. If the hit collider implements `IClickable`, it invokes `OnClick` with the hit point in world space.
+`ClickInputManager` listens to a pointer position and a click action (Input System) and casts a ray from `Camera.main`. If multiple colliders implementing `IClickable` overlap under the pointer, it selects the one with the highest `Priority` and invokes `OnClick` with that hit point in world space.
 
 **Primary usage**
 - Assign the `InputActionReference` assets for position and click in the Inspector.
@@ -20,6 +20,8 @@ using UnityEngine;
 
 public class ClickableTarget : MonoBehaviour, IClickable
 {
+    public int Priority => 10;
+
     // Reacts to the click received from ClickInputManager.
     public void OnClick(Vector3 hitPoint)
     {
@@ -29,7 +31,7 @@ public class ClickableTarget : MonoBehaviour, IClickable
 ```
 
 ## IClickable
-Interface for raycast-clickable objects. Implement `OnClick(Vector3 hitPoint)` to receive the hit point.
+Interface for raycast-clickable objects. `Priority` determines which object wins when multiple clickables overlap under the pointer; higher values win. Implement `OnClick(Vector3 hitPoint)` to receive the selected hit point.
 
 ## IMouseInput
 Interface that aggregates `EventSystems` handlers for click, drag, drop, and hover. It exposes assignable actions and useful properties:

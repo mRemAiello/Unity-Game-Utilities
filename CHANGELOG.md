@@ -1,3 +1,8 @@
+## 3.5.2
+
+- Improved ClickInputManager to handle MouseEnter, MouseExit and MouseClick with priority.
+- Added PreviousState and NextState parameters to StateMonoBehaviour's OnEnterState and OnExitState for better state transition context.
+
 ## 3.5.1
 
 - Fixed ClickInputManager variables.

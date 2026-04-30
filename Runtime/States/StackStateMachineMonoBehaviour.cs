@@ -108,11 +108,12 @@ namespace GameUtils
             if (_stack.Count > 0 && !isSilent)
             {
                 var previous = _stack.Peek();
-                previous.OnExitState();
+                previous.OnExitState(state);
             }
 
+            var prevState = _stack.Count > 0 ? _stack.Peek() : null;
             _stack.Push(state);
-            state.OnEnterState();
+            state.OnEnterState(prevState);
         }
 
         public StateMonoBehaviour<T> PeekState()
@@ -128,15 +129,16 @@ namespace GameUtils
         {
             if (_stack.Count > 0)
             {
+                var nextState = _stack.Count > 1 ? _stack.ToArray()[1] : null;
                 var state = _stack.Pop();
                 this.Log($"Operation: Pop, state: {state.GetType()}");
-                state.OnExitState();
+                state.OnExitState(nextState);
             }
 
             if (_stack.Count > 0 && !isSilent)
             {
                 var state = _stack.Peek();
-                state.OnEnterState();
+                state.OnEnterState(null);
             }
         }
 
