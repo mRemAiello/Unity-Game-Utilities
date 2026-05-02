@@ -6,7 +6,7 @@ namespace GameUtils
 {
     [DeclareBoxGroup("Settings")]
     [DeclareBoxGroup("Debug")]
-    public abstract class BaseSettingData<T> : ScriptableObject, ISaveable, ILoggable
+    public abstract class BaseSettingData<T> : ScriptableObject, ILoggable
     {
         [Group("Settings"), SerializeField] protected string _settingName;
         [Group("Settings"), SerializeField] protected T _defaultValue;
@@ -36,7 +36,7 @@ namespace GameUtils
             }
             else
             {
-                GameSaveManager.Instance.Save(this, _settingName, newValue);
+                GameSaveManager.Instance.Save("Settings", _settingName, newValue);
             }
 
             _currentValue = newValue;
@@ -45,7 +45,7 @@ namespace GameUtils
 
         public virtual T GetValue()
         {
-            if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad(this, _settingName, out T value))
+            if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad("Settings", _settingName, out T value))
             {
                 return value;
             }
@@ -57,7 +57,7 @@ namespace GameUtils
         [Button(ButtonSizes.Medium)]
         public virtual void Load()
         {
-            if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad(this, _settingName, out T value))
+            if (GameSaveManager.InstanceExists && GameSaveManager.Instance.TryLoad("Settings", _settingName, out T value))
             {
                 SetValue(value);
                 return;
@@ -74,7 +74,7 @@ namespace GameUtils
                 return;
             }
 
-            GameSaveManager.Instance.Save(this, _settingName, _currentValue);
+            GameSaveManager.Instance.Save("Settings", _settingName, _currentValue);
         }
     }
 }

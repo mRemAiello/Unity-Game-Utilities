@@ -9,9 +9,9 @@ namespace GameUtils
     /// Manages achievement data and runtime instances.
     /// </summary>
     [DefaultExecutionOrder(-100)]
-    public class AchievementManager : GenericDataManager<AchievementManager, AchievementData>, ISaveable
+    public class AchievementManager : GenericDataManager<AchievementManager, AchievementData>
     {
-        private readonly Dictionary<string, RuntimeAchievement> _runtimeAchievements = new();
+        /*private readonly Dictionary<string, RuntimeAchievement> _runtimeAchievements = new();
         private List<RuntimeAchievementSaveData> _pendingLoadData;
 
         // TODO: When sdk of different platform (steam, xbox, etc) are implemented listen to those events
@@ -110,6 +110,6 @@ namespace GameUtils
             }
 
             _pendingLoadData = null;
-        }
+        }/*/
     }
 }

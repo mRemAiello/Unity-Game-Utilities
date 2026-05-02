@@ -25,7 +25,7 @@ namespace GameUtils
             {
                 _isCompleted = true;
                 _currentValue = _data.TargetValue;
-                AchievementManager.Instance?.AchievementCompleted(this);
+                //AchievementManager.Instance?.AchievementCompleted(this);
             }
         }
 
@@ -34,7 +34,7 @@ namespace GameUtils
             if (_isCompleted)
             {
                 _isCompleted = false;
-                AchievementManager.Instance?.AchievementUncompleted(this);
+                //AchievementManager.Instance?.AchievementUncompleted(this);
             }
         }
 

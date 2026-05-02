@@ -8,14 +8,14 @@ namespace GameUtils
 
         private void OnEnable()
         {
-            if (AchievementManager.InstanceExists)
-                AchievementManager.Instance.OnAchievementCompleted += OnAchievementUnlocked;
+            //if (AchievementManager.InstanceExists)
+                //AchievementManager.Instance.OnAchievementCompleted += OnAchievementUnlocked;
         }
 
         private void OnDisable()
         {
-            if (AchievementManager.InstanceExists)
-                AchievementManager.Instance.OnAchievementCompleted -= OnAchievementUnlocked;
+           //if (AchievementManager.InstanceExists)
+                //AchievementManager.Instance.OnAchievementCompleted -= OnAchievementUnlocked;
         }
 
         private void OnAchievementUnlocked(RuntimeAchievement achievement)

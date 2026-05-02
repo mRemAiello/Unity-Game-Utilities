@@ -9,7 +9,8 @@ namespace GameUtils
     [DeclareBoxGroup("Events")]
     [DeclareBoxGroup("Debug")]
     [DefaultExecutionOrder(-100)]
-    public class SkillTreeManager : Singleton<SkillTreeManager>, ISaveable, ISkillStateProvider
+    // TODO: ISaveable
+    public class SkillTreeManager : Singleton<SkillTreeManager>, ISkillStateProvider
     {
         [SerializeField, Group("Nodes")] private List<RuntimeSkillNode> _nodes = new();
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelUpRequest;
@@ -21,7 +22,7 @@ namespace GameUtils
         private BaseSkillContext _context;
 
         //
-        public string SaveContext => "SkillTree";
+        public string ID => "SkillTree";
         public IReadOnlyList<RuntimeSkillNode> Nodes => _nodes;
 
         //
@@ -227,7 +228,7 @@ namespace GameUtils
 
             // Only save if level > 0 to avoid cluttering save with locked skills
             int level = GetLevel(skillID);
-            GameSaveManager.Instance.Save(SaveContext, skillID, level);
+            GameSaveManager.Instance.Save(ID, skillID, level);
         }
 
         private void RemoveSavedSkill(string skillID)
@@ -236,7 +237,7 @@ namespace GameUtils
                 return;
 
             // Only save if level > 0 to avoid cluttering save with locked skills
-            GameSaveManager.Instance.RemoveKey<int>(SaveContext, skillID);
+            GameSaveManager.Instance.RemoveKey<int>(ID, skillID);
         }
 
         public void Save()
@@ -259,11 +260,11 @@ namespace GameUtils
             _skillLevels.Clear();
             foreach (var key in GameSaveManager.Instance.GetKeys())
             {
-                if (!key.StartsWith(SaveContext))
+                if (!key.StartsWith(ID))
                     continue;
 
-                string skillID = key.Replace($"{SaveContext}-", "").Replace("-Int32", "");
-                int level = GameSaveManager.Instance.Load(SaveContext, skillID, 0);
+                string skillID = key.Replace($"{ID}-", "").Replace("-Int32", "");
+                int level = GameSaveManager.Instance.Load(ID, skillID, 0);
 
                 if (level > 0)
                     _skillLevels[skillID] = level;

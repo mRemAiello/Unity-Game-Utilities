@@ -12,7 +12,6 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     [DeclareBoxGroup("Save")]
     [DeclareBoxGroup("Events")]
-    // Ensures this singleton initializes much earlier than standard MonoBehaviours.
     [DefaultExecutionOrder(-10000)]
     public class GameSaveManager : Singleton<GameSaveManager>, ILoggable
     {
@@ -23,7 +22,7 @@ namespace GameUtils
         [SerializeField, Group("Save"), ShowIf(nameof(_autoSaveEnabled), true)] private float _saveInterval = 5f;
         [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
-        
+
         private Coroutine _autoSaveCoroutine;
         private bool _isAutoSaveRunning = false;
 
@@ -35,9 +34,9 @@ namespace GameUtils
             //
             if (_loadOnEnable)
             {
-                LoadAll();
+                //LoadAll();
             }
-            
+
             //
             if (_autoSaveEnabled)
             {
@@ -52,12 +51,12 @@ namespace GameUtils
                 this.LogWarning("Auto save is already running.");
                 return;
             }
-            
+
             _autoSaveCoroutine = StartCoroutine(AutoSaveCoroutine());
             _isAutoSaveRunning = true;
             this.Log("Auto save started.");
         }
-        
+
         public void StopAutoSave()
         {
             if (!_isAutoSaveRunning)
@@ -65,7 +64,7 @@ namespace GameUtils
                 this.LogWarning("Auto save is not running.");
                 return;
             }
-            
+
             if (_autoSaveCoroutine != null)
             {
                 StopCoroutine(_autoSaveCoroutine);
@@ -73,13 +72,13 @@ namespace GameUtils
             _isAutoSaveRunning = false;
             this.Log("Auto save stopped.");
         }
-        
+
         private IEnumerator AutoSaveCoroutine()
         {
             while (_isAutoSaveRunning)
             {
                 yield return new WaitForSeconds(_saveInterval);
-                SaveAll();
+                //SaveAll();
                 this.Log($"Auto save executed at {System.DateTime.Now:HH:mm:ss}");
             }
         }
@@ -138,11 +137,6 @@ namespace GameUtils
             return false;
         }
 
-        public bool TryLoad<T>(ISaveable saveable, string key, out T result, T defaultValue = default)
-        {
-            return TryLoad(saveable.SaveContext, key, out result, defaultValue);
-        }
-
         public void Save<T>(string context, string key, T amount)
         {
             CheckFileSave();
@@ -174,6 +168,48 @@ namespace GameUtils
             }
 
             return defaultValue;
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void SaveAll()
+        {
+            CheckFileSave();
+
+            //
+            var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
+            var saveables = FindSceneSaveables(true);
+            foreach (var saveable in saveables)
+            {
+                object state = saveable.CaptureState();
+                string json = JsonUtility.ToJson(state);
+
+                //
+                var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
+                saveWriter.Write(id, json);
+                saveWriter.Commit();
+            }
+
+            //
+            DebugCurrentFileSave();
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void LoadAll()
+        {
+            DebugCurrentFileSave();
+
+            //
+            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
+            var saveables = FindSceneSaveables(true);
+            foreach (var saveable in saveables)
+            {
+                var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
+                if (saveReader.TryRead(id, out string json))
+                {
+                    var state = JsonUtility.FromJson(json, saveable.GetType());
+                    saveable.RestoreState(state);
+                }
+            }
         }
 
         public void RemoveKey<T>(string context, string key)
@@ -244,24 +280,6 @@ namespace GameUtils
             _dict.Clear();
         }
 
-        [Button(ButtonSizes.Medium)]
-        public void SaveAll(bool includeInactive = true)
-        {
-            foreach (var saveable in FindSceneSaveables(includeInactive))
-            {
-                saveable.Save();
-            }
-        }
-
-        [Button(ButtonSizes.Medium)]
-        public void LoadAll(bool includeInactive = true)
-        {
-            foreach (var saveable in FindSceneSaveables(includeInactive))
-            {
-                saveable.Load();
-            }
-        }
-
         private void CheckFileSave()
         {
             //
@@ -290,10 +308,6 @@ namespace GameUtils
         }
 
         //
-        public void Save<T>(ISaveable saveable, string key, T amount) => Save(saveable.SaveContext, key, amount);
-        public T Load<T>(ISaveable saveable, string key, T defaultValue = default) => Load(saveable.SaveContext, key, defaultValue);
-        public void RemoveKey<T>(ISaveable saveable, string key) => RemoveKey<T>(saveable.SaveContext, key);
-        public bool Exists<T>(ISaveable saveable, string key) => Exists<T>(saveable.SaveContext, key);
         protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
         public IReadOnlyList<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;

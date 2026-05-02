@@ -5,7 +5,7 @@ namespace GameUtils
         string SaveContext { get; }
 
         //
-        void Save();
-        void Load();
+        object CaptureState();
+        void RestoreState(object state);
     }
 }

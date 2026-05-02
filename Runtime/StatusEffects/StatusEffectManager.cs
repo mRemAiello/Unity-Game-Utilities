@@ -6,20 +6,18 @@ using UnityEngine;
 namespace GameUtils
 {
     [DefaultExecutionOrder(0)]
-    public class StatusEffectManager : MonoBehaviour, ISaveable
+    [DeclareBoxGroup("Events")]
+    [DeclareBoxGroup("Debug")]
+    // TODO: ISaveable
+    public class StatusEffectManager : MonoBehaviour
     {
-        [Tab("Events")]
-        [SerializeField] private string _saveContext = "StatusEffects";
-        [SerializeField] private StatusEffectEventAsset _onApplyEffect;
-        [SerializeField] private StatusEffectEventAsset _onUpdateEffect;
-        [SerializeField] private StatusEffectEventAsset _onEndEffect;
-
-        [Tab("Debug")]
-        [SerializeField, ReadOnly, TableList] private List<RuntimeStatusEffect> _statusEffects = new();
-
-        [Tab("Tags")]
-        [SerializeField, ReadOnly] private TagManager _tags = new();
-        [SerializeField, ReadOnly] private TagManager _immunities = new();
+        [SerializeField, Group("Events")] private string _saveContext = "StatusEffects";
+        [SerializeField, Group("Events")] private StatusEffectEventAsset _onApplyEffect;
+        [SerializeField, Group("Events")] private StatusEffectEventAsset _onUpdateEffect;
+        [SerializeField, Group("Events")] private StatusEffectEventAsset _onEndEffect;
+        [SerializeField, ReadOnly, TableList, Group("Debug")] private List<RuntimeStatusEffect> _statusEffects = new();
+        [SerializeField, ReadOnly, Group("Debug")] private TagManager _tags = new();
+        [SerializeField, ReadOnly, Group("Debug")] private TagManager _immunities = new();
 
         //
         public string SaveContext => _saveContext;
