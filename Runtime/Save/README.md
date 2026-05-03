@@ -5,8 +5,9 @@ data across multiple save slots.
 
 Main components:
 - `GameSaveManager`: persistent singleton responsible for save files and slot management.
-- `ISaveable`: interface for scene components that expose save/load behavior.
-- `BaseSettingData<T>` and `SettingBinder<T, TUI>`: optional helpers to keep setting assets and UI controls in sync.
+- `ISaveable`: interface for scene components that expose state capture/restore behavior.
+- `PersistentID`: component that generates and maintains unique, stable IDs for GameObjects.
+- `BaseSettingData<T>` and typed variants: helpers to manage persistent settings with optional UI synchronization.
 
 ## Overview
 
@@ -35,49 +36,99 @@ Common methods:
 ## ISaveable
 
 `ISaveable` exposes:
-- `string SaveContext { get; }`
-- `void Save()`
-- `void Load()`
+- `string SaveContext { get; }`: The context group for this component's save data
+- `object CaptureState()`: Serialize the component's current state into a serializable object
+- `void RestoreState(object state)`: Deserialize and apply the saved state
 
-Implement it on components that should participate in save/load cycles. This keeps each
-component's data under a stable context and allows `GameSaveManager.SaveAll()` / `LoadAll()`
-to process all saveable scene objects automatically.
+Implement it on components that should participate in save/load cycles via `SaveAll()` / `LoadAll()`. 
+This keeps each component's data under a stable context.
 
 ```cs
 public class PlayerInventory : MonoBehaviour, ISaveable
 {
-    public string SaveContext => "PlayerInventory";
-
-    public void Save()
+    [System.Serializable]
+    public class InventoryState
     {
-        GameSaveManager.Instance.Save(this, "Money", 100);
+        public int money;
+        public int itemCount;
     }
 
-    public void Load()
+    public int Money { get; set; }
+    public int ItemCount { get; set; }
+
+    public string SaveContext => "PlayerInventory";
+
+    public object CaptureState()
     {
-        int money = GameSaveManager.Instance.Load<int>(this, "Money", 0);
+        return new InventoryState
+        {
+            money = Money,
+            itemCount = ItemCount
+        };
+    }
+
+    public void RestoreState(object state)
+    {
+        if (state is InventoryState data)
+        {
+            Money = data.money;
+            ItemCount = data.itemCount;
+        }
     }
 }
 ```
 
 ## Quick Start
 
-1. Add a `GameObject` with `GameSaveManager` to your scene.
-2. Implement `ISaveable` on components that need persistence.
-3. Save and load values through the manager using context + key.
+1. Add a `GameObject` with `GameSaveManager` to your scene (or it will auto-create as a singleton).
+2. Implement `ISaveable` on components that need persistence via `SaveAll()` / `LoadAll()`.
+3. Or save/load individual values through the manager using context + key.
+
+**Option A: Using ISaveable for automatic save/load**
 
 ```cs
-// Save through ISaveable context
-GameSaveManager.Instance.Save(this, "Money", 100);
+// In a scene object
+public class PlayerStats : MonoBehaviour, ISaveable
+{
+    public string SaveContext => "PlayerStats";
+    
+    public object CaptureState() => new { health = 100, level = 5 };
+    public void RestoreState(object state) { /* restore from state */ }
+}
 
-// Save with an explicit custom context
+// Then save/load all ISaveable components in the scene:
+GameSaveManager.Instance.SaveAll();
+GameSaveManager.Instance.LoadAll();
+```
+
+**Option B: Manual key-value storage**
+
+```cs
+// Save individual values
 GameSaveManager.Instance.Save("Deck", "Card1", "123x1123");
+GameSaveManager.Instance.Save("PlayerStats", "Money", 500);
 
-// Load
-int money = GameSaveManager.Instance.Load<int>(this, "Money", 0);
+// Load with fallback
+int money = GameSaveManager.Instance.Load<int>("PlayerStats", "Money", 0);
 string card1 = GameSaveManager.Instance.Load<string>("Deck", "Card1", "");
-string card2 = GameSaveManager.Instance.Load<string>("Deck", "Card2", "");
-string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
+
+// Check if a key exists
+if (GameSaveManager.Instance.Exists<string>("Deck", "Card1"))
+{
+    // Key exists, safe to load
+}
+```
+
+**Switching save slots**
+
+```cs
+// Save slot 0
+GameSaveManager.Instance.SetActiveSaveSlot(0);
+GameSaveManager.Instance.SaveAll();
+
+// Switch to slot 1 and load different data
+GameSaveManager.Instance.SetActiveSaveSlot(1);
+GameSaveManager.Instance.LoadAll();
 ```
 
 ## Auto Save/Load for Scene Objects
@@ -85,6 +136,25 @@ string card3 = GameSaveManager.Instance.Load<string>("Deck", "Card3", "");
 Use `SaveAll()` and `LoadAll()` when you want a centralized save/load pass:
 - Good for checkpoints, scene transitions, profile changes, and quit flows.
 - Ensures all active `ISaveable` components are processed with a single call.
+- Automatically discovers and processes all `ISaveable` components in the active scene.
+
+### Automatic Save Feature
+
+Enable automatic periodic saves via Inspector settings:
+- `Auto Save Enabled`: Toggles the feature on/off
+- `Save Interval`: Time in seconds between auto-save calls (default: 5 seconds)
+
+Use these methods:
+- `StartAutoSave()`: Begin periodic saves (if not already running)
+- `StopAutoSave()`: Stop periodic saves
+
+```cs
+// Auto save runs in background every 5 seconds
+GameSaveManager.Instance.StartAutoSave();
+
+// Stop when you're done
+GameSaveManager.Instance.StopAutoSave();
+```
 
 ## Extending the Manager
 
@@ -104,26 +174,43 @@ public class EncryptedSaveManager : GameSaveManager
 
 ## Settings Data and UI Binding
 
-UI binders can subscribe to `BaseSettingData<T>.OnValueChanged` to react whenever a value changes.
+`BaseSettingData<T>` and its typed variants provide a clean way to manage persistent settings with optional UI synchronization.
+
+Available built-in types:
+- `BoolSettingData`: For boolean settings (toggles, checkboxes)
+- `IntSettingData`: For integer settings (player level, difficulty, etc.)
+- `FloatSettingData`: For floating-point settings (volume, brightness, sensitivity)
+- `StringSettingData`: For text settings (player name, language preference)
+
+### Setting Features
+
+Each setting provides:
+- `OnValueChanged` event: Fired whenever the value changes via `SetValue()` or `Load()`
+- `GetValue()`: Retrieve the current value (loads from save if available)
+- `SetValue(T newValue)`: Update and persist the value
+- `Load()`: Refresh from disk (useful after switching save slots)
+
+UI binders can subscribe to `OnValueChanged` to react whenever a value changes:
 
 ```cs
 mySetting.OnValueChanged += value => mySlider.value = value;
 ```
 
 The event is raised both when:
-- the value changes via `SetValue`, and
-- the value is restored via `Load`.
+- the value changes via `SetValue()`, and
+- the value is restored via `Load()`.
 
 ### Configure a Setting with UI
 
-1. Create a `SettingData` asset.
-2. Create a binder class deriving from `SettingBinder<T, TUI>`.
-3. Assign references in the Inspector (`Data` and `UI Component`).
+1. Create a `[SettingType]SettingData` asset (right-click in Project → Create → GameUtils → [BoolSetting|IntSetting|FloatSetting|StringSetting] Data).
+2. Create a binder class deriving from `SettingBinder<T, TUI>` for your UI component.
+3. Assign the Setting asset and UI Component in the Inspector.
 
 Example: bind a `Slider` to a `float` setting.
 
 ```cs
 using UnityEngine.UI;
+using GameUtils;
 
 public class SliderSettingBinder : SettingBinder<float, Slider>
 {
@@ -133,12 +220,45 @@ public class SliderSettingBinder : SettingBinder<float, Slider>
     protected override void RemoveUIListener() =>
         _uiComponent.onValueChanged.RemoveListener(_ => OnUIValueChanged());
 
-    protected override void SetUIValue(float value) => _uiComponent.value = value;
-    protected override float GetUIValue() => _uiComponent.value;
+    protected override void SetUIValue(float value) => 
+        _uiComponent.value = value;
+
+    protected override float GetUIValue() => 
+        _uiComponent.value;
 }
 ```
 
-At runtime, the setting asset and the UI control stay synchronized.
+At runtime, the setting asset and the UI control stay synchronized: changing the slider updates the setting, and loading a new save slot updates the slider.
+
+## PersistentID
+
+`PersistentID` is a component that assigns a unique, stable identifier to GameObjects. It's automatically generated in the editor and persists across sessions.
+
+**Features:**
+- Auto-generated unique ID when the component is first added
+- Ensures uniqueness across scene instances
+- Editor-only validation (does not affect runtime performance)
+- Useful for tracking specific GameObjects across saves (e.g., specific enemies, NPCs, or interactable objects)
+
+### Setup
+
+Simply add the `PersistentID` component to any GameObject that needs a stable identifier:
+
+```cs
+public class SpecialEnemy : MonoBehaviour
+{
+    private PersistentID _persistentID;
+
+    private void Awake()
+    {
+        _persistentID = GetComponent<PersistentID>();
+    }
+
+    public string GetStableID() => _persistentID.ID;
+}
+```
+
+The ID is generated automatically and visible in the Inspector. No manual configuration needed.
 
 ## Best Practices
 
@@ -147,3 +267,7 @@ At runtime, the setting asset and the UI control stay synchronized.
 - Prefer `TryLoad` when the presence of a key is optional.
 - Group save/load calls by game flow (checkpoint, scene exit, profile switch).
 - Use slot switching intentionally (`SetActiveSaveSlot`) before reading or writing data.
+- Use `SaveAll()` / `LoadAll()` for complete scene-wide persistence rather than individual calls.
+- For settings with UI, always use `BaseSettingData<T>` subclasses to ensure consistency between data and UI.
+- Test save slot switching to ensure data properly isolates between slots.
+- Add `PersistentID` to GameObjects that need unique identification across sessions.

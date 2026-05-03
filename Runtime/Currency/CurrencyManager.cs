@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using TriInspector;
 using UnityEngine;
 
@@ -9,7 +8,6 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     [DeclareBoxGroup("Events")]
     [DefaultExecutionOrder(-100)]
-    // TODO: ISaveable
     public class CurrencyManager : GenericDataManager<CurrencyManager, CurrencyData>
     {
         [SerializeField, Group("Events"), Required] private CurrencyChangeEvent _onChangeEvent;
@@ -18,13 +16,6 @@ namespace GameUtils
 
         //
         public string SaveContext => "Currency";
-
-        //
-        private class CurrencySaveData
-        {
-            public string[] CurrencyID;
-            public int[] Amount;
-        }
 
         //
         protected override void OnPostAwake()
@@ -151,18 +142,5 @@ namespace GameUtils
         public IReadOnlyDictionary<string, int> GetAllCurrencies() => new ReadOnlyDictionary<string, int>(_savedCurrencies);
         public int GetCurrencyAmount(CurrencyData currency) => _savedCurrencies.TryGetValue(currency.ID, out int amount) ? amount : 0;
         public bool HasEnoughCurrency(CurrencyData currency, int amount) => GetCurrencyAmount(currency) >= amount;
-
-        public void Save()
-        {
-            foreach (var currencyID in _savedCurrencies.Keys.ToList())
-            {
-                SaveCurrency(currencyID);
-            }
-        }
-
-        public void Load()
-        {
-            LoadAllCurrencies();
-        }
     }
 }

@@ -34,7 +34,7 @@ namespace GameUtils
             //
             if (_loadOnEnable)
             {
-                //LoadAll();
+                LoadAll();
             }
 
             //
@@ -78,7 +78,7 @@ namespace GameUtils
             while (_isAutoSaveRunning)
             {
                 yield return new WaitForSeconds(_saveInterval);
-                //SaveAll();
+                SaveAll();
                 this.Log($"Auto save executed at {System.DateTime.Now:HH:mm:ss}");
             }
         }
