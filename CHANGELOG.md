@@ -1,3 +1,9 @@
+## 3.5.3
+
+- Improved Save and ISaveable interface.
+- Added AudioMixerSettings to manage and save audio mixer parameters with a simple API.
+- 
+
 ## 3.5.2
 
 - Improved ClickInputManager to handle MouseEnter, MouseExit and MouseClick with priority.
