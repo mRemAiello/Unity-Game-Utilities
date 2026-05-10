@@ -24,6 +24,7 @@ namespace GameUtils
         [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
 
+        //
         private Coroutine _autoSaveCoroutine;
         private bool _isAutoSaveRunning = false;
         private SaveFileStorage _saveStorage;
@@ -33,6 +34,7 @@ namespace GameUtils
         {
             _saveStorage = new SaveFileStorage(_saveEncryptionMode != SaveEncryptionMode.None, _encryptionPassword, _saveEncryptionMode);
 
+            //
             DebugCurrentFileSave();
 
             //
@@ -284,9 +286,8 @@ namespace GameUtils
             return cleaned;
         }
 
-        private bool IsAesEncryptionEnabled => _saveEncryptionMode == SaveEncryptionMode.Aes;
-
         //
+        private bool IsAesEncryptionEnabled => _saveEncryptionMode == SaveEncryptionMode.Aes;
         protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";
         public IReadOnlyList<string> GetKeys() => _dict.Keys.ToList();
         public int GetActiveSaveSlot() => _currentSaveSlot;
