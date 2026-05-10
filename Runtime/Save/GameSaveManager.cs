@@ -1,4 +1,3 @@
-using CI.QuickSave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections;
@@ -20,15 +19,20 @@ namespace GameUtils
         [SerializeField, Group("Save")] private int _maxSaveSlot = 5;
         [SerializeField, Group("Save")] private bool _autoSaveEnabled = false;
         [SerializeField, Group("Save"), ShowIf(nameof(_autoSaveEnabled), true)] private float _saveInterval = 5f;
+        [SerializeField, Group("Save")] private SaveEncryptionMode _saveEncryptionMode = SaveEncryptionMode.None;
+        [SerializeField, Group("Save"), ShowIf(nameof(IsAesEncryptionEnabled), true)] private string _encryptionPassword = "change-me";
         [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
         [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
 
         private Coroutine _autoSaveCoroutine;
         private bool _isAutoSaveRunning = false;
+        private SaveFileStorage _saveStorage;
 
         //
         protected override void OnPostAwake()
         {
+            _saveStorage = new SaveFileStorage(_saveEncryptionMode != SaveEncryptionMode.None, _encryptionPassword, _saveEncryptionMode);
+
             DebugCurrentFileSave();
 
             //
@@ -108,15 +112,8 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
             var id = GetID<T>(context, key);
-            if (saveReader.Exists(id))
-            {
-                return true;
-            }
-
-            //
-            return false;
+            return _saveStorage.Exists(_currentSaveSlot, id);
         }
 
         public bool TryLoad<T>(string context, string key, out T result, T defaultValue = default)
@@ -124,11 +121,9 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
             var id = GetID<T>(context, key);
-            if (saveReader.Exists(id))
+            if (_saveStorage.TryRead(_currentSaveSlot, id, out result))
             {
-                result = saveReader.Read<T>(id);
                 return true;
             }
 
@@ -145,9 +140,7 @@ namespace GameUtils
             var id = GetID<T>(context, key);
 
             //
-            var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
-            saveWriter.Write(id, amount);
-            saveWriter.Commit();
+            _saveStorage.Write(_currentSaveSlot, id, amount);
 
             //
             _dict[id] = amount.ToString();
@@ -161,8 +154,7 @@ namespace GameUtils
             var id = GetID<T>(context, key);
 
             //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
-            if (saveReader.TryRead(id, out T result))
+            if (_saveStorage.TryRead(_currentSaveSlot, id, out T result))
             {
                 return result;
             }
@@ -176,7 +168,6 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
             var saveables = FindSceneSaveables(true);
             foreach (var saveable in saveables)
             {
@@ -185,8 +176,7 @@ namespace GameUtils
 
                 //
                 var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
-                saveWriter.Write(id, json);
-                saveWriter.Commit();
+                _saveStorage.Write(_currentSaveSlot, id, json);
             }
 
             //
@@ -199,12 +189,11 @@ namespace GameUtils
             DebugCurrentFileSave();
 
             //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
             var saveables = FindSceneSaveables(true);
             foreach (var saveable in saveables)
             {
                 var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
-                if (saveReader.TryRead(id, out string json))
+                if (_saveStorage.TryRead(_currentSaveSlot, id, out string json))
                 {
                     var state = JsonUtility.FromJson(json, saveable.GetType());
                     saveable.RestoreState(state);
@@ -218,15 +207,10 @@ namespace GameUtils
 
             //
             var id = GetID<T>(context, key);
-            var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
 
             //
-            if (saveWriter.Exists(id))
+            if (_saveStorage.Delete(_currentSaveSlot, id))
             {
-                saveWriter.Delete(id);
-                saveWriter.Commit();
-
-                //
                 _dict.Remove(id);
             }
         }
@@ -237,8 +221,7 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var saveReader = QuickSaveReader.Create("Save" + _currentSaveSlot);
-            var saveKeys = saveReader.GetAllKeys().ToList();
+            var saveKeys = _saveStorage.GetAllKeys(_currentSaveSlot);
 
             //
             _dict.Clear();
@@ -248,13 +231,13 @@ namespace GameUtils
                     continue;
 
                 //
-                if (saveReader.TryRead(key, out JObject jObj))
+                if (_saveStorage.TryRead(_currentSaveSlot, key, out JObject jObj))
                 {
                     _dict.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
                 }
                 else
                 {
-                    if (saveReader.TryRead(key, out object obj))
+                    if (_saveStorage.TryRead(_currentSaveSlot, key, out object obj))
                     {
                         _dict.Add(key, obj.ToString());
                     }
@@ -268,13 +251,7 @@ namespace GameUtils
             CheckFileSave();
 
             //
-            var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
-            var saveKeys = saveWriter.GetAllKeys().ToList();
-            foreach (var key in saveKeys)
-            {
-                saveWriter.Delete(key);
-            }
-            saveWriter.Commit();
+            _saveStorage.Clear(_currentSaveSlot);
 
             //
             _dict.Clear();
@@ -282,12 +259,12 @@ namespace GameUtils
 
         private void CheckFileSave()
         {
-            //
-            if (!QuickSaveBase.RootExists("Save" + _currentSaveSlot))
+            if (_saveStorage == null)
             {
-                var saveWriter = QuickSaveWriter.Create("Save" + _currentSaveSlot);
-                saveWriter.Commit();
+                _saveStorage = new SaveFileStorage(_saveEncryptionMode != SaveEncryptionMode.None, _encryptionPassword, _saveEncryptionMode);
             }
+
+            _saveStorage.EnsureRoot(_currentSaveSlot);
         }
 
         private IEnumerable<ISaveable> FindSceneSaveables(bool includeInactive)
@@ -306,6 +283,8 @@ namespace GameUtils
 
             return cleaned;
         }
+
+        private bool IsAesEncryptionEnabled => _saveEncryptionMode == SaveEncryptionMode.Aes;
 
         //
         protected virtual string GetID<T>(string context, string key) => $"{context}-{key}-{typeof(T).Name}";

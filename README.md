@@ -29,7 +29,6 @@ To use this package you need the following assets:
 ### Third-party
 
 * [Tri-Inspector](https://github.com/codewriter-packages/Tri-Inspector)
-* [Quick Save](https://www.claytoninds.com/quick-save)
 * [DOTween](http://dotween.demigiant.com/)
 
 ---

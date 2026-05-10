@@ -1,7 +1,7 @@
 {
   "name": "com.gedemy.gameutils",
   "displayName": "Unity Game Utilities",
-  "description": "A lightweight, modular and easy to use Unity utility package providing reusable runtime systems, editor tooling, and experimental gameplay modules editor utilities (events, save system, extensions, projectiles, currency, and more) to accelerate game development workflows.",
+  "description": "A lightweight, modular and easy to use Unity utility package providing reusable runtime systems, editor tooling, and experimental gameplay modules editor utilities (events, save system, extensions, projectiles, currency, audio, and more) to accelerate game development workflows.",
   "keywords": [
     "unity",
     "upm",
@@ -18,7 +18,7 @@
     "status-effects",
     "projectiles"
   ],
-  "version": "3.5.3",
+  "version": "3.5.5",
   "unity": "2022.3",
   "author": "Mirko Raimondo Aiello (https://github.com/mRemAiello?tab=repositories)",
   "homepage": "https://github.com/mRemAiello/Unity-Game-Utilities/#readme"

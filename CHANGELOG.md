@@ -1,8 +1,9 @@
-## 3.5.3
+## 3.5.5
 
 - Improved Save and ISaveable interface.
 - Added AudioMixerSettings to manage and save audio mixer parameters with a simple API.
-- 
+- Added a basic AudioManager
+- Removed QuickSave package dependency.
 
 ## 3.5.2
 

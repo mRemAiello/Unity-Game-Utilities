@@ -8,8 +8,7 @@
         "Unity.Localization",
         "Unity.InputSystem",
         "Unity.TextMeshPro",
-        "TriInspector",
-        "QuickSave"
+        "TriInspector"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
