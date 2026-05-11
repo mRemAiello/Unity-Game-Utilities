@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,25 @@ namespace GameUtils
                 SaveAll();
                 this.Log($"Auto save executed at {System.DateTime.Now:HH:mm:ss}");
             }
+        }
+
+        [Button(ButtonSizes.Medium)]
+        public void OpenPersistentDataPath()
+        {
+            string projectFolderName = new DirectoryInfo(Directory.GetParent(Application.dataPath)?.FullName ?? Application.dataPath).Name;
+            string projectPersistentDataPath = Path.Combine(Application.persistentDataPath, projectFolderName);
+
+            // Ensure the directory exists
+            if (!Directory.Exists(projectPersistentDataPath))
+            {
+                Directory.CreateDirectory(projectPersistentDataPath);
+            }
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.RevealInFinder(projectPersistentDataPath);
+#else
+            Application.OpenURL($"file://{projectPersistentDataPath}");
+#endif
         }
 
         [Button(ButtonSizes.Medium)]
@@ -261,10 +281,7 @@ namespace GameUtils
 
         private void CheckFileSave()
         {
-            if (_saveStorage == null)
-            {
-                _saveStorage = new SaveFileStorage(_saveEncryptionMode != SaveEncryptionMode.None, _encryptionPassword, _saveEncryptionMode);
-            }
+            _saveStorage ??= new SaveFileStorage(_saveEncryptionMode != SaveEncryptionMode.None, _encryptionPassword, _saveEncryptionMode);
 
             _saveStorage.EnsureRoot(_currentSaveSlot);
         }
