@@ -194,11 +194,10 @@ namespace GameUtils
             foreach (var saveable in saveables)
             {
                 object state = saveable.CaptureState();
-                string json = JsonUtility.ToJson(state);
 
                 //
                 var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
-                _saveStorage.Write(_currentSaveSlot, id, json);
+                _saveStorage.Write(_currentSaveSlot, id, state);
             }
 
             //
@@ -215,9 +214,29 @@ namespace GameUtils
             foreach (var saveable in saveables)
             {
                 var id = GetID<object>(saveable.SaveContext, saveable.GetType().Name);
-                if (_saveStorage.TryRead(_currentSaveSlot, id, out string json))
+                if (_saveStorage.TryRead(_currentSaveSlot, id, out JToken jToken))
                 {
-                    var state = JsonUtility.FromJson(json, saveable.GetType());
+                    var stateTemplate = saveable.CaptureState();
+                    var stateType = stateTemplate?.GetType();
+
+                    object state;
+                    if (stateType != null && jToken is JValue legacyValue && legacyValue.Type == JTokenType.String)
+                    {
+                        var raw = legacyValue.Value<string>();
+                        if (!string.IsNullOrEmpty(raw) && (raw.StartsWith("{") || raw.StartsWith("[")))
+                        {
+                            state = JsonConvert.DeserializeObject(raw, stateType);
+                        }
+                        else
+                        {
+                            state = jToken.ToObject(stateType);
+                        }
+                    }
+                    else
+                    {
+                        state = stateType != null ? jToken.ToObject(stateType) : jToken;
+                    }
+
                     saveable.RestoreState(state);
                 }
             }
@@ -253,9 +272,9 @@ namespace GameUtils
                     continue;
 
                 //
-                if (_saveStorage.TryRead(_currentSaveSlot, key, out JObject jObj))
+                if (_saveStorage.TryRead(_currentSaveSlot, key, out JToken jToken))
                 {
-                    _dict.Add(key, CleanJObjectString(jObj.ToString(Formatting.None)));
+                    _dict.Add(key, FormatTokenForDebug(jToken));
                 }
                 else
                 {
@@ -290,6 +309,26 @@ namespace GameUtils
         {
             FindObjectsInactive findInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
             return FindObjectsByType<MonoBehaviour>(findInactive).OfType<ISaveable>().Distinct();
+        }
+
+        private string FormatTokenForDebug(JToken token)
+        {
+            if (token == null || token.Type == JTokenType.Null)
+            {
+                return "null";
+            }
+
+            if (token is JValue value && value.Type == JTokenType.String)
+            {
+                return value.Value<string>() ?? string.Empty;
+            }
+
+            if (token is JObject jObject)
+            {
+                return CleanJObjectString(jObject.ToString(Formatting.None));
+            }
+
+            return token.ToString(Formatting.None);
         }
 
         private string CleanJObjectString(string original)

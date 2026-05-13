@@ -1,3 +1,7 @@
+## 3.5.6
+
+- Fixed GameSaveManager saving/loading with the new Save and ISaveable implementation.
+
 ## 3.5.5
 
 - Improved Save and ISaveable interface.
