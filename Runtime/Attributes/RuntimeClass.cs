@@ -46,10 +46,35 @@ namespace GameUtils
         {
             _classData = classData;
             _attributes = new List<RuntimeAttribute>();
+
+            // Dictionary to store attribute data and their values.
+            Dictionary<AttributeData, float> attributeValues = new();
+
+            // If LoadAllAttributes is enabled, start by adding all attributes from AttributeDataManager.
+            if (classData.LoadAllAttributes && AttributeDataManager.InstanceExists)
+            {
+                foreach (var data in AttributeDataManager.Instance.Items)
+                {
+                    if (data != null)
+                    {
+                        attributeValues[data] = data.MinValue;
+                    }
+                }
+            }
+
+            // Override with the specific values defined in classData.Attributes.
             foreach (var data in classData.Attributes)
             {
-                // Create a runtime instance for each attribute definition.
-                var runtimeAttribute = CreateRuntimeAttribute(classData, data.Data, data.Value);
+                if (data.Data != null)
+                {
+                    attributeValues[data.Data] = data.Value;
+                }
+            }
+
+            // Create runtime instances for all collected attributes.
+            foreach (var kvp in attributeValues)
+            {
+                var runtimeAttribute = CreateRuntimeAttribute(classData, kvp.Key, kvp.Value);
                 if (runtimeAttribute != null)
                     _attributes.Add(runtimeAttribute);
             }

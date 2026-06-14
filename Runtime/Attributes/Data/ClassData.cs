@@ -15,11 +15,11 @@ namespace GameUtils
     [DeclareBoxGroup("Class")]
     public class ClassData : ItemVisualData
     {
+        [SerializeField, Group("Class")] private bool _loadAllAttributes = false;
         [SerializeField, Group("Class"), TableList] private List<AttributeValuePair> _attributes;
 
-        /// <summary>
-        /// Gets the attribute list used by runtime class instances.
-        /// </summary>
+        //
+        public bool LoadAllAttributes => _loadAllAttributes;
         public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
 
         /// <summary>
@@ -99,6 +99,39 @@ namespace GameUtils
 
             Debug.Log($"[{nameof(ClassData)}] Populated '{name}' with {_attributes.Count} attributes.", this);
             EditorUtility.SetDirty(this);
+#endif
+        }
+
+        /// <summary>
+        /// Removes all attributes with a value of 0 from the class.
+        /// </summary>
+        [Button(ButtonSizes.Medium)]
+        public void RemoveZeroValueAttributes()
+        {
+#if UNITY_EDITOR
+            // Ensure the list exists before attempting to remove elements.
+            if (_attributes == null)
+            {
+                Debug.LogWarning($"[{nameof(ClassData)}] No attributes to remove on '{name}'.", this);
+                return;
+            }
+
+            // Track how many attributes we start with to report how many were removed.
+            int initialCount = _attributes.Count;
+            
+            // Remove all attributes where the value is 0.
+            _attributes.RemoveAll(pair => pair != null && pair.Value == 0f);
+            
+            int removedCount = initialCount - _attributes.Count;
+            if (removedCount > 0)
+            {
+                Debug.Log($"[{nameof(ClassData)}] Removed {removedCount} zero-value attributes from '{name}'.", this);
+                EditorUtility.SetDirty(this);
+            }
+            else
+            {
+                Debug.Log($"[{nameof(ClassData)}] No zero-value attributes found on '{name}'.", this);
+            }
 #endif
         }
     }
