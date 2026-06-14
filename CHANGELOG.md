@@ -1,3 +1,8 @@
+## 3.4
+
+- Added HealthSystem and VitalsSystem
+- Improved ClassData and RuntimeClass
+
 ## 3.5.6
 
 - Fixed GameSaveManager saving/loading with the new Save and ISaveable implementation.
