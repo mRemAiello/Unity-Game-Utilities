@@ -1,5 +1,6 @@
-## 3.4
+## 3.6
 
+- Fixed NullReferenceException in StateMonoBehaviour when using OnEnterState and OnExitState with null previous or next state.
 - Added HealthSystem and VitalsSystem
 - Improved ClassData and RuntimeClass
 

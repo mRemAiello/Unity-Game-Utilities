@@ -27,11 +27,21 @@ namespace GameUtils
             this.Log("SingleStateMachine Assigned");
         }
 
+        public virtual void OnEnterState(StateMonoBehaviour<T> prevState)
+        {
+            var from = prevState != null ? prevState.GetType().Name : "None";
+            this.Log($"OnEnterState from {from}");
+        }
+
+        public virtual void OnExitState(StateMonoBehaviour<T> nextState)
+        {
+            var to = nextState != null ? nextState.GetType().Name : "None";
+            this.Log($"OnExitState to {to}");
+        }
+
         //
         public virtual void OnAwake() => this.Log("OnAwake");
         public virtual void OnStart() => this.Log("OnStart");
         public virtual void OnUpdate() => this.Log("OnUpdate");
-        public virtual void OnEnterState(StateMonoBehaviour<T> prevState) => this.Log($"OnEnterState from {prevState.GetType()}");
-        public virtual void OnExitState(StateMonoBehaviour<T> nextState) => this.Log($"OnExitState from {nextState.GetType()}");        
     }
 }
