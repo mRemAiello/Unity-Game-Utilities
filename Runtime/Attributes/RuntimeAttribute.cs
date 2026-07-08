@@ -229,5 +229,16 @@ namespace GameUtils
         /// Called when the value hits the maximum.
         /// </summary>
         protected virtual void OnMaxValue() { }
+
+        //
+        public override string ToString()
+        {
+            string returnString = $"{_data.InternalName}: {CurrentValue} ({BaseValue})";
+            foreach (var modifier in _modifiers)
+            {
+                returnString += $"\n  {modifier}";
+            }
+            return returnString + "\n";
+        }
     }
 }

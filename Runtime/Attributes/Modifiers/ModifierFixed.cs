@@ -32,7 +32,8 @@ namespace GameUtils
         public override string ToString()
         {
             string sign = Amount >= 0 ? "+" : "-";
-            return $"{sign}{Amount}, Source: {Source}, Duration: {Duration}s, Permanent: {IsPermanent}";
+            string duration = IsPermanent ? "permanent" : $"{Duration} seconds";
+            return $"{sign}{Amount} from {Source} with {duration} duration";
         }
     }
 }

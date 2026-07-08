@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace GameUtils
 {
+    [DeclareBoxGroup("Class")]
+    [DeclareBoxGroup("Debug")]
     /// <summary>
     /// MonoBehaviour that instantiates and manages runtime attributes for a class.
     /// </summary>
-    [DeclareBoxGroup("Class")]
-    [DeclareBoxGroup("Debug")]
     public class RuntimeClass : MonoBehaviour, ILoggable
     {
         [SerializeField, Group("Class")] protected bool _startWithClass = true;
@@ -18,6 +18,7 @@ namespace GameUtils
         // Debugging/diagnostic settings.
         [SerializeField, Group("Debug")] private bool _logEnabled = true;
         [SerializeField, ReadOnly, HideInEditMode, TableList, Group("Debug")] protected List<RuntimeAttribute> _attributes;
+        private DebugInfo _debugInfo;
 
         // Public accessors.
         public ClassData ClassData => _classData;
@@ -30,6 +31,9 @@ namespace GameUtils
             {
                 SetClass(_classData);
             }
+
+            //
+            _debugInfo = GetComponent<DebugInfo>();
         }
 
         void Update()
@@ -98,9 +102,19 @@ namespace GameUtils
                 return;
             }
 
+            if (_debugInfo != null)
+            {
+                _debugInfo.Info = "";
+            }
+
+            // Refresh each attribute and update debug info if available.
             foreach (var attribute in _attributes)
             {
                 attribute.Refresh();
+                if (_debugInfo != null)
+                {
+                    _debugInfo.Info += $"{attribute}\n";
+                }
             }
         }
 
