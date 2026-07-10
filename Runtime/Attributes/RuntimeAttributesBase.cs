@@ -8,11 +8,12 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public abstract class RuntimeAttributesBase : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("Attributes")] protected bool _refreshAttributesOnUpdate = false;
+        [SerializeField, Group("Attributes")] private bool _loadAllAttributes = false;
+        [SerializeField, Group("Attributes")] private bool _refreshAttributesOnUpdate = false;
 
         //
         [SerializeField, Group("Debug")] private bool _logEnabled = true;
-        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("Debug")] protected List<RuntimeAttribute> _attributes;
+        [SerializeField, ReadOnly, HideInEditMode, TableList, Group("Debug")] private List<RuntimeAttribute> _attributes;
         [SerializeField, Group("Debug")] private DebugInfo _debugInfo;
 
         //
@@ -29,6 +30,17 @@ namespace GameUtils
 
         protected virtual void Init()
         {
+            if (_loadAllAttributes && AttributeDataManager.InstanceExists)
+            {
+                foreach (var data in AttributeDataManager.Instance.Items)
+                {
+                    if (data == null || GetAttribute(data) != null)
+                        continue;
+
+                    //
+                    ReplaceOrAddAttribute(data, data.MinValue);
+                }
+            }
         }
 
         void Update()
@@ -74,15 +86,24 @@ namespace GameUtils
             }
         }
 
+        protected void ReplaceOrAddAttribute(AttributeData attribute, float value)
+        {
+            // Remove the old attribute if it exists
+            if (TryGetAttribute(attribute, out RuntimeAttribute runtimeAttribute))
+                _attributes.Remove(runtimeAttribute);
+
+            // Add the new attribute
+            var newRuntimeAttribute = CreateRuntimeAttribute(null, attribute, value);
+            _attributes.Add(newRuntimeAttribute);
+        }
+
         // Helper methods to locate attributes in the runtime list.
         public bool TryGetAttribute<T>(out RuntimeAttribute attribute) where T : AttributeData
         {
             attribute = GetAttribute<T>();
             if (attribute == null)
-            {
-                this.LogError($"Attribute of type {typeof(T).Name} not found in class data.");
                 return false;
-            }
+
             return true;
         }
 
@@ -99,10 +120,7 @@ namespace GameUtils
         {
             attribute = GetAttribute<TData, TRuntime>();
             if (attribute == null)
-            {
-                this.LogError($"Attribute of type {typeof(TData).Name} with runtime {typeof(TRuntime).Name} not found in class data.");
                 return false;
-            }
 
             return true;
         }
@@ -168,10 +186,7 @@ namespace GameUtils
         {
             attribute = GetAttribute(attributeId);
             if (attribute == null)
-            {
-                this.LogError($"Attribute with id {attributeId} not found in class data.");
                 return false;
-            }
 
             return true;
         }
@@ -180,10 +195,7 @@ namespace GameUtils
         {
             attribute = GetAttribute(attributeData);
             if (attribute == null)
-            {
-                this.LogError($"Attribute {attributeData?.name ?? "<null>"} not found in class data.");
                 return false;
-            }
 
             return true;
         }

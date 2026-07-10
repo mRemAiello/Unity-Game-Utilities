@@ -15,11 +15,10 @@ namespace GameUtils
     [DeclareBoxGroup("Class")]
     public class ClassData : ItemVisualData
     {
-        [SerializeField, Group("Class")] private bool _loadAllAttributes = false;
+
         [SerializeField, Group("Class"), TableList] private List<AttributeValuePair> _attributes;
 
         //
-        public bool LoadAllAttributes => _loadAllAttributes;
         public IReadOnlyList<AttributeValuePair> Attributes => _attributes;
 
         /// <summary>
@@ -118,10 +117,10 @@ namespace GameUtils
 
             // Track how many attributes we start with to report how many were removed.
             int initialCount = _attributes.Count;
-            
+
             // Remove all attributes where the value is 0.
             _attributes.RemoveAll(pair => pair != null && pair.Value == 0f);
-            
+
             int removedCount = initialCount - _attributes.Count;
             if (removedCount > 0)
             {

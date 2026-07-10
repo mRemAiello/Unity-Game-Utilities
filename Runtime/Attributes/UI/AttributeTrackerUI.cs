@@ -8,7 +8,7 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public class AttributeTrackerUI : BaseTrackerUI
     {
-        [SerializeField, Group("References")] private RuntimeClass _targetRuntimeClass;
+        [SerializeField, Group("References")] private RuntimeAttributesBase _targetRuntimeClass;
         [SerializeField, Group("References")] private AttributeData _targetAttributeData;
         [SerializeField, Group("References")] private TextMeshProUGUI _attributeTextLabel;
         [SerializeField, Group("Debug")] private bool _showModifiers = false;

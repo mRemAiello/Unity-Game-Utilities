@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TriInspector;
 using UnityEngine;
 
@@ -13,13 +14,21 @@ namespace GameUtils
         {
             base.Init();
 
+            // 
+            if (_attributeValuePair == null)
+            {
+                this.LogWarning("AttributeValuePair list is null. No attributes to initialize.");
+                return;
+            }
+
             //
             foreach (var pair in _attributeValuePair)
             {
-                if (pair.Attribute != null)
-                {
-                    CreateRuntimeAttribute(null, pair.Attribute, pair.Value);
-                }
+                if (pair.Attribute == null)
+                    continue;
+
+                //
+                ReplaceOrAddAttribute(pair.Attribute, pair.Value);
             }
         }
     }
