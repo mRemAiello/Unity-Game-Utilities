@@ -47,13 +47,13 @@ namespace GameUtils
             var blueprintSet = new HashSet<AttributeData>(blueprintAttributes);
 
             // Remove attributes that are not declared by the selected blueprint.
-            _attributes.RemoveAll(pair => pair?.Data == null || !blueprintSet.Contains(pair.Data));
+            _attributes.RemoveAll(pair => pair?.Attribute == null || !blueprintSet.Contains(pair.Attribute));
 
             // Reorder the remaining attributes to match blueprint ordering.
             _attributes.Sort((first, second) =>
             {
-                var firstIndex = blueprintAttributes.IndexOf(first.Data);
-                var secondIndex = blueprintAttributes.IndexOf(second.Data);
+                var firstIndex = blueprintAttributes.IndexOf(first.Attribute);
+                var secondIndex = blueprintAttributes.IndexOf(second.Attribute);
                 return firstIndex.CompareTo(secondIndex);
             });
 
@@ -76,9 +76,9 @@ namespace GameUtils
             var existingAttributes = new HashSet<AttributeData>();
             foreach (var pair in _attributes)
             {
-                if (pair?.Data != null)
+                if (pair?.Attribute != null)
                 {
-                    existingAttributes.Add(pair.Data);
+                    existingAttributes.Add(pair.Attribute);
                 }
             }
 

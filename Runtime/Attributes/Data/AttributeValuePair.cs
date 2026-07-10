@@ -12,14 +12,14 @@ namespace GameUtils
         [SerializeField] private AttributeData _data;
         [SerializeField] private float _value;
 
-        public AttributeValuePair(AttributeData data, float value)
+        public AttributeValuePair(AttributeData attribute, float value)
         {
-            _data = data;
+            _data = attribute;
             _value = value;
         }
 
-        // Expose serialized data for runtime consumption.
-        public AttributeData Data => _data;
+        //
+        public AttributeData Attribute => _data;
         public float Value => _value;
     }
 }

@@ -15,7 +15,7 @@ namespace GameUtils
         {
             foreach (AttributeValuePair attributeValuePair in _runtimeClass.ClassData.Attributes)
             {
-                if (_runtimeClass.TryGetAttribute(attributeValuePair.Data, out RuntimeAttribute runtimeAttr))
+                if (_runtimeClass.TryGetAttribute(attributeValuePair.Attribute, out RuntimeAttribute runtimeAttr))
                 {
                     // Format the attribute information and set it to the text label.
                     string formattedText = FormatRuntimeAttribute(runtimeAttr, _showModifiers);
