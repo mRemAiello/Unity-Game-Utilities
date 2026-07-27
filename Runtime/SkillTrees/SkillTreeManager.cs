@@ -16,7 +16,7 @@ namespace GameUtils
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelUpRequest;
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelDownRequest;
         [SerializeField, Group("Events")] private ChangeSkillStateEventAsset _onSkillChanged;
-        [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, int> _skillLevels = new();
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private SerializedDictionary<string, int> _skillLevels = new();
 
         //
         private BaseSkillContext _context;

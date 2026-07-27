@@ -19,9 +19,9 @@ namespace GameUtils
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelUpRequest;
         [SerializeField, Group("Events")] private ClickSkillEventAsset _onLevelDownRequest;
         [SerializeField, Group("Events")] private ChangeSkillStateEventAsset _onStateChanged;
-        [SerializeField, ReadOnly, Group("Debug")] private bool _logEnabled = false;
-        [SerializeField, ReadOnly, Group("Debug")] private SkillNodeState _state = SkillNodeState.Locked;
-        [SerializeField, ReadOnly, Group("Debug")] private int _currentLevel;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private bool _logEnabled = false;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private SkillNodeState _state = SkillNodeState.Locked;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private int _currentLevel;
 
         //
         private bool _isHovered;

@@ -7,7 +7,7 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public abstract class StateMonoBehaviour<T> : MonoBehaviour, ILoggable where T : MonoBehaviour
     {
-        [SerializeField, Group("Debug")] private bool _logEnabled = true;
+        [SerializeField, Group("Debug"), PropertyOrder(99)] private bool _logEnabled = true;
 
         //
         public T StateMachine { get; private set; }

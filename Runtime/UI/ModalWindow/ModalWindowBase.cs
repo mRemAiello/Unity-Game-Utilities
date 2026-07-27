@@ -16,8 +16,8 @@ namespace GameUtils
         [SerializeField, Group("References")] private Transform _buttonsRoot;
         [SerializeField, Group("Animations")] private Animator _animator;
         [SerializeField, Group("Debug")] private bool _logEnabled = false;
-        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] protected List<ModalWindowButton> _buttons = new();
-        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] private bool _ignorable;
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug"), PropertyOrder(99)] protected List<ModalWindowButton> _buttons = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug"), PropertyOrder(99)] private bool _ignorable;
 
         //
         public virtual bool Ignorable

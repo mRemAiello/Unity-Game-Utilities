@@ -8,7 +8,7 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public abstract class Singleton<T> : MonoBehaviour, ILoggable where T : Singleton<T>
     {
-        [SerializeField, Group("Debug")] private bool _logEnabled = false;
+        [SerializeField, Group("Debug"), PropertyOrder(99)] private bool _logEnabled = false;
 
         //
         public bool LogEnabled => _logEnabled;

@@ -13,8 +13,8 @@ namespace GameUtils
     {
         [SerializeField, Group("References")] private TextMeshProUGUI _text;
         [SerializeField, Group("References")] private Button _button;
-        [SerializeField, Group("Debug")] private ModalWindowButtonEventAsset _onClickEvent;
-        [SerializeField, Group("Debug"), ReadOnly] private UnityAction _onButtonClicked;
+        [SerializeField, Group("Debug"), PropertyOrder(99)] private ModalWindowButtonEventAsset _onClickEvent;
+        [SerializeField, Group("Debug"), PropertyOrder(99), ReadOnly] private UnityAction _onButtonClicked;
 
         //
         public void Init(string text, UnityAction onButtonClicked)

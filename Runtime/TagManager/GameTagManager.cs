@@ -29,8 +29,6 @@ namespace GameUtils
             }
         }
 
-        public bool TryGetTag(string id, out GameTag tag) => _tagsById.TryGetValue(id, out tag);
-
         public bool TryGetTag<T>(out T tag) where T : GameTag
         {
             if (_tagsByType.TryGetValue(typeof(T), out var result))
@@ -54,6 +52,8 @@ namespace GameUtils
             return null;
         }
 
+        //
+        public bool TryGetTag(string id, out GameTag tag) => _tagsById.TryGetValue(id, out tag);
         public IReadOnlyList<GameTag> GetAll() => Items.ToList();
     }
 }

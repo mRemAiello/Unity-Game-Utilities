@@ -12,8 +12,8 @@ namespace GameUtils
     [DeclareBoxGroup("Debug")]
     public sealed class PersistentID : MonoBehaviour, ILoggable
     {
-        [SerializeField, Group("Debug")] private bool _logEnabled = false;
-        [SerializeField, ReadOnly, Group("Debug")] private string _id;
+        [SerializeField, Group("Debug"), PropertyOrder(99)] private bool _logEnabled = false;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private string _id;
 
         // Expose ID as read-only property
         public string ID => _id;

@@ -13,9 +13,9 @@ namespace GameUtils
         [SerializeField, Group("Events")] private StatusEffectEventAsset _onApplyEffect;
         [SerializeField, Group("Events")] private StatusEffectEventAsset _onUpdateEffect;
         [SerializeField, Group("Events")] private StatusEffectEventAsset _onEndEffect;
-        [SerializeField, ReadOnly, TableList, Group("Debug")] private List<RuntimeStatusEffect> _statusEffects = new();
-        [SerializeField, ReadOnly, Group("Debug")] private TagManager _tags = new();
-        [SerializeField, ReadOnly, Group("Debug")] private TagManager _immunities = new();
+        [SerializeField, ReadOnly, TableList, Group("Debug"), PropertyOrder(99)] private List<RuntimeStatusEffect> _statusEffects = new();
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private TagManager _tags = new();
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private TagManager _immunities = new();
 
         //
         public IReadOnlyList<RuntimeStatusEffect> StatusEffects => _statusEffects;

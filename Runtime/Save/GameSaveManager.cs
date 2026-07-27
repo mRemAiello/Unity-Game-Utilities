@@ -22,8 +22,8 @@ namespace GameUtils
         [SerializeField, Group("Save"), ShowIf(nameof(_autoSaveEnabled), true)] private float _saveInterval = 5f;
         [SerializeField, Group("Save")] private SaveEncryptionMode _saveEncryptionMode = SaveEncryptionMode.None;
         [SerializeField, Group("Save"), ShowIf(nameof(IsAesEncryptionEnabled), true)] private string _encryptionPassword = "change-me";
-        [SerializeField, ReadOnly, Group("Debug")] private int _currentSaveSlot;
-        [SerializeField, ReadOnly, Group("Debug")] private SerializedDictionary<string, string> _dict;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private int _currentSaveSlot;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private SerializedDictionary<string, string> _dict;
 
         //
         private Coroutine _autoSaveCoroutine;
