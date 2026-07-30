@@ -2,6 +2,8 @@
 
 - Added DebugInfo
 - Fixed compilation error in PersistentID
+- Fixed `RegeneratingVitalSystem` depletion notifications so its event asset and protected hook fire once when the vital transitions to its minimum value.
+- Added `RegeneratingVitalSystem` consumption tests for partial, exact, excessive, and already-depleted consumption.
 
 ## 3.6
 
