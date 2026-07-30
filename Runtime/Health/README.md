@@ -78,15 +78,19 @@ vitalSystem.Destroy(); // Instantly depletes to minimum
 
 // Invulnerability
 vitalSystem.SetInvulnerable(true, 2f); // Invulnerable for 2 seconds
+vitalSystem.SetInvulnerable(true, 0f); // Invulnerable until explicitly disabled
+vitalSystem.SetInvulnerable(false); // Ends either mode; repeated calls do not emit another end notification
 bool invuln = vitalSystem.IsInvulnerable;
 ```
+
+`IsInvulnerable` reports the active runtime state independently of the temporary duration remaining. Positive durations expire automatically, while zero or negative durations remain active until `SetInvulnerable(false)` is called. Calling `SetInvulnerable(true, duration)` again refreshes the duration without emitting another start notification.
 
 **Virtual Hooks:**
 - `OnDamaged(amount, source)` — Called when damage is successfully applied
 - `OnRestored(amount, source)` — Called when restoration is successful
 - `OnDestroyed()` — Called when vital is destroyed (reaches minimum)
 - `OnInvulnerabilityStarted()` — Called when invulnerability begins
-- `OnInvulnerabilityEnded()` — Called when invulnerability expires
+- `OnInvulnerabilityEnded()` — Called once when invulnerability expires or is manually disabled
 
 **Use Cases:**
 - Player health systems
