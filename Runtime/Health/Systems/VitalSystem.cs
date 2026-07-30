@@ -100,10 +100,15 @@ namespace GameUtils
         /// </summary>
         public virtual void Destroy()
         {
+            // Delegate destruction to the value transition so depletion has one notification path.
+            if (IsAtMin)
+            {
+                this.Log($"[{nameof(VitalSystem)}] Destroy ignored: {gameObject.name} is already at its minimum value.");
+                return;
+            }
+
             this.Log($"[{nameof(VitalSystem)}] {gameObject.name} destroyed.");
             SetToMin();
-            OnDestroyed();
-            _onDestroyed?.Invoke();
         }
 
         /// <summary>
@@ -156,7 +161,7 @@ namespace GameUtils
         protected override void OnMinReached()
         {
             base.OnMinReached();
-            // Automatically trigger destruction when depleted.
+            // Emit destruction only for the actual transition from above minimum to minimum.
             OnDestroyed();
             _onDestroyed?.Invoke();
         }

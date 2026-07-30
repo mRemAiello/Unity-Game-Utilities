@@ -88,6 +88,11 @@ bool invuln = vitalSystem.IsInvulnerable;
 - `OnInvulnerabilityStarted()` — Called when invulnerability begins
 - `OnInvulnerabilityEnded()` — Called when invulnerability expires
 
+**Destruction semantics:**
+- Destruction notifications are emitted only when the vital actually transitions from a value above its minimum to the minimum.
+- `Destroy()` delegates to `SetToMin()` and is idempotent while the vital is already depleted; calls made at the minimum do not emit `OnDestroyed` or the configured `On Destroyed` event again.
+- Restoring the vital above its minimum permits a later depletion to emit a new destruction notification.
+
 **Use Cases:**
 - Player health systems
 - Enemy health bars
