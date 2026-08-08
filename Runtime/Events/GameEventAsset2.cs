@@ -64,8 +64,7 @@ namespace GameUtils
         [Button(ButtonSizes.Medium)]
         public virtual void Invoke(T1 param1, T2 param2)
         {
-            // Gestisce l'invocazione dell'evento con tracciamento opzionale.
-            this.Log($"Invoked with params: {param1}, {param2}", this);
+            this.Log($"{name} invoked with param: {param1}, {param2}", this);
 
             //
             _callHistory ??= new List<(T1, T2)>();

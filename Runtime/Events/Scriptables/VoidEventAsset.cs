@@ -58,8 +58,7 @@ namespace GameUtils
         [Button(ButtonSizes.Medium)]
         public void Invoke()
         {
-            // Gestisce l'invocazione dell'evento con tracciamento opzionale.
-            this.Log($"Invoked", this);
+            this.Log($"{name} invoked", this);
 
             //
             _onInvoked?.Invoke();

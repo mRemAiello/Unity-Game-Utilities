@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    /*[DeclareBoxGroup("Colors")]
+    [DeclareBoxGroup("Colors")]
     [DeclareBoxGroup("Popup")]
     [DeclareBoxGroup("Animations")]
     [DeclareBoxGroup("Events")]
@@ -88,5 +88,5 @@ namespace GameUtils
                     rect.position = _referenceCamera.WorldToScreenPoint(target.position + new Vector3(0f, yOffset, 0f));       
             }
         }
-    }*/
+    }
 }
