@@ -3,45 +3,47 @@ using UnityEngine;
 
 namespace GameUtils
 {
-    // Ensures singleton-based MonoBehaviours initialize much earlier than standard scripts.
     [DefaultExecutionOrder(-10000)]
     [DeclareBoxGroup("Debug")]
     public abstract class Singleton<T> : MonoBehaviour, ILoggable where T : Singleton<T>
     {
+        private static T _instance;
         [SerializeField, Group("Debug"), PropertyOrder(99)] private bool _logEnabled = false;
 
         //
         public bool LogEnabled => _logEnabled;
-        public static T Instance { get; protected set; }
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    return null;
+
+                return _instance;
+            }
+
+            protected set => _instance = value;
+        }
         public static bool InstanceExists => Instance != null;
 
         //
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics()
+        private void Awake()
         {
-            Instance = null;
-        }
-
-        //
-        protected void Awake()
-        {
-            if (InstanceExists)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
+                return;
             }
-            else
-            {
-                // Registers the first valid instance before the rest of the scene startup flow.
-                Instance = (T)this;
-                OnPostAwake();
-            }
+
+            _instance = (T)this;
+            OnPostAwake();
         }
 
-        protected void OnDestroy()
+        private void OnDestroy()
         {
-            if (Instance == this)
+            if (_instance == this)
             {
-                Instance = null;
+                _instance = null;
                 OnPostDestroy();
             }
         }
