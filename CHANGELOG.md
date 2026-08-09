@@ -2,6 +2,7 @@
 
 - Added DebugInfo
 - Fixed compilation error in PersistentID
+- Fixed `VitalSystem` permanent and temporary invulnerability state transitions, including duplicate end notifications (3.6.1).
 
 ## 3.6
 

@@ -18,24 +18,44 @@ namespace GameUtils
         [SerializeField, Group("Settings")] protected bool _invulnerable = false;
         [SerializeField, Group("Settings"), ShowIf(nameof(_invulnerable))] protected float _invulnerabilityDuration = 0f;
 
-        private float _invulnerabilityTimer = 0f;
+        private bool _isInvulnerable = false;
+        private float _invulnerabilityTimeRemaining = 0f;
 
         /// <summary>
         /// Returns true if the vital system is currently invulnerable.
         /// </summary>
-        public bool IsInvulnerable => _invulnerable && _invulnerabilityTimer > 0f;
+        public bool IsInvulnerable => _isInvulnerable;
+
+        protected virtual void Awake()
+        {
+            // Copy inspector configuration into runtime state without conflating it with remaining time.
+            _isInvulnerable = _invulnerable;
+            _invulnerabilityTimeRemaining = _isInvulnerable ? Mathf.Max(0f, _invulnerabilityDuration) : 0f;
+        }
 
         protected virtual void Update()
         {
-            // Update invulnerability timer.
-            if (_invulnerable && _invulnerabilityTimer > 0f)
+            // Advance only temporary invulnerability; a zero remainder represents a permanent state.
+            UpdateInvulnerability(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Advances a temporary invulnerability state by the supplied elapsed time.
+        /// </summary>
+        /// <param name="deltaTime">Elapsed time in seconds.</param>
+        protected void UpdateInvulnerability(float deltaTime)
+        {
+            // Ignore permanent and inactive states so their state cannot end on a later frame.
+            if (!_isInvulnerable || _invulnerabilityTimeRemaining <= 0f)
             {
-                _invulnerabilityTimer -= Time.deltaTime;
-                if (_invulnerabilityTimer <= 0f)
-                {
-                    _invulnerabilityTimer = 0f;
-                    OnInvulnerabilityEnded();
-                }
+                return;
+            }
+
+            _invulnerabilityTimeRemaining -= deltaTime;
+            if (_invulnerabilityTimeRemaining <= 0f)
+            {
+                // End through the shared transition to guarantee a single notification.
+                EndInvulnerability();
             }
         }
 
@@ -113,19 +133,39 @@ namespace GameUtils
         /// <param name="duration">Duration of invulnerability in seconds (0 = permanent).</param>
         public virtual void SetInvulnerable(bool enabled, float duration = 0f)
         {
-            _invulnerable = enabled;
-            _invulnerabilityTimer = enabled ? duration : 0f;
-
             if (enabled)
             {
-                this.Log($"[{nameof(VitalSystem)}] {gameObject.name} became invulnerable for {(duration > 0f ? duration + "s" : "permanent")}.");
-                OnInvulnerabilityStarted();
+                // A repeated enable updates the remaining duration without starting the state twice.
+                _invulnerabilityTimeRemaining = Mathf.Max(0f, duration);
+                if (!_isInvulnerable)
+                {
+                    _isInvulnerable = true;
+                    this.Log($"[{nameof(VitalSystem)}] {gameObject.name} became invulnerable for {(duration > 0f ? duration + "s" : "permanent")}.");
+                    OnInvulnerabilityStarted();
+                }
             }
             else
             {
-                this.Log($"[{nameof(VitalSystem)}] {gameObject.name} is no longer invulnerable.");
-                OnInvulnerabilityEnded();
+                // Use the same guarded transition used by automatic expiration.
+                EndInvulnerability();
             }
+        }
+
+        /// <summary>
+        /// Ends the active invulnerability state and emits its notification once.
+        /// </summary>
+        private void EndInvulnerability()
+        {
+            // Repeated disable or expiration calls are no-ops after the first transition.
+            if (!_isInvulnerable)
+            {
+                return;
+            }
+
+            _isInvulnerable = false;
+            _invulnerabilityTimeRemaining = 0f;
+            this.Log($"[{nameof(VitalSystem)}] {gameObject.name} is no longer invulnerable.");
+            OnInvulnerabilityEnded();
         }
 
         /// <summary>
