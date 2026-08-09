@@ -15,6 +15,14 @@ namespace GameUtils
         public static T Instance { get; protected set; }
         public static bool InstanceExists => Instance != null;
 
+        //
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+        }
+
+        //
         protected void Awake()
         {
             if (InstanceExists)

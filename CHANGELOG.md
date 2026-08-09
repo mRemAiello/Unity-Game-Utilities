@@ -1,3 +1,6 @@
+## 3.6.2
+- Fixed NullReferenceException in Singleton using FastPlayMode.
+
 ## 3.6.1
 
 - Added DebugInfo
