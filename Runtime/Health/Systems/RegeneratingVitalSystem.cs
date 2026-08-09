@@ -199,9 +199,18 @@ namespace GameUtils
         /// </summary>
         protected virtual void OnRegenStopped() { }
 
+        /// <summary>
+        /// Called when the vital transitions to its minimum value.
+        /// </summary>
+        protected virtual void OnDepleted() { }
+
         protected override void OnMinReached()
         {
             base.OnMinReached();
+            // Notify both extension points once for the transition detected by BaseVitalSystem.
+            OnDepleted();
+            _onDepleted?.Invoke();
+
             // Stop regeneration when depleted, will restart after delay.
             StopRegeneration();
             _timeSinceLastConsumption = 0f;

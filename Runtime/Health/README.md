@@ -113,7 +113,7 @@ Generic regenerating vital system for attributes like **mana, stamina, energy, s
   - `On Restored` — `GameEventAsset<float, object>` invoked when vital is restored (amount, source)
   - `On Regen Started` — `VoidEventAsset` invoked when regeneration begins
   - `On Regen Stopped` — `VoidEventAsset` invoked when regeneration stops
-  - `On Depleted` — `VoidEventAsset` invoked when vital reaches zero
+  - `On Depleted` — `VoidEventAsset` invoked once when the vital transitions to its minimum value
 - **Regeneration Settings** group:
   - `Auto Regenerate` — Enable automatic regeneration over time
   - `Regen Rate` — Amount regenerated per second
@@ -138,6 +138,7 @@ bool isRegen = regenSystem.IsRegenerating;
 - `OnRestored(amount, source)` — Called when restoration is successful
 - `OnRegenStarted()` — Called when regeneration begins
 - `OnRegenStopped()` — Called when regeneration stops
+- `OnDepleted()` — Called once when the vital transitions to its minimum value
 - `RegenerateCoroutine()` — Override to customize regeneration behavior
 
 **Use Cases:**
