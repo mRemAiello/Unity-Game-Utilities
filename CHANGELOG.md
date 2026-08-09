@@ -2,6 +2,8 @@
 
 - Added DebugInfo
 - Fixed compilation error in PersistentID
+- Fixed duplicate VitalSystem destruction notifications and made repeated `Destroy()` calls idempotent.
+- Added VitalSystem depletion and destruction notification tests.
 
 ## 3.6
 
