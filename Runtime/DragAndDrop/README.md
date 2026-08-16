@@ -8,7 +8,7 @@ This folder contains a drag-and-drop workflow designed for card-like scene objec
   - Central singleton manager that listens to pointer movement and click input.
   - Detects draggable objects (`IDraggable`) through `_dragMask`.
   - Detects drop targets (`IDroppable`) during dragging through `_dropMask`.
-  - Converts pointer movement into world-space offset (`_dragSpeed`) and applies a vertical start offset (`_height`) when dragging begins.
+  - Converts the current mouse position into a world-space point on the drag plane and keeps the dragged object at `_height` while dragging.
 - `CardDrag`
   - Base `IDraggable` implementation for draggable objects with DOTween-based animations.
   - Handles:
@@ -46,7 +46,7 @@ This folder contains a drag-and-drop workflow designed for card-like scene objec
 
 1. The manager detects a hovered `IDraggable` and updates hover callbacks (`OnPointerEnter`/`OnPointerExit`).
 2. On click, drag starts (`OnBeginDrag`) and the cursor is hidden (if configured).
-3. While moving, the manager calls `OnDrag(deltaPosition, droppable)` on the current draggable.
+3. While moving, the manager calls `OnDrag(position, height, droppable)` on the current draggable.
 4. On release, the manager calls `OnEndDrag(position, droppable)`.
 5. If `droppable.AcceptDrop(drag)` returns `true`, the target can finalize its drop logic through `OnDrop` (for example in your `CardDrag` extension or target component).
 

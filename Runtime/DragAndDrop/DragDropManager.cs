@@ -20,7 +20,6 @@ namespace GameUtils
 
         //
         [SerializeField, Group("Cards")] private Vector2 _cardSize;
-        [SerializeField, Range(0.1f, 2.0f), Group("Cards")] private float _dragSpeed = 1.0f;
         [SerializeField, Group("Cards")] private Vector3 _dropOffset = Vector3.zero;
         [SerializeField, Group("Cards")] private float _height = 1.0f;
 
@@ -30,14 +29,12 @@ namespace GameUtils
         [SerializeField, Group("Debug"), ReadOnly] private MonoBehaviour _currentDropTarget;
         [SerializeField, Group("Debug"), ReadOnly] private Transform _currentDragTransform;
         [SerializeField, Group("Debug"), ReadOnly] private Vector2 _mousePosition;
-        [SerializeField, Group("Debug"), ReadOnly] private Vector3 _oldMouseWorldPosition;
         private RaycastHit[] _raycastHits;
         private readonly RaycastHit[] _cardHits = new RaycastHit[5];
         private Ray _mouseRay;
 
         //
         public Vector2 CardSize => _cardSize;
-        public float DragSpeed => _dragSpeed;
         public Vector3 DropOffset => _dropOffset;
         public float Height => _height;
 
@@ -90,8 +87,6 @@ namespace GameUtils
             //
             _currentDrag = _hoveredDraggable;
             _currentDragTransform = _currentDrag.transform;
-            _oldMouseWorldPosition = MousePositionToWorldPoint();
-
             //
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
@@ -135,7 +130,7 @@ namespace GameUtils
                 {
                     this.Log($"Stop dragging {_currentDrag}, no drop target");
                     draggable.Dragging = false;
-                    draggable.OnEndDrag(MousePositionToWorldPoint(), null);
+                    draggable.OnEndDrag(MousePositionToWorldPoint(_height), null);
                 }
             }
 
@@ -182,19 +177,13 @@ namespace GameUtils
             IDroppable droppable = DetectDroppable();
             _currentDropTarget = droppable as MonoBehaviour;
 
-            // Calculate offset
-            Vector3 mouseWorldPosition = MousePositionToWorldPoint();
-            Vector3 deltaPosition = (mouseWorldPosition - _oldMouseWorldPosition) * _dragSpeed;
-            deltaPosition.z = 0;
+            Vector3 mouseWorldPosition = MousePositionToWorldPoint(_height);
 
             // Drag the card
             if (_currentDrag is IDraggable draggable)
             {
-                draggable.OnDrag(deltaPosition, _height, droppable);
+                draggable.OnDrag(mouseWorldPosition, _height, droppable);
             }
-
-            //
-            _oldMouseWorldPosition = mouseWorldPosition;
         }
 
         /// <summary>
@@ -332,13 +321,18 @@ namespace GameUtils
             return corners;
         }
 
-        private Vector3 MousePositionToWorldPoint()
+        private Vector3 MousePositionToWorldPoint(float height)
         {
-            Vector3 mousePosition = _mousePosition;
-            if (_camera.orthographic == false)
-                mousePosition.z = 10.0f;
+            Ray ray = _camera.ScreenPointToRay(_mousePosition);
+            Plane dragPlane = new(Vector3.forward, new Vector3(0.0f, 0.0f, height));
 
-            //
+            if (dragPlane.Raycast(ray, out float enter))
+            {
+                return ray.GetPoint(enter);
+            }
+
+            Vector3 mousePosition = _mousePosition;
+            mousePosition.z = Mathf.Abs(height - _camera.transform.position.z);
             return _camera.ScreenToWorldPoint(mousePosition);
         }
 

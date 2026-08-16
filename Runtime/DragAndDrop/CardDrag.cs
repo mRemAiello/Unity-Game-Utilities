@@ -40,25 +40,23 @@ namespace GameUtils
             _isDraggable = false;
 
             //
-            Tween tween = transform.DOMoveY(position.y, _riseDuration).From(_dragOriginPosition.y);
-            tween.SetEase(_riseEase);
-            tween.OnComplete(() =>
-            {
-                _isDraggable = true;
-            });
-            tween.SetTarget(this);
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMoveY(position.y, _riseDuration).From(_dragOriginPosition.y));
+            sequence.Join(transform.DOMoveZ(height, _riseDuration).From(_dragOriginPosition.z));
+            sequence.SetEase(_riseEase);
+            sequence.OnComplete(() => { _isDraggable = true; });
+            sequence.SetTarget(this);
 
             //
             OnPostBeginDrag(position);
         }
 
-        public virtual void OnDrag(Vector3 deltaPosition, float height, IDroppable droppable)
+        public virtual void OnDrag(Vector3 position, float height, IDroppable droppable)
         {
-            transform.position += deltaPosition;
-            transform.position = new Vector3(transform.position.x, transform.position.y, height);
+            transform.position = new Vector3(position.x, position.y, height);
 
             //
-            OnPostDrag(deltaPosition, droppable);
+            OnPostDrag(position, droppable);
         }
 
         public virtual void OnEndDrag(Vector3 position, IDroppable droppable)
@@ -107,7 +105,7 @@ namespace GameUtils
 
         //
         protected virtual void OnPostBeginDrag(Vector3 position) { }
-        protected virtual void OnPostDrag(Vector3 deltaPosition, IDroppable droppable) { }
+        protected virtual void OnPostDrag(Vector3 position, IDroppable droppable) { }
         protected virtual void OnPostEndDrag(Vector3 position, IDroppable droppable) { }
     }
 }
