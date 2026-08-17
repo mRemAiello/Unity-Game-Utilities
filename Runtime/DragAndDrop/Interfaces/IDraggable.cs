@@ -14,12 +14,12 @@ namespace GameUtils
         public bool Dragging { get; set; }
 
         /// <summary> Mouse enters the object. </summary>
-        /// <param name="position">Mouse position.</param>
-        public void OnPointerEnter(Vector3 position);
+        /// <param name="mousePosition">Mouse position.</param>
+        public void OnPointerEnter(Vector3 mousePosition);
 
         /// <summary> Mouse exits object. </summary>
-        /// <param name="position">Mouse position.</param>
-        public void OnPointerExit(Vector3 position);
+        /// <param name="mousePosition">Mouse position.</param>
+        public void OnPointerExit(Vector3 mousePosition);
 
         /// <summary> Drag begins. </summary>
         /// <param name="position">Mouse position.</param>

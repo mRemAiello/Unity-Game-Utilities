@@ -7,8 +7,16 @@ namespace GameUtils
         int Priority { get; }
 
         //
-        void OnEnter(Vector3 mousePosition);
-        void OnExit();
-        void OnClick(Vector3 hitPoint);
+        /// <summary> Mouse enters the object. </summary>
+        /// <param name="mousePosition">Mouse position.</param>
+        public void OnPointerEnter(Vector3 mousePosition);
+
+        /// <summary> Mouse exits object. </summary>
+        /// <param name="mousePosition">Mouse position.</param>
+        public void OnPointerExit(Vector3 mousePosition);
+
+        /// <summary> Mouse click on the object. </summary>
+        /// <param name="hitPoint">Mouse hit point.</param>
+        void OnPointerClick(Vector3 hitPoint);
     }
 }

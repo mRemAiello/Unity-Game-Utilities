@@ -44,9 +44,9 @@ namespace GameUtils
 
             if (!ReferenceEquals(_hoveredClickable, hitClickable))
             {
-                _hoveredClickable?.OnExit();
+                _hoveredClickable?.OnPointerExit(hitPoint);
                 _hoveredClickable = hitClickable;
-                _hoveredClickable?.OnEnter(hitPoint);
+                _hoveredClickable?.OnPointerEnter(hitPoint);
             }
 
             if (!_clickAction.action.WasPerformedThisFrame())
@@ -59,12 +59,13 @@ namespace GameUtils
                 return;
             }
 
-            hitClickable.OnClick(hitPoint);
+            hitClickable.OnPointerClick(hitPoint);
         }
 
         private void ClearHoveredClickable()
         {
-            _hoveredClickable?.OnExit();
+            Vector2 pointerPosition = _pointerPositionAction.action.ReadValue<Vector2>();
+            _hoveredClickable?.OnPointerExit(pointerPosition);
             _hoveredClickable = null;
         }
 
