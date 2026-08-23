@@ -1,3 +1,16 @@
+## 3.6.3
+
+- Improved Skill Tree system with a new `SkillStateChangeData` struct to encapsulate skill state change information, replacing the previous multi-parameter event signature.
+- Refactored the Game Event System to centralize shared listener management and reduce duplicated code across event asset types.
+- Improved listener safety with null validation, duplicate prevention, consistent registration/removal, and proper callback cleanup.
+- Fixed ResetData() to correctly clear listeners, invocation history, callbacks, and current event values.
+- Improved runtime diagnostics with configurable listener/history tracking, ListenerCount, HasListeners, and limited call history.
+- Added support for strongly typed event payloads, reducing the need for complex multi-parameter event signatures.
+- Refactored VoidEventAsset to reuse the shared listener management infrastructure while preserving parameterless events.
+- Refactored GameEventDataManager and event discovery to remove runtime dependencies on Unity Editor APIs and improve build compatibility.
+- Simplified concrete event assets by removing unnecessary Invoke() overrides and boilerplate code.
+- Improved overall event system maintainability, memory usage, debugging, runtime safety, and API readability.
+
 ## 3.6.2
 - Fixed NullReferenceException in Singleton using FastPlayMode.
 

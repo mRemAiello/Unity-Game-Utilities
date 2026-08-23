@@ -84,10 +84,20 @@ namespace GameUtils
             _skillLevels[data.ID] = newLevel;
             data.OnLevelUp(_context, newLevel);
 
+            // Save and refresh
             SaveSkill(data.ID);
             RefreshAllNodes();
 
-            _onSkillChanged?.Invoke(node, node.State, newLevel);
+            // Notify listeners
+            SkillStateChangeData param = new()
+            {
+                Node = node,
+                NewState = node.State,
+                Level = newLevel
+            };
+            _onSkillChanged?.Invoke(param);
+
+            //
             return true;
         }
 
@@ -119,10 +129,20 @@ namespace GameUtils
             if (newLevel == 0)
                 _skillLevels.Remove(data.ID);
 
+            // Save and refresh
             SaveSkill(data.ID);
             RefreshAllNodes();
 
-            _onSkillChanged?.Invoke(node, node.State, newLevel);
+            // Notify listeners
+            SkillStateChangeData param = new()
+            {
+                Node = node,
+                NewState = node.State,
+                Level = newLevel
+            };
+            _onSkillChanged?.Invoke(param);
+
+            //
             return true;
         }
 

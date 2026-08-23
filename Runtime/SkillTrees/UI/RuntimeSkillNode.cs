@@ -72,8 +72,18 @@ namespace GameUtils
 
             _state = newState;
             _currentLevel = level;
+
+            // Update visuals and notify listeners
             ApplyVisualState();
-            _onStateChanged?.Invoke(this, _state, _currentLevel);
+
+            //
+            SkillStateChangeData param = new()
+            {
+                Node = this,
+                NewState = _state,
+                Level = _currentLevel
+            };
+            _onStateChanged?.Invoke(param);
         }
 
         public void RefreshState(ISkillContext context)
