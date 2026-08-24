@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameUtils
 {
     [Serializable]
-    public class EventTuple
+    public class EventListenerInfo
     {
         [SerializeField, Group("Caller"), HideLabel] public GameObject CallerGameObject;
         [SerializeField, Group("Caller Script"), HideLabel] public MonoBehaviour CallerScript;
