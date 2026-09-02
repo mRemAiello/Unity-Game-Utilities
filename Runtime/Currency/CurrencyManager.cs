@@ -12,7 +12,7 @@ namespace GameUtils
     {
         [SerializeField, Group("Events"), Required] private CurrencyChangeEvent _onChangeEvent;
         [SerializeField, ReadOnly, HideInEditMode, Group("Debug"), ShowProperties] private List<CurrencyData> _currencies = new();
-        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] private SerializedDictionary<string, int> _savedCurrencies = new();
+        [SerializeField, ReadOnly, HideInEditMode, Group("Debug")] private Dictionary<string, int> _savedCurrencies = new();
 
         //
         public string SaveContext => "Currency";

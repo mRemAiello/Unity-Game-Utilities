@@ -23,7 +23,7 @@ namespace GameUtils
         [SerializeField, Group("Save")] private SaveEncryptionMode _saveEncryptionMode = SaveEncryptionMode.None;
         [SerializeField, Group("Save"), ShowIf(nameof(IsAesEncryptionEnabled), true)] private string _encryptionPassword = "change-me";
         [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private int _currentSaveSlot;
-        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private SerializedDictionary<string, string> _dict;
+        [SerializeField, ReadOnly, Group("Debug"), PropertyOrder(99)] private Dictionary<string, string> _dict;
 
         //
         private Coroutine _autoSaveCoroutine;

@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace GameUtils
 {
     public class BaseSkillContext : ISkillContext
     {
-        private readonly SerializedDictionary<Type, object> _capabilities = new();
+        private readonly Dictionary<Type, object> _capabilities = new();
 
         //
         public void Add<T>(T capability) where T : class

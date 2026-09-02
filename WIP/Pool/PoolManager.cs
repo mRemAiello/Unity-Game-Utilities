@@ -8,13 +8,13 @@ namespace GameUtils
     [DefaultExecutionOrder(-10000)]
     public class PoolManager : Singleton<PoolManager>
     {
-        [SerializeField, ReadOnly] private SerializedDictionary<string, Queue<GameObject>> _poolDict;
+        /*[SerializeField, ReadOnly] private Dictionary<string, Queue<GameObject>> _poolDict;
         [SerializeField] private List<Pool> _pools;
 
         protected override void OnPostAwake()
         {
             // 
-            _poolDict = new SerializedDictionary<string, Queue<GameObject>>();
+            _poolDict = new Dictionary<string, Queue<GameObject>>();
 
             // 
             foreach (Pool pool in _pools)
@@ -87,6 +87,6 @@ namespace GameUtils
             }
 
             Debug.Log(count + " objects added to pool with tag " + tag);
-        }
+        }*/
     }
 }

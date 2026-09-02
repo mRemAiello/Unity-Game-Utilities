@@ -9,11 +9,11 @@ namespace GameUtils
     [Serializable]
     public class TagManager
     {
-        [SerializeField, ReadOnly] private SerializedDictionary<string, RuntimeTag> _values;
+        [SerializeField, ReadOnly] private Dictionary<string, RuntimeTag> _values;
 
         public TagManager()
         {
-            _values = new SerializedDictionary<string, RuntimeTag>();
+            _values = new Dictionary<string, RuntimeTag>();
         }
 
         public void SetTagValue(GameTag tag, bool value)
